@@ -1,0 +1,9 @@
+[2025-07-30 16:54:16] district_user -> FPS Edit ->Ariyalur@pds| Requested JSON -> {"type":"Model FPS","latitude":"11","longitude":"12","district":"Ariyalur","id":"12","demand":"14","demand_rice":"15","demand_frice":"16"}
+[2025-07-30 16:55:00] district_user -> FPS Edit ->Ariyalur@pds| Requested JSON -> {"latitude":"11","longitude":"12","district":"Ariyalur","id":"12","demand":"14","demand_rice":"15","demand_frice":"16"}
+[2025-07-30 16:56:16] district_user -> FPS Edit ->Ariyalur@pds| Requested JSON -> {"type":"Model FPS","latitude":"11","longitude":"12","district":"Ariyalur","id":"12","demand":"14","demand_rice":"15","demand_frice":"17"}
+[2025-07-30 16:56:49] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> [] | all
+[2025-07-30 16:59:58] User -> Read Message ->Ariyalur@pds| Requested JSON -> abcxza | Ariyalur@pds
+[2025-07-30 17:01:30] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":false} | all
+[2025-07-30 17:02:02] district_user -> Warehouse Edit ->Ariyalur@pds| Requested JSON -> {"type":"motorable","latitude":"78","storage":"50","district":"Ariyalur","id":"87","warehousetype":"swc","longitude":"65"}
+[2025-07-30 17:02:49] district_user -> Warehouse Edit ->Ariyalur@pds| Requested JSON -> {"type":"motorable","latitude":"78","storage":"50","district":"Ariyalur","id":"87","warehousetype":"swc","longitude":"65"}
+[2025-07-30 17:05:10] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"WH_6889f5507814"} | Qwert

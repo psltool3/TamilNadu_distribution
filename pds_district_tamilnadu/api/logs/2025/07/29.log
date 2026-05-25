@@ -1,0 +1,20 @@
+[2025-07-29 10:29:26] User -> Read Message ->Ariyalur@pds| Requested JSON ->  | 
+[2025-07-29 11:21:03] User -> Read Message ->Ariyalur@pds| Requested JSON -> abcxza | Ariyalur@pds
+[2025-07-29 15:13:56] User -> All Smart FPS Active -> Pudukkottai@pds
+[2025-07-29 15:15:08] district_user -> FPS Edit ->Pudukkottai@pds| Requested JSON -> {"name":"qwert","uniqueid":"FPS_6880a4926d3","active":false,"type":"Model FPS","latitude":"11","longitude":"12","district":"Madurai","id":"1","demand":"1","demand_rice":"1","demand_frice":"1"}
+[2025-07-29 15:18:36] district_user -> FPS added ->Pudukkottai@pds| Requested JSON -> {"name":"tester29","type":"Model FPS","latitude":"44","longitude":"45","district":"Madurai","id":"4","demand":"4","demand_rice":"4","demand_frice":"4"}
+[2025-07-29 15:27:36] User -> Read Message ->Pudukkottai@pds| Requested JSON -> X5OP@AP4PZX54P7CC7$EICAR-STANDARD-ANTIVIRUS-TEST-FILE$HH | Pudukkottai@pds
+[2025-07-29 15:27:39] User -> Read Message ->Pudukkottai@pds| Requested JSON -> tester | Pudukkottai@pds
+[2025-07-29 15:41:23] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"FPS_68679379b35"} | T
+[2025-07-29 15:43:19] district_user -> Warehouse added ->Pudukkottai@pds| Requested JSON -> {"name":"qwert","type":"motorable","latitude":"56","storage":"50","district":"Pudukkottai","id":"50","warehousetype":"swc","longitude":"65"}
+[2025-07-29 15:44:27] district_user -> Warehouse Edit ->Pudukkottai@pds| Requested JSON -> {"name":"Qwert","uniqueid":"WH_68889ebf0646","active":"1","type":"motorable","latitude":"78","storage":"50","district":"Ariyalur","id":"87","warehousetype":"swc","longitude":"65"}
+[2025-07-29 15:49:44] district_user -> FPS added ->Pudukkottai@pds| Requested JSON -> {"name":"Retester","type":"Model FPS","latitude":"19","longitude":"20","district":"Ariyalur","id":"13","demand":"1","demand_rice":"1","demand_frice":"1"}
+[2025-07-29 16:24:44] district_user -> Warehouse added ->Pudukkottai@pds| Requested JSON -> {"name":"qwert","type":"motorable","latitude":"11","storage":"1","district":"Pudukkottai","id":"22","warehousetype":"swc","longitude":"22"}
+[2025-07-29 16:49:48] district_user -> FPS added ->Ariyalur@pds| Requested JSON -> {"name":"Abcd","type":"Model FPS","latitude":"53.3696","longitude":"45.3698","district":"Ariyalur","id":"5698","demand":"33","demand_rice":"22","demand_frice":"11"}
+[2025-07-29 17:27:22] district_user -> Warehouse added ->Pudukkottai@pds| Requested JSON -> {"name":"retester33","type":"motorable","latitude":"12","storage":"12","district":"Pudukkottai","id":"98","warehousetype":"swc","longitude":"21"}
+[2025-07-29 17:28:27] district_user -> Warehouse Edit ->Pudukkottai@pds| Requested JSON -> {"name":"Retester80","uniqueid":"WH_6888b7221062","active":"1","type":"motorable","latitude":"12","storage":"12","district":"Pudukkottai","id":"98","warehousetype":"swc","longitude":"21"}
+[2025-07-29 17:30:10] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"FPS_6888a040bd5"} | Retester
+[2025-07-29 17:30:16] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"FPS_6888a9917e4"} | Abcd
+[2025-07-29 17:30:22] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"FPS_6888ae545a3"} | Abcd
+[2025-07-29 17:32:22] district_user -> FPS added ->Pudukkottai@pds| Requested JSON -> {"name":"qwerty","type":"Model FPS","latitude":"10","longitude":"11","district":"Pudukkottai","id":"2","demand":"2","demand_rice":"2","demand_frice":"2"}
+[2025-07-29 17:34:33] district_user -> FPS added ->Ariyalur@pds| Requested JSON -> {"name":"asdfg","type":"Model FPS","latitude":"11","longitude":"12","district":"Ariyalur","id":"12","demand":"14","demand_rice":"15","demand_frice":"16"}

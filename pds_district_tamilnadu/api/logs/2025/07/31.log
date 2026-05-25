@@ -1,0 +1,9 @@
+[2025-07-31 10:11:21] district_user -> Warehouse Edit ->Ariyalur@pds| Requested JSON -> {"name":"Btesterb","uniqueid":"WH_6889f5506ad5","active":"1","type":"motorable","latitude":"10","storage":"18","district":"Ariyalur","id":"btesterb","warehousetype":"swc","longitude":"11"}
+[2025-07-31 10:12:31] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":false} | all
+[2025-07-31 10:14:01] district_user -> Warehouse added ->Ariyalur@pds| Requested JSON -> {"name":"july30","type":"motorable","latitude":"32","storage":"23","district":"Ariyalur","id":"45","warehousetype":"swc","longitude":"32"}
+[2025-07-31 10:17:36] User -> FPS InActive -> Ariyalur@pds| asdfghjkl
+[2025-07-31 10:18:21] district_user -> FPS Edit ->Ariyalur@pds| Requested JSON -> {"name":"asdfghjkl","uniqueid":"FPS_688a1259115","active":false,"type":"Model FPS","latitude":"10","longitude":"11","district":"Ariyalur","id":"222","demand":"5","demand_rice":"5","demand_frice":"5"}
+[2025-07-31 10:20:08] district_user -> FPS Edit ->Ariyalur@pds| Requested JSON -> {"name":"Asdfghjkl","uniqueid":"FPS_688a1259115","active":false,"type":"Model FPS","latitude":"10","longitude":"11","district":"Ariyalur","id":"222","demand":"5","demand_rice":"5","demand_frice":"5"}
+[2025-07-31 10:23:11] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":false} | all
+[2025-07-31 10:23:33] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> [] | all
+[2025-07-31 10:30:52] User -> FPS Edit -> Ariyalur@pds| asdfghjkl

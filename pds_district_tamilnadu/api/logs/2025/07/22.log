@@ -1,0 +1,4 @@
+[2025-07-22 15:24:40] district_user -> Warehouse added ->Ariyalur@pds| Requested JSON -> {"name":"Abcd","type":"motorable","latitude":"11.20847","storage":"1800","district":"Ariyalur","id":"a999","warehousetype":"swc","longitude":"79.06627"}
+[2025-07-22 15:30:41] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"WH_687f5fe03d1c"} | Abcd
+[2025-07-22 15:31:31] district_user -> Warehouse added ->Ariyalur@pds| Requested JSON -> {"name":"Abcd","type":"motorable","latitude":"11.20847","storage":"2560","district":"Ariyalur","id":"894333","warehousetype":"swc","longitude":"56.321"}
+[2025-07-22 16:08:57] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"FPS_686649d6dd5"} | Stringfromcharcode60 105 62 106 117 108 121 60 47 105 62

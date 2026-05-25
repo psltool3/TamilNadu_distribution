@@ -1,0 +1,7 @@
+[2025-07-29 10:27:39] User -> Send  Message ->admin@pds| Requested JSON -> {"message":"abcxza","uniqueid":"678baa8433d73"} | Ariyalur@pds
+[2025-07-29 15:36:00] User -> Delete User ->admin@pds| Requested JSON -> {"uid":"687f844110d8d"} | tester
+[2025-07-29 15:36:32] User -> Verify User ->admin@pds| Requested JSON -> {"uid":"678bf97f760ce"} | Madurai@pds
+[2025-07-29 15:36:58] User -> Verify User ->admin@pds| Requested JSON -> {"uid":"678bf97f760ce"} | Madurai@pds
+[2025-07-29 15:37:10] User -> Verify User ->admin@pds| Requested JSON -> {"uid":"6"} | 
+[2025-07-29 16:29:29] User -> FPS added ->admin@pds| Requested JSON -> {"name":"Abcd","type":"Model FPS","latitude":"11.20847","longitude":"56.321","district":"Ariyalur","id":"pds","demand":"25","demand_rice":"75","demand_frice":"25"}
+[2025-07-29 17:00:13] User -> Verify User ->admin@pds| Requested JSON -> {"uid":"678bf8da235cf"} | Coimbatore@pds

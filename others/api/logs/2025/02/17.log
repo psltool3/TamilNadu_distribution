@@ -1,0 +1,29 @@
+[2025-02-17 10:28:31] User -> FPS Data Edit->admin@pds| Requested JSON -> {"name":"saurabha","uniqueid":"FPS_67a79f9b20d","active":"1","type":"Normal FPS","latitude":"11.29651167","longitude":"79.385945","district":"Ariyalur","id":"1212","demand":"2.81","demand_rice":"85.26","demand_frice":"100"}
+[2025-02-17 10:33:59] User -> FPS Edit -> admin@pds| Saurabh Gawande
+[2025-02-17 10:53:40] User -> User Add ->admin@pds| Requested JSON -> {"newusername":"Ariyalur@pds","district":"Ariyalur","newpassword":"Ariyalur"} | Ariyalur@pds
+[2025-02-17 11:01:09] User -> Cost for leg2 Added ->admin@pds| Requested JSON -> {"cost_lbQU5ZSHdjTE0r":"123"} | 2024 | may
+[2025-02-17 11:01:35] User -> Cost for leg1 Reset ->admin@pds| Requested JSON -> {"id":"NTUnSpTWeucUgA"} | 
+[2025-02-17 12:18:17] User -> FPS deleted -> admin@pds| Requested JSON -> {"uid":"all"} | all
+[2025-02-17 12:27:47] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:27:47] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:27:48] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:27:48] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:27:48] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:27:48] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:28:13] User -> FPS deleted -> admin@pds| Requested JSON -> {"uid":"all"} | all
+[2025-02-17 12:28:25] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:28:25] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:28:28] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:28:29] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:28:29] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:28:29] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 12:49:07] User -> Cost for leg2 Added ->admin@pds| Requested JSON -> {"cost_Z0qy4kt5MzGN5x":"89"} | 2025 | feb
+[2025-02-17 12:49:09] {"id":"Z0qy4kt5MzGN5x"}
+[2025-02-17 12:49:09] User -> Cost for leg2 Reset ->admin@pds| Requested JSON -> {"id":"Z0qy4kt5MzGN5x"} | 
+[2025-02-17 12:49:12] User -> Cost for leg2 Added ->admin@pds| Requested JSON -> {"cost_Z0qy4kt5MzGN5x":"90"} | 2025 | feb
+[2025-02-17 13:05:45] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 13:05:45] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 13:05:45] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 13:05:45] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 13:05:45] User -> FPS Added -> admin@pds| ABGDJ
+[2025-02-17 13:05:45] User -> FPS Added -> admin@pds| ABGDJ

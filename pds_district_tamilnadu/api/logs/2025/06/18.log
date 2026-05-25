@@ -1,0 +1,8 @@
+[2025-06-18 13:06:15] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all
+[2025-06-18 13:10:56] User -> Warehouse Added -> Ariyalur@pds| abc
+[2025-06-18 13:10:56] User -> Warehouse Added -> Ariyalur@pds| JEYANKONDAM OG
+[2025-06-18 13:10:56] User -> Warehouse Added -> Ariyalur@pds| SENTHURAI OG
+[2025-06-18 13:12:06] district_user -> FPS added ->Ariyalur@pds| Requested JSON -> {"name":"abc","type":"Model FPS","latitude":"12.258","longitude":"89.228","district":"Ariyalur","id":"scriptalert123script","demand":"25","demand_rice":"69","demand_frice":"36"}
+[2025-06-18 13:12:46] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all
+[2025-06-18 13:13:04] User -> FPS Added -> Ariyalur@pds| abc
+[2025-06-18 13:16:30] User -> FPS Edit -> Ariyalur@pds| abc

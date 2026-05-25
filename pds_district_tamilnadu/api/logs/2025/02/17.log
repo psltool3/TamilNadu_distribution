@@ -1,0 +1,68 @@
+[2025-02-17 10:51:48] district_user -> FPS added ->Adilabad@pds| Requested JSON -> {"name":"aaaaa","type":"Model FPS","latitude":"10.124","longitude":"54.123","district":"Adilabad","id":"admin@pds","demand":"15.123","demand_rice":"129","demand_frice":"63"}
+[2025-02-17 10:55:41] User -> FPS Added -> Ariyalur@pds| abc
+[2025-02-17 10:57:34] User -> FPS Edit -> Ariyalur@pds| Saurabh Gawande
+[2025-02-17 10:57:34] User -> FPS Edit -> Ariyalur@pds| Saurabh
+[2025-02-17 10:58:56] User -> Warehouse Added -> Ariyalur@pds| Ariyalur Og
+[2025-02-17 10:58:56] User -> Warehouse Added -> Ariyalur@pds| JEYANKONDAM OG
+[2025-02-17 10:58:56] User -> Warehouse Added -> Ariyalur@pds| SENTHURAI OG
+[2025-02-17 10:58:56] User -> Warehouse Added -> Ariyalur@pds| saurabh
+[2025-02-17 12:35:25] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP104PY - FRice
+[2025-02-17 12:35:30] district User -> Save Data | approve district change yes ->Ariyalur@pds| 58 - 15EP091PN - Wheat
+[2025-02-17 12:35:30] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP084PY - Wheat
+[2025-02-17 12:35:30] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP085P1 - Wheat
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP085PY - Wheat
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP103P1 - Wheat
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP104PY - Wheat
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 58 - 15EP091PN - Rice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP084PY - Rice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP085P1 - Rice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP085PY - Rice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP103P1 - Rice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP104PY - Rice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 58 - 15EP091PN - FRice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP084PY - FRice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP085P1 - FRice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP085PY - FRice
+[2025-02-17 12:35:31] district User -> Save Data | approve district change yes ->Ariyalur@pds| 646 - 15EP103P1 - FRice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 58 - 15EP091PN - Wheat
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP084PY - Wheat
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085P1 - Wheat
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085PY - Wheat
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP103P1 - Wheat
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP104PY - Wheat
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 58 - 15EP091PN - Rice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP084PY - Rice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085P1 - Rice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085PY - Rice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP103P1 - Rice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP104PY - Rice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 58 - 15EP091PN - FRice
+[2025-02-17 12:35:38] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP084PY - FRice
+[2025-02-17 12:35:39] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085P1 - FRice
+[2025-02-17 12:35:39] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085PY - FRice
+[2025-02-17 12:35:39] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP103P1 - FRice
+[2025-02-17 12:35:39] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP104PY - FRice
+[2025-02-17 13:02:25] district User -> Save Data | implemeneted ->Ariyalur@pds| 58 - 15EP091PN - Wheat
+[2025-02-17 13:02:25] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP084PY - Wheat
+[2025-02-17 13:02:25] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085P1 - Wheat
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085PY - Wheat
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP103P1 - Wheat
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP104PY - Wheat
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 58 - 15EP091PN - Rice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP084PY - Rice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085P1 - Rice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085PY - Rice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP103P1 - Rice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP104PY - Rice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 58 - 15EP091PN - FRice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP084PY - FRice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085P1 - FRice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP085PY - FRice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP103P1 - FRice
+[2025-02-17 13:02:26] district User -> Save Data | implemeneted ->Ariyalur@pds| 646 - 15EP104PY - FRice
+[2025-02-17 13:06:20] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all
+[2025-02-17 13:06:35] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all
+[2025-02-17 13:06:52] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all
+[2025-02-17 13:07:27] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all
+[2025-02-17 13:07:51] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all
+[2025-02-17 13:08:05] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"all"} | all

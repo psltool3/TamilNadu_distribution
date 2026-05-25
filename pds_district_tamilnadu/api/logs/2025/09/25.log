@@ -1,0 +1,27 @@
+[2025-09-25 11:15:13] district_user -> Warehouse added ->Ariyalur@pds| Requested JSON -> {"name":"Test","type":"motorable","latitude":"89.258","storage":"2000","district":"Ariyalur","id":"ABC","warehousetype":"swc","longitude":"78.596"}
+[2025-09-25 11:15:28] User -> Warehouse InActive -> Ariyalur@pds| Test
+[2025-09-25 11:15:32] User -> Warehouse Active -> Ariyalur@pds| Test
+[2025-09-25 11:16:00] district_user -> Warehouse Edit ->Ariyalur@pds| Requested JSON -> {"name":"Test","uniqueid":"WH_68d4d6e9c480","active":"1","type":"motorable","latitude":"89.258","storage":"2000","district":"Ariyalur","id":"A099","warehousetype":"swc","longitude":"78.596"}
+[2025-09-25 11:16:13] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"WH_68d4d6e9c480"} | Test
+[2025-09-25 11:17:22] User -> Warehouse Added -> Ariyalur@pds| Test
+[2025-09-25 11:24:25] district_user -> FPS added ->Ariyalur@pds| Requested JSON -> {"name":"Test","type":"Normal FPS","latitude":"89.258","longitude":"78.596","district":"Ariyalur","id":"09FPS0088","demand":"100","demand_rice":"1000","demand_frice":"50"}
+[2025-09-25 11:31:15] User -> FPS InActive -> Ariyalur@pds| Test
+[2025-09-25 11:31:55] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"FPS_68d4d911d00"} | Test
+[2025-09-25 11:34:18] User -> All Normal FPS InActive -> Ariyalur@pds
+[2025-09-25 11:34:33] User -> All Normal FPS Active -> Ariyalur@pds
+[2025-09-25 11:38:31] User -> Read Message ->Ariyalur@pds| Requested JSON -> Please download and check the FPS  Warehouse details for your respective districts.
+
+CSCP HO. | Ariyalur@pds
+[2025-09-25 12:04:59] User -> Warehouse InActive -> Ariyalur@pds| Test
+[2025-09-25 12:05:18] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"WH_68d4d76ab3eb"} | Test
+[2025-09-25 14:57:03] User -> Warehouse InActive -> Ariyalur@pds| Senthurai  Og
+[2025-09-25 14:57:05] User -> Warehouse Active -> Ariyalur@pds| Senthurai  Og
+[2025-09-25 14:58:26] district_user -> Warehouse added ->Ariyalur@pds| Requested JSON -> {"name":"Test","type":"motorable","latitude":"89.258","storage":"2000","district":"Ariyalur","id":"T123","warehousetype":"swc","longitude":"78.596"}
+[2025-09-25 15:05:56] district_user -> FPS added ->Ariyalur@pds| Requested JSON -> {"name":"Demo Test","type":"Model FPS","latitude":"89.258","longitude":"78.596","district":"Ariyalur","id":"Dem12309","demand":"100","demand_rice":"1000","demand_frice":"50"}
+[2025-09-25 15:06:24] User -> FPS InActive -> Ariyalur@pds| Demo Test
+[2025-09-25 15:06:49] district_user -> FPS Edit ->Ariyalur@pds| Requested JSON -> {"name":"Demo Test Training","uniqueid":"FPS_68d50cfcd4c","active":false,"type":"Model FPS","latitude":"89.258","longitude":"78.596","district":"Ariyalur","id":"Dem12309","demand":"100","demand_rice":"1000","demand_frice":"50"}
+[2025-09-25 15:07:02] district_user -> FPS deleted -> Ariyalur@pds| Requested JSON -> {"uid":"FPS_68d50cfcd4c"} | Demo Test Training
+[2025-09-25 15:09:19] User -> All Normal FPS InActive -> Ariyalur@pds
+[2025-09-25 15:09:31] User -> All Normal FPS Active -> Ariyalur@pds
+[2025-09-25 15:12:11] User -> Read Message ->Ariyalur@pds| Requested JSON -> Please complete Route Optimization plan finalization before 15th Oct for rolling out from November month.
+CSCP HO. | Ariyalur@pds

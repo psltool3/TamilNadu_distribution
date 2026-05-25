@@ -1,0 +1,2 @@
+[2026-01-05 15:05:44] User -> DCP deleted -> Kangra@pds| Requested JSON -> {"uid":"all"} | all
+[2026-01-05 15:07:47] User -> DCP added ->Kangra@pds| Requested JSON -> {"name":"abcd","type":"afds","latitude":"24.010211","longitude":"91.994214","demand_frice":"1","district":"Ariyalur","id":"Kangra@pds","demand":"1","demand_rice":"1"}

@@ -1,0 +1,5 @@
+[2025-10-03 17:51:49] User -> Delete User ->admin@pds| Requested JSON -> {"uid":"68da317ba23b7"} | user@pds
+[2025-10-03 17:57:01] User -> User Add ->admin@pds| Requested JSON -> {"newusername":"tnscs@pds","district":"state","newpassword":"tnscs#123"} | tnscs@pds
+[2025-10-03 17:57:29] User -> Delete User ->admin@pds| Requested JSON -> {"uid":"68dfc1159f0e9"} | tnscs@pds
+[2025-10-03 18:00:41] User -> User Add ->admin@pds| Requested JSON -> {"newusername":"tnscs@pds","district":"state","newpassword":"TNscs#123"} | tnscs@pds
+[2025-10-03 18:02:02] User -> User Add ->admin@pds| Requested JSON -> {"newusername":"tnrcs@pds","district":"state","newpassword":"TNrcs#123"} | tnrcs@pds

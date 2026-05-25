@@ -1,0 +1,2 @@
+[2025-10-17 13:47:09] User ->  Optimization Start for leg2 Requested JSON -> ImmutableMultiDict([('month', 'oct'), ('year', '2025'), ('type', 'inter'), ('applicable', 'dec'), ('username', 'admin@pds')])
+[2025-10-17 15:15:44] User ->  Optimization Start for leg2 Requested JSON -> ImmutableMultiDict([('month', 'oct'), ('year', '2025'), ('type', 'inter'), ('applicable', 'dec'), ('username', 'admin@pds')])

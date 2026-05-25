@@ -1,0 +1,11 @@
+[2025-07-07 13:00:22] User -> District added ->admin@pds| Requested JSON -> {"name":"Ariyalurr"}
+[2025-07-07 13:02:23] User -> Warehouse Edit ->admin@pds| Requested JSON -> {"name":"Abcd","uniqueid":"WH_68660937eb58","active":"1","type":"motorable","latitude":"11.14939","storage":"18000","district":"Ariyalur","id":"645","warehousetype":"swc","longitude":"79.06627"}
+[2025-07-07 13:04:40] User -> Warehouse InActive -> admin@pds| Abcd
+[2025-07-07 13:49:36] User -> FPS Data Edit->admin@pds| Requested JSON -> {"name":"t","uniqueid":"FPS_68679379b35","active":"1","type":"Model FPS","latitude":"11","longitude":"22","district":"Ariyalur","id":"9","demand":"1","demand_rice":"1","demand_frice":"1"}
+[2025-07-07 13:51:07] User -> District Name Edit->admin@pds| Requested JSON -> {"name":"Ariyalurr","uid":"686b778e72891"}
+[2025-07-07 13:51:19] User -> District Name Edit->admin@pds| Requested JSON -> {"name":false,"uid":"686b778e72891"}
+[2025-07-07 13:51:32] User -> District Name Edit->admin@pds| Requested JSON -> {"name":false,"uid":false}
+[2025-07-07 13:53:55] User -> District Name Edit->admin@pds| Requested JSON -> {"name":"Ariyalurr","uid":"686b778e72891"}
+[2025-07-07 13:55:37] User -> Warehouse Edit ->admin@pds| Requested JSON -> {"name":"Abcd","uniqueid":"WH_68660937eb58","active":false,"type":"motorable","latitude":"11.14939","storage":"1800","district":"Ariyalur","id":"645","warehousetype":"swc","longitude":"79.06627"}
+[2025-07-07 13:56:40] User -> FPS Data Edit->admin@pds| Requested JSON -> {"name":"T","uniqueid":"FPS_68679379b35","active":"1","type":"Model FPS","latitude":"11","longitude":"22","district":"Ariyalur","id":"9","demand":"1","demand_rice":"1","demand_frice":"1"}
+[2025-07-07 14:01:49] User -> User Add ->admin@pds| Requested JSON -> {"newusername":"testerr","district":"admin","newpassword":"Tester@12345"} | testerr

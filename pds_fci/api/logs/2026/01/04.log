@@ -1,0 +1,125 @@
+[2026-01-04 16:55:48] User -> DCP deleted -> admin@pds| Requested JSON -> {"uid":"all"} | all
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Egmore
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Avadi
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| SILO Elavur
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD, Sevur
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD, Arakkonam
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| PEG,Madhuranthagam
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| PEG,Thiruvanammalai
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Madurai-II
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Ramnad
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Ramnad PEG
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Karikudi PEG
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Virudhunagar
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD MG Complex 
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Tirunelveli 
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC PEG Muthur 
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Nagercoil  
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC DINDIGUL 
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Moolapalayam
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Hosur
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Tiruppur 
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Namakkal
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| PEG Dharmapuri
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| SILO Madukkarai
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Peelamedu
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Salem
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD COIMBATORE
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Thanjavur
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Sembanarkoil
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Pudukottai
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Trichy
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Trichy
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Chinnasalem
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| TNWC Villupuram
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| PEG Villupuram
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Chidambaram
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Chidambaram
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| CWC Cuddalore
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Pondicherry
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Karaikal
+[2026-01-04 16:59:34] User -> DCP Added -> admin@pds| FSD Thiruvandarkoil
+[2026-01-04 17:05:56] User -> DCP deleted -> admin@pds| Requested JSON -> {"uid":"DCP_695a4f1e75d"} | FSD Pondicherry
+[2026-01-04 17:08:10] User -> DCP deleted -> admin@pds| Requested JSON -> {"uid":"all"} | all
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Egmore
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Avadi
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| SILO Elavur
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD, Sevur
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD, Arakkonam
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| PEG,Madhuranthagam
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| PEG,Thiruvanammalai
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Madurai-II
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Ramnad
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Ramnad PEG
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Karikudi PEG
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Virudhunagar
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD MG Complex 
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Tirunelveli 
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC PEG Muthur 
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Nagercoil  
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC DINDIGUL 
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Moolapalayam
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Hosur
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Tiruppur 
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Namakkal
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| PEG Dharmapuri
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| SILO Madukkarai
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Peelamedu
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Salem
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD COIMBATORE
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Thanjavur
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Sembanarkoil
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Pudukottai
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Trichy
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Trichy
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Chinnasalem
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| TNWC Villupuram
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| PEG Villupuram
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Chidambaram
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Chidambaram
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| CWC Cuddalore
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Karaikal
+[2026-01-04 17:08:19] User -> DCP Added -> admin@pds| FSD Thiruvandarkoil
+[2026-01-04 17:21:34] User -> DCP InActive -> admin@pds| FSD Karaikal
+[2026-01-04 17:45:38] User -> DCP deleted -> admin@pds| Requested JSON -> {"uid":"all"} | all
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Egmore
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Avadi
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| SILO Elavur
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD, Sevur
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD, Arakkonam
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| PEG,Madhuranthagam
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| PEG,Thiruvanammalai
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Madurai-II
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Ramnad
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Ramnad PEG
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Karikudi PEG
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Virudhunagar
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD MG Complex 
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Tirunelveli 
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC PEG Muthur 
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Nagercoil  
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC DINDIGUL 
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Moolapalayam
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Hosur
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Tiruppur 
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Namakkal
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| PEG Dharmapuri
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| SILO Madukkarai
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Peelamedu
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Salem
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD COIMBATORE
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Thanjavur
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Sembanarkoil
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Pudukottai
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Trichy
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Trichy
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Chinnasalem
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| TNWC Villupuram
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| PEG Villupuram
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Chidambaram
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Chidambaram
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| CWC Cuddalore
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Karaikal
+[2026-01-04 17:45:45] User -> DCP Added -> admin@pds| FSD Thiruvandarkoil
+[2026-01-04 17:48:13] User -> DCP deleted -> admin@pds| Requested JSON -> {"uid":"DCP_695a59f1982"} | FSD Avadi
+[2026-01-04 17:49:22] User -> DCP Edit ->admin@pds| Requested JSON -> {"name":"SILO Elavur","uniqueid":"DCP_695a59f199a","active":"1","type":"FCI","latitude":"13.45583451","longitude":"80.11781928","demand_frice":"10","district":"Thiruvallur","id":"SE14003","demand":"250000","demand_rice":"1000"}
