@@ -143,13 +143,13 @@ else{
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Procurement of FRice in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offset of FRice in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand_frice" name="demand_frice" value="<?php echo $demand_rice ?>" required />
                                                     </div>
-                                                    <span class="help-block">Procurement in Quintals</span>
+                                                    <span class="help-block">Offset in Quintals</span>
                                                 </div>
                                             </div>	
 											
@@ -180,23 +180,23 @@ else{
                                             </div>
 											
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Procurement of Rice in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offset of Rice in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand" name="demand" value="<?php echo $demand ?>" required />
                                                     </div>
-                                                    <span class="help-block">Procurement in Quintals</span>
+                                                    <span class="help-block">Offset in Quintals</span>
                                                 </div>
                                             </div>
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Procurement of Wheat in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offset of Wheat in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand_rice" name="demand_rice" value="<?php echo $demand_rice ?>" required />
                                                     </div>
-                                                    <span class="help-block">Procurement in Quintals</span>
+                                                    <span class="help-block">Offset in Quintals</span>
                                                 </div>
                                             </div>											
                                         </div>

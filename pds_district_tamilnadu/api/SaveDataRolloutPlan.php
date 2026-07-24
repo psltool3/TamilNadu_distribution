@@ -1,6 +1,6 @@
 <?php
 require('../util/Connection.php');
-require('../util/SessionCheck.php');
+require('../util/SessionFunction.php');
 require('../util/Logger.php');
 
 require('Header.php');

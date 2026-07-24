@@ -77,40 +77,42 @@ require('Header.php');
                                         <tbody id="table_body">
 										<?php
 										
-										$query = "SELECT * FROM optimised_table WHERE 1";
+										$query = "SELECT * FROM optimised_table ORDER BY last_updated ASC";
 										$result = mysqli_query($con,$query);
 										$numrows = mysqli_num_rows($result);
 										while($row = mysqli_fetch_assoc($result))
 										{
 											$temp_id = (string)$row['id'];
 											$month = $row['month'];
+											$app_month = (!empty($row['applicable'])) ? $row['applicable'] : $row['month'];
 											
+											$id_leg1 = "";
 											$query_leg1 = "SELECT * FROM optimised_table_leg1 WHERE month='$month'";
 											$result_leg1 = mysqli_query($con,$query_leg1);
-											$numrows_leg1 = mysqli_num_rows($result_leg1);
-											if($numrows_leg1>0){
+											if($result_leg1 && mysqli_num_rows($result_leg1)>0){
 												$row_leg1 = mysqli_fetch_assoc($result_leg1);
 												$id_leg1 = $row_leg1['id'];
-												echo "<tr>
-												
-												<td style='text-align: center; text-transform: capitalize;'>{$row['year']}</td>
-												<td style='text-align: center; text-transform: capitalize;'>{$row['month']}</td>
-												<td style='text-align: center; text-transform: capitalize;'>{$row['applicable']}</td>
-												<td style='text-align: center;'>
-													<button class='btn btn-info btn-rounded' onclick=\"warehouse_open('{$temp_id}','{$id_leg1}')\">View Warehouses</button>
-												</td>
-												<td style='text-align: center;'>
-													<button class='btn btn-warning btn-rounded' onclick=\"fps_open('{$temp_id}','{$id_leg1}')\">View FPS</button>
-												</td>
-												<td style='text-align: center;'>
-													<button class='btn btn-danger btn-rounded' onclick=\"optimised_open('{$temp_id}','{$id_leg1}')\">View Data</button>
-												</td>
-												<td style='text-align: center;'>
-													<button class='btn btn-success btn-rounded' onclick=\"generate_report('{$temp_id}','{$id_leg1}')\">View Report</button>
-												</td>
-												
-												</tr>";
 											}
+
+											echo "<tr>
+											
+											<td style='text-align: center; text-transform: capitalize;'>{$row['year']}</td>
+											<td style='text-align: center; text-transform: capitalize;'>{$row['month']}</td>
+											<td style='text-align: center; text-transform: capitalize;'>{$app_month}</td>
+											<td style='text-align: center;'>
+												<button class='btn btn-info btn-rounded' onclick=\"warehouse_open('{$temp_id}','{$id_leg1}')\">View Warehouses</button>
+											</td>
+											<td style='text-align: center;'>
+												<button class='btn btn-warning btn-rounded' onclick=\"fps_open('{$temp_id}','{$id_leg1}')\">View FPS</button>
+											</td>
+											<td style='text-align: center;'>
+												<button class='btn btn-danger btn-rounded' onclick=\"optimised_open('{$temp_id}','{$id_leg1}')\">View Data</button>
+											</td>
+											<td style='text-align: center;'>
+												<button class='btn btn-success btn-rounded' onclick=\"generate_report('{$temp_id}','{$id_leg1}')\">View Report</button>
+											</td>
+											
+											</tr>";
              							}
 
 										?>

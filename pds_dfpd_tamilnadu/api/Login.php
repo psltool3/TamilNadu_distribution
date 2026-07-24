@@ -29,7 +29,7 @@ if(empty($row)){
 
 $dbHashedPassword = $row['password'];
 if(password_verify($person->getPassword(), $dbHashedPassword)){
- if($row['role']=="admin"){
+ if($row['role']=="dfpd"){
 		$count = 1 + $row['count'];
 		$uniqueId = uniqid();
 		$authToken = md5($uniqueId);
@@ -43,6 +43,9 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 		mysqli_close($con);
 		 echo "<script>window.location.href = '../OptimisedDataAll.php';</script>";
     }
+	else{
+		echo "Only:DFPD is allowed";
+	}
 } 
 else{
     echo "Error : Password or Username is incorrect";

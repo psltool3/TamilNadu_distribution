@@ -2,43 +2,46 @@
 require('../util/Connection.php');
 require('../structures/Login.php');
 
-require('Header.php');
-
-$newpassword = $_POST['newpassword'];
-$confirmpassword = $_POST['confirmpassword'];
-
-if($newpassword=="" || $confirmpassword==""){
-	echo "Error : Password is Empty";
-	return;
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
-if($newpassword!=$confirmpassword){
-	echo "Error : Both Password doesn't match";
-	return;
+
+$username = $_POST['username'] ?? '';
+$oldpassword = $_POST['oldpassword'] ?? '';
+$newpassword = $_POST['newpassword'] ?? '';
+$confirmpassword = $_POST['confirmpassword'] ?? '';
+
+if(empty($username) || empty($oldpassword) || empty($newpassword) || empty($confirmpassword)){
+	echo "Error: All fields are required.";
+	exit;
+}
+
+if($newpassword !== $confirmpassword){
+	echo "Error: Both Passwords don't match.";
+	exit;
 }
 
 $person = new Login;
-$person->setUsername($_POST["username"]);
-$person->setPassword($_POST["oldpassword"]);
+$person->setUsername($username);
+$person->setPassword($oldpassword);
 
-if($_SESSION['user']!=$person->getUsername()){
-	echo "User is logged in with different username and password";
-	return;
-}
+$username_safe = mysqli_real_escape_string($con, $person->getUsername());
+$query = "SELECT * FROM login WHERE username='$username_safe'";
+$result = mysqli_query($con, $query);
 
-$query = "SELECT * FROM login WHERE username='".$person->getUsername()."' AND password='".$person->getPassword()."'";
-$result = mysqli_query($con,$query);
-$numrows = mysqli_num_rows($result);
+if (!$result || mysqli_num_rows($result) == 0) {
+	echo "Error: Username or Old Password is incorrect.";
+} else {
+	$row = mysqli_fetch_assoc($result);
+	if (password_verify($oldpassword, $row['password']) || $oldpassword === $row['password']) {
+		$hashedNewPassword = password_hash($newpassword, PASSWORD_DEFAULT);
+		$queryUpdate = "UPDATE login SET password='$hashedNewPassword' WHERE username='$username_safe'";
+		mysqli_query($con, $queryUpdate);
 
-if($numrows == 0){
-	echo "Error : Old Password and username is incorrect";
-}
-else if($numrows > 0){
-	$query1 = "UPDATE login SET password='$newpassword' WHERE 1";
-	mysqli_query($con,$query1);
-
-	mysqli_close($con);
-	echo "<script>window.location.href = '../Login.php';</script>";
-
+		mysqli_close($con);
+		echo "<script>alert('Password updated successfully!'); window.location.href = '../AdminLogin.html';</script>";
+	} else {
+		echo "Error: Username or Old Password is incorrect.";
+	}
 }
 ?>
-<?php require('Fullui.php');  ?>

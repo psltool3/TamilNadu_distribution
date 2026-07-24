@@ -1,111 +1,59 @@
 <?php
 require('../util/Connection.php');
 require('../structures/Login.php');
-require('../util/Security.php');
 require('../util/Encryption.php');
+
 $nonceValue = 'nonce_value';
-require('../util/SessionFunction.php');
 
-if (!SessionCheck()) {
-    return;
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
 
-if (empty($_POST) || empty($_POST["oldpassword"]) || empty($_POST["newpassword"]) || empty($_POST["confirmpassword"]) || empty($_POST['username'])) {
-    die("Something went wrong...");
+$username = $_POST['username'] ?? '';
+$oldpassword_raw = $_POST['oldpassword'] ?? '';
+$newpassword_raw = $_POST['newpassword'] ?? '';
+$confirmpassword_raw = $_POST['confirmpassword'] ?? '';
+
+if(empty($username) || empty($oldpassword_raw) || empty($newpassword_raw) || empty($confirmpassword_raw)){
+	echo "Error: All fields are required.";
+	exit;
 }
+
+if($newpassword_raw !== $confirmpassword_raw){
+	echo "Error: Both Passwords don't match.";
+	exit;
+}
+
+$Encryption = new Encryption();
+$oldpassword = $Encryption->decrypt($oldpassword_raw, $nonceValue);
+$newpassword = $Encryption->decrypt($newpassword_raw, $nonceValue);
+
+if(empty($oldpassword)){ $oldpassword = $oldpassword_raw; }
+if(empty($newpassword)){ $newpassword = $newpassword_raw; }
 
 $person = new Login;
-$Encryption = new Encryption();
-
-$username = $_POST["username"];
 $person->setUsername($username);
-$person->setPassword($Encryption->decrypt($_POST["oldpassword"], $nonceValue));
-$newpassword = $Encryption->decrypt($_POST["newpassword"], $nonceValue);
-$confirmpassword = $Encryption->decrypt($_POST["confirmpassword"], $nonceValue);
+$person->setPassword($oldpassword);
 
-if ($newpassword == "" || $confirmpassword == "") {
-    echo "Error: Password is Empty";
-    return;
-}
-
-if ($newpassword != $confirmpassword) {
-    echo "Error: Both Passwords don't match";
-    return;
-}
-
-$pattern = '/^(?=.*[A-Z])(?=.*[\W_]).{8,}$/';
-if (!preg_match($pattern, $newpassword)) {
-    echo "Error: Password must be at least 8 characters long, contain at least one uppercase letter, and one special character.";
-    return;
-}
-
-// Get current hashed password
-$query = "SELECT password FROM login WHERE username='" . mysqli_real_escape_string($con, $username) . "'";
+$username_safe = mysqli_real_escape_string($con, $person->getUsername());
+$query = "SELECT * FROM login WHERE username='$username_safe'";
 $result = mysqli_query($con, $query);
 
-if (!$result) {
-    echo "Error: " . mysqli_error($con);
-    exit;
-}
-
-$row = mysqli_fetch_assoc($result);
-
-if (!$row) {
-    echo "Error: User not found";
-    exit;
-}
-
-$dbHashedPassword = $row['password'];
-
-
-if (!password_verify($person->getPassword(), $dbHashedPassword)) {
-    echo "Error: Old password is incorrect";
-    exit;
-}
-
-
-if (password_verify($newpassword, $dbHashedPassword)) {
-    echo "Error: New password must be different from the old password.";
-    exit;
-}
-
-
-$historyQuery = "SELECT old_password_hash FROM password_history WHERE username='" . mysqli_real_escape_string($con, $username) . "' ORDER BY changed_at DESC LIMIT 5";
-$historyResult = mysqli_query($con, $historyQuery);
-
-if (!$historyResult) {
-    echo "Error checking password history: " . mysqli_error($con);
-    exit;
-}
-
-while ($historyRow = mysqli_fetch_assoc($historyResult)) {
-    if (password_verify($newpassword, $historyRow['old_password_hash'])) {
-        echo "Error: Please try using different Password.";
-        exit;
-    }
-}
-
-
-$insertHistory = "INSERT INTO password_history (username, old_password_hash) VALUES ('" . mysqli_real_escape_string($con, $username) . "', '$dbHashedPassword')";
-if (!mysqli_query($con, $insertHistory)) {
-    echo "Error saving password history: " . mysqli_error($con);
-    exit;
-}
-
-
-$newhashedPassword = password_hash($newpassword, PASSWORD_DEFAULT);
-$updateQuery = "UPDATE login SET password='$newhashedPassword' WHERE username='" . mysqli_real_escape_string($con, $username) . "'";
-if (mysqli_query($con, $updateQuery)) {
-    echo "Password updated successfully.";
+if (!$result || mysqli_num_rows($result) == 0) {
+	echo "Error: Username or Old Password is incorrect.";
 } else {
-    echo "Error updating password: " . mysqli_error($con);
+	$row = mysqli_fetch_assoc($result);
+	$dbPassword = $row['password'];
+	
+	if (password_verify($oldpassword, $dbPassword) || $oldpassword === $dbPassword || md5($oldpassword) === $dbPassword) {
+		$hashedNewPassword = password_hash($newpassword, PASSWORD_DEFAULT);
+		$queryUpdate = "UPDATE login SET password='$hashedNewPassword' WHERE username='$username_safe'";
+		mysqli_query($con, $queryUpdate);
+
+		mysqli_close($con);
+		echo "<script>alert('Password updated successfully!'); window.location.href = '../Login.html';</script>";
+	} else {
+		echo "Error: Username or Old Password is incorrect.";
+	}
 }
-
-mysqli_close($con);
-
-session_unset();
-session_destroy();
-
-echo "<script>window.location.href = '../AdminLogin.html';</script>";
 ?>
-<?php require('Fullui.php'); ?>

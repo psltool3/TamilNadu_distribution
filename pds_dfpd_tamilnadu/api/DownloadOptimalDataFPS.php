@@ -15,35 +15,58 @@ if (isset($_GET['format'])) {
     $columns = ["district","name","id","type","latitude","longitude","demand","demand_rice","demand_frice"];
 	$columnsName = ["district","name","id","type","latitude","longitude","Allocation Wheat","Allocation Rice","Allocation_FRice"];
     $tablename = $_GET['tableName'];
+    $district = isset($_GET['district']) ? $_GET['district'] : '';
+
+    $whereClause = " WHERE 1";
+    if (!empty($district) && $district != "all") {
+        $district_escaped = mysqli_real_escape_string($con, $district);
+        $whereClause = " WHERE district='$district_escaped'";
+    }
+
 	$tableData = array();
     array_push($tableData,$columnsName);
 
-	$query = "SELECT * FROM ".$tablename." WHERE 1";
+	$query = "SELECT * FROM ".$tablename . $whereClause;
     $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
+    $numrows = $result ? mysqli_num_rows($result) : 0;
     
     if($numrows>0){
-        while($row = mysqli_fetch_array($result)){
+        while($row = mysqli_fetch_assoc($result)){
+            $lat = isset($row["latitude"]) ? $row["latitude"] : '';
+            $lng = isset($row["longitude"]) ? $row["longitude"] : '';
+            $dWheat = isset($row["demand"]) && $row["demand"] !== '' ? $row["demand"] : '0';
+            $dRice = isset($row["demand_rice"]) && $row["demand_rice"] !== '' ? $row["demand_rice"] : '0';
+            $dFRice = isset($row["demand_frice"]) && $row["demand_frice"] !== '' ? $row["demand_frice"] : '0';
+
+            if (isset($row["Allocation_Wheat"]) && is_numeric($row["Allocation_Wheat"]) && floatval($row["Allocation_Wheat"]) < 40) {
+                $lat = $row["Allocation_Wheat"];
+                $lng = isset($row["Allocation_Rice"]) ? $row["Allocation_Rice"] : '';
+                $dWheat = isset($row["Allocation_FRice"]) ? $row["Allocation_FRice"] : '0';
+                $dRice = isset($row["latitude"]) ? $row["latitude"] : '0';
+                $dFRice = isset($row["demand_frice"]) ? $row["demand_frice"] : '0';
+            }
+
+            $mapped = array(
+                "district" => isset($row["district"]) ? $row["district"] : '',
+                "name" => isset($row["name"]) ? $row["name"] : '',
+                "id" => isset($row["id"]) ? $row["id"] : '',
+                "type" => isset($row["type"]) ? $row["type"] : '',
+                "latitude" => $lat,
+                "longitude" => $lng,
+                "demand" => $dWheat,
+                "demand_rice" => $dRice,
+                "demand_frice" => $dFRice
+            );
+
             $temp = array();
             for($i=0;$i<count($columns);$i++){
-                if($columns[$i]=="from_id"){
-                    if(strlen($row["new_id"])>0 and $row["approve"]=="yes"){
-                        array_push($temp,$row["new_id"]);
-                    }
-                    else{
-                        array_push($temp,$row[$columns[$i]]);
-                    }
-                }
-                else{            
-                    array_push($temp,$row[$columns[$i]]);
-                }
+                $colKey = $columns[$i];
+                array_push($temp, isset($mapped[$colKey]) ? $mapped[$colKey] : '');
             }
             array_push($tableData,$temp);
         }
     }
 	
-	
-    
     // Filename for the downloaded file
     $filename = 'table_data';
 
@@ -60,69 +83,25 @@ if (isset($_GET['format'])) {
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            // Set column names as the first row
-            $columnIndex = 1;
-            /*foreach ($columns as $columnName) {
-                $sheet->setCellValueByColumnAndRow($columnIndex, 1, $columnName);
-                $columnIndex++;
-            }*/
+            // Populate the spreadsheet with data
+            $sheet->fromArray($tableData, null, 'A1');
 
-            // Insert data tableData
-            $rowIndex = 1;
-            foreach ($tableData as $rowData) {
-                $columnIndex = 1;
-                foreach ($rowData as $value) {
-                    $sheet->setCellValueByColumnAndRow($columnIndex, $rowIndex, $value);
-                    $columnIndex++;
-                }
-                $rowIndex++;
-            }
+            // Set headers for download
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $filename . '.xlsx"');
 
-
-            header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
-            header('Cache-Control: max-age=0');
-
+            // Output the spreadsheet to the browser
             $writer = new Xlsx($spreadsheet);
             $writer->save('php://output');
             break;
 
-        case 'pdf':
-            require('fpdf/fpdf.php');
-
-            $pdf = new FPDF();
-            $pdf->AddPage();
-            $pdf->SetFont('Arial', 'B', 0);
-
-            // Highlight the first row as header
-            $pdf->SetFillColor(200, 220, 255); // Set background color
-            $pdf->SetTextColor(0); // Reset text color
-            $case = 0;
-			$pdf->SetFont('helvetica', '', 7); // Font family, style (empty for regular), and size (8)
-            foreach ($tableData as $row) {
-                foreach ($row as $col) {
-                    $pdf->Cell(22, 5, $col, 1, 0, 'C', true);
-                }
-                $pdf->Ln();
-                $pdf->SetFillColor(255, 255, 255); 
-            }
-
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
-            echo $pdf->Output('S');
-            break;
-
         default:
-            echo 'Error : Invalid format specified.';
+            echo 'Invalid format specified.';
             break;
     }
-} else {
-    echo 'Error : Please specify a format in the GET request (e.g., ?format=pdf).';
 }
 
-
-
-// Function to output CSV data
+// Function to output data as CSV
 function outputCSV($data) {
     $output = fopen('php://output', 'w');
     foreach ($data as $row) {
@@ -130,5 +109,4 @@ function outputCSV($data) {
     }
     fclose($output);
 }
-
-//exit();
+?>

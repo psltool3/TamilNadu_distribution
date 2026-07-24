@@ -8,23 +8,31 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
+function is_valid_table($con, $t) {
+    if (empty($t)) return false;
+    $chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $t) . "'");
+    return ($chk && mysqli_num_rows($chk) > 0);
+}
+
 // Check if format is specified in GET request
 if (isset($_GET['format'])) {
     $format = $_GET['format'];
     
     $columns = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 	
-    $tablename = $_GET['tableName'];
-    $tablename1 = $_GET['tableName1'];
+    $tablename = isset($_GET['tableName']) ? $_GET['tableName'] : '';
+    $tablename1 = isset($_GET['tableName1']) ? $_GET['tableName1'] : $tablename;
+    $district = isset($_GET['district']) ? $_GET['district'] : '';
+    
+    $whereClause = " WHERE 1";
+    if(!empty($district) && $district != "all"){
+        $district_escaped = mysqli_real_escape_string($con, $district);
+        $whereClause = " WHERE to_district='$district_escaped'";
+    }
+
 	$tableData = array();
     array_push($tableData,$columns);
 
-    $query = "SELECT * FROM ".$tablename." WHERE 1";
-    $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
-    
-    if($numrows>0){
-        while($row = mysqli_fetch_array($result)){
 			if($row['new_id_admin']!=null or $row['new_id_admin']!=""){
 				$id = $row['new_id_admin'];
 				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";

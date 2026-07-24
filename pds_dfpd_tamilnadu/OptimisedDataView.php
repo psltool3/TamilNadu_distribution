@@ -3,21 +3,51 @@ require('util/Connection.php');
 require('util/SessionCheck.php');
 require('Header.php');
 
-$id = $_POST['id'];
-$tablename = "optimiseddata_".$id;
-$tablename1 = "optimiseddata_".$id;
+$id = "";
+if (isset($_POST['id']) && !empty($_POST['id'])) {
+    $id = $_POST['id'];
+} else if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
+    $result = mysqli_query($con, $query);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $id = $row["id"];
+    }
+}
+$id = preg_replace('/[^a-zA-Z0-9_-]/', '', $id);
+
+function get_safe_opt_table($con, $prefix, $id_val) {
+    if (empty($id_val)) return '';
+    $id_val = preg_replace('/[^a-zA-Z0-9_-]/', '', $id_val);
+    $id_lower = strtolower($id_val);
+    
+    $chk1 = mysqli_query($con, "SHOW TABLES LIKE '" . $prefix . mysqli_real_escape_string($con, $id_val) . "'");
+    if ($chk1 && mysqli_num_rows($chk1) > 0) {
+        return $prefix . $id_val;
+    }
+    $chk2 = mysqli_query($con, "SHOW TABLES LIKE '" . $prefix . mysqli_real_escape_string($con, $id_lower) . "'");
+    if ($chk2 && mysqli_num_rows($chk2) > 0) {
+        return $prefix . $id_lower;
+    }
+    return '';
+}
+
+$tablename = get_safe_opt_table($con, "optimiseddata_", $id);
+$tablename1 = $tablename;
 $leg = 0;
 if(isset($_POST['step'])){
 	if($_POST['step']=="leg1"){
 		$leg = 1;
-		$tablename = "optimiseddata_leg1_".$id;
-		$tablename1 = "optimiseddata_leg1_".$id;
+		$tablename = get_safe_opt_table($con, "optimiseddata_leg1_", $id);
+		$tablename1 = $tablename;
 	}
 	if($_POST['step']=="all"){
 		$leg = 2;
-		$leg_id = $_POST['legid'];
-		$tablename = "optimiseddata_".$id;
-		$tablename1 = "optimiseddata_leg1_".$leg_id;
+		$leg_id = isset($_POST['legid']) ? $_POST['legid'] : '';
+		$tablename = get_safe_opt_table($con, "optimiseddata_", $id);
+		$tablename1 = get_safe_opt_table($con, "optimiseddata_leg1_", $leg_id);
 	}
 }
 
@@ -122,7 +152,7 @@ if(isset($_POST['step'])){
 													<option value='all'>All</option>
 												</select>
 												</div>
-												<span class="help-block">All option will work only for download</span>
+												<span class="help-block">Select a specific district or 'All' for state-wide data</span>
 											</div>
 										</div>
 									</div>

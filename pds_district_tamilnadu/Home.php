@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require('util/Connection.php');
 require('util/SessionCheck.php');
 require('Header.php');
@@ -112,6 +112,11 @@ if($currentTimestamp >= $targetTimestamp) {
 	/* Apply background color to even rows */
 	#export_table tbody tr:nth-child(even) {
 		background-color: #FFCF8B;
+	}
+
+	select.form-control, select.form-control option {
+		color: #000000 !important;
+		background-color: #ffffff !important;
 	}
 
 </style>
@@ -280,7 +285,8 @@ if($currentTimestamp >= $targetTimestamp) {
 												<th style="font-size:16px">District Suggested Warehouse</th>
 												<th style="font-size:16px">District Reason for not Approve</th>
 												<th style="font-size:16px">District Suggested Warehouse Distance</th>
-												<th style="font-size:16px">Admin Approved</th>										
+												<th style="font-size:16px">Admin Approved</th>
+												<th style="font-size:16px">Action</th>
                                             </tr>
                                         </thead>
 										<tbody id="table_body">
@@ -462,8 +468,8 @@ if($currentTimestamp >= $targetTimestamp) {
 							alert("New Id " + String(value) + " Reason needs to be selected");
 							return;
 						}
-						if(!modifiedDistanceData.hasOwnProperty(key + "_iddistance")){
-							alert("New Id " + String(value) + " distance needs to be filled");
+						if(!modifiedDistanceData.hasOwnProperty(key + "_iddistance") || modifiedDistanceData[key + "_iddistance"] === undefined || modifiedDistanceData[key + "_iddistance"] === null || modifiedDistanceData[key + "_iddistance"].trim() === "" || isNaN(modifiedDistanceData[key + "_iddistance"]) || Number(modifiedDistanceData[key + "_iddistance"]) < 0){
+							alert("New Id " + String(value) + " distance must be a valid non-negative numeric value (0 or greater)");
 							return;
 						}
 					}
@@ -479,6 +485,105 @@ if($currentTimestamp >= $targetTimestamp) {
 			for (let i = 0; i < uniqueid_bool_array.length; i++) {
 				setSelectedValue(uniqueid_bool_array[i],'yes');
 				enableDisable(uniqueid_bool_array[i].substring(0, uniqueid_bool_array[i].indexOf('_bool')));
+			}
+		}
+
+		function saveRowData(fromId, toId, commodity, uniqueid) {
+			var boolElem = document.getElementById(uniqueid + "_bool");
+			if (!boolElem) {
+				alert("Cannot find review options for this row.");
+				return;
+			}
+			
+			var boolVal = boolElem.value;
+			if (boolVal === "" || boolVal === null) {
+				alert("Please select 'Agree' or 'Change ID' before saving.");
+				return;
+			}
+			
+			var newId = "";
+			var reason = "";
+			var distance = "";
+			
+			if (boolVal === "no") {
+				var idElem = document.getElementById(uniqueid);
+				var reasonElem = document.getElementById(uniqueid + "_idreason");
+				var distanceElem = document.getElementById(uniqueid + "_iddistance");
+				
+				newId = idElem ? idElem.value : "";
+				reason = reasonElem ? reasonElem.value : "";
+				distance = distanceElem ? distanceElem.value : "";
+				
+				if (newId === "") {
+					alert("New Id needs to be selected");
+					return;
+				}
+				if (reason === "") {
+					alert("Reason needs to be selected");
+					return;
+				}
+				if (distance === "" || distance.trim() === "" || isNaN(distance) || Number(distance) < 0) {
+					alert("Distance must be a valid non-negative numeric value (0 or greater)");
+					return;
+				}
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "api/SaveRowData.php",
+				data: {
+					fromid: fromId,
+					toid: toId,
+					commodity: commodity,
+					approve_bool: boolVal,
+					new_id_district: newId,
+					reason_district: reason,
+					new_distance_district: distance
+				},
+				cache: false,
+				success: function(response) {
+					location.reload();
+				},
+				error: function() {
+					alert("Error saving row data. Please try again.");
+				}
+			});
+		}
+
+		function resetRowData(fromId, toId, commodity, uniqueid) {
+			if (confirm("Are you sure you want to reset this item?")) {
+				if (modifiedData.hasOwnProperty(uniqueid)) {
+					delete modifiedData[uniqueid];
+				}
+				if (modifiedIdData.hasOwnProperty(uniqueid)) {
+					delete modifiedIdData[uniqueid];
+				}
+				if (modifiedReasonData.hasOwnProperty(uniqueid + "_idreason")) {
+					delete modifiedReasonData[uniqueid + "_idreason"];
+				}
+				if (modifiedDistanceData.hasOwnProperty(uniqueid + "_iddistance")) {
+					delete modifiedDistanceData[uniqueid + "_iddistance"];
+				}
+				if (modifiedApproveData.hasOwnProperty(uniqueid + "_approve")) {
+					delete modifiedApproveData[uniqueid + "_approve"];
+				}
+
+				$.ajax({
+					type: "POST",
+					url: "api/ResetRowData.php",
+					data: {
+						fromid: fromId,
+						toid: toId,
+						commodity: commodity
+					},
+					cache: false,
+					success: function(response) {
+						location.reload();
+					},
+					error: function() {
+						alert("Error resetting row data. Please try again.");
+					}
+				});
 			}
 		}
 		document.getElementById('downloadCSV').addEventListener('click', async function() {
@@ -733,7 +838,7 @@ if($currentTimestamp >= $targetTimestamp) {
 									}
 									
 									if(distance_district==null || distance_district==""){
-										var newdistance = "<td><input type='text' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
+										var newdistance = "<td><input type='text' oninput='this.value = this.value.replace(/[^0-9.]/g, \"\").replace(/(\\..*?)\\..*/g, \"$1\"); handleDistanceChange(\"" + uniqueid_iddistance + "\")' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
 									}
 									else{
 										var newdistance = "<td>" + distance_district + "</td>"
@@ -747,7 +852,18 @@ if($currentTimestamp >= $targetTimestamp) {
 
 									}
 									
-									$('#table_body').append(subpart1 + warehouse_id_part + district_reason + newdistance  + admin_approve + "</tr>");
+									var isExpired = <?php echo $expired; ?>;
+									var isApproved = (approve_admin !== "");
+									var saveDisabled = (isExpired == 1 || isApproved || approve_district == "yes") ? "disabled" : "";
+									var resetDisabled = (isExpired == 1 || isApproved) ? "disabled" : "";
+									
+									var toIdVal = obj[datafield]["to_id"] !== undefined && obj[datafield]["to_id"] !== null ? obj[datafield]["to_id"] : obj[datafield]["to"];
+									var action_buttons = "<td>" +
+										"<button type='button' class='btn btn-primary' style='margin-right:5px;' " + saveDisabled + " onclick='saveRowData(\"" + obj[datafield]["from_id"] + "\", \"" + toIdVal + "\", \"" + obj[datafield]["commodity"] + "\", \"" + uniqueid + "\")'>Save</button>" +
+										"<button type='button' class='btn btn-warning' " + resetDisabled + " onclick='resetRowData(\"" + obj[datafield]["from_id"] + "\", \"" + toIdVal + "\", \"" + obj[datafield]["commodity"] + "\", \"" + uniqueid + "\")'>Reset</button>" +
+										"</td>";
+									
+									$('#table_body').append(subpart1 + warehouse_id_part + district_reason + newdistance  + admin_approve + action_buttons + "</tr>");
 								}
 							}
 							//fetchCardDataFromServer();							

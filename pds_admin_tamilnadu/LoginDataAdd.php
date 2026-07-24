@@ -3,18 +3,24 @@ require('util/Connection.php');
 require('util/SessionCheck.php');
 require('Header.php');
 ?>
-  <script src="crypto-js/crypto-js.js"></script>
-  <script src="js/Encryption.js"></script>
+<script src="crypto-js/crypto-js.js"></script>
+<script src="js/Encryption.js"></script>
 
 <script>
-    function verifyCaptcha() {
-        var readableString = document.getElementById("password").value;
-        var nonceValue = 'nonce_value';
-        let encryption = new Encryption();
-        var encrypted = encryption.encrypt(readableString, nonceValue);
-        document.getElementById("password").value = encrypted;
-    }
- </script>
+	function verifyCaptcha() {
+		var readableString = document.getElementById("password").value;
+		var readableNewPassword = document.getElementById("newpassword").value;
+		var nonceValue = "nonce_value";
+		let encryption = new Encryption();
+		
+		var encrypted = encryption.encrypt(readableString, nonceValue);
+		document.getElementById("password").value = encrypted;
+
+		var encryptedNew = encryption.encrypt(readableNewPassword, nonceValue);
+		document.getElementById("newpassword").value = encryptedNew;
+	}
+</script>
+
 
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
@@ -60,9 +66,9 @@ require('Header.php');
                                                    <div class="input-group">
 												   <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                     <select class="form-control" id="district" name="district">
-														<!--<option value="admin">Admin</option>-->
-														<option value="state">State</option>
+														<option value="admin">Admin</option>
                                                         <option value="fci">FCI</option>
+                                                        <option value="dfpd">DFPD</option>
                                                     </select>
 													</div>
                                                     <span class="help-block">District Name/Admin Role</span>

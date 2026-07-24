@@ -1,26 +1,30 @@
 <?php
 require('../util/Connection.php');
 
-if(empty($_POST) || empty($_POST['district']) || empty($_POST['tablename'])){
+if(empty($_POST) || empty($_POST['tablename'])){
 	die("Something went wrong...");
 }
 
-$district = $_POST['district'];
+$district = isset($_POST['district']) ? $_POST['district'] : '';
 $tablename = $_POST['tablename'];
 
-$query = "SELECT * FROM ".$tablename." WHERE district='$district'";
+$whereClause = " WHERE 1";
+if(!empty($district) && $district != "all"){
+	$district_escaped = mysqli_real_escape_string($con, $district);
+	$whereClause = " WHERE district='$district_escaped'";
+}
+
+$query = "SELECT * FROM ".$tablename . $whereClause;
 $result = mysqli_query($con,$query);
-$numrows = mysqli_num_rows($result);
-$data = null;
+$data = array();
 
-while($row = mysqli_fetch_assoc($result)){
-	$data[] = $row;
+if($result){
+	while($row = mysqli_fetch_assoc($result)){
+		$data[] = $row;
+	}
 }
 
-$resultarray = [];
-if($data==null){
-	$data = array();
-}
+$resultarray = array();
 $resultarray["data"] = $data;
 echo json_encode($resultarray);
 ?>

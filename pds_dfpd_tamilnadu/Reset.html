@@ -61,7 +61,7 @@
             <div class="login-box animated fadeInDown">
 			     <div class="login-body">
                     <div class="login-title"><strong>Welcome</strong>, Reset Password</div>
-                    <form action="api/Reset.php" class="form-horizontal" method="post" autocomplete="off">
+                    <form action="api/Reset.php" class="form-horizontal" method="post" autocomplete="off" onsubmit="return verifyCaptcha()">
 					<div class="form-group">
                         <div class="col-md-12">
                             <input type="text" id="username" name="username" class="form-control" placeholder="Username"/>

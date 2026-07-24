@@ -66,15 +66,15 @@ if(!isValidCoordinate($_POST["latitude"],'latitude') or !isValidCoordinate($_POS
 }
 
 if(!isStringNumber($_POST["demand"])){
-	echo "Error : Check Procurement Wheat Value";
+	echo "Error : Check Offset Wheat Value";
 	exit();
 }
 if(!isStringNumber($_POST["demand_rice"])){
-	echo "Error : Check Procurement Rice Value";
+	echo "Error : Check Offset Rice Value";
 	exit();
 }
 if(!isStringNumber($_POST["demand_frice"])){
-	echo "Error : Check Procurement FRice Value";
+	echo "Error : Check Offset FRice Value";
 	exit();
 }
 

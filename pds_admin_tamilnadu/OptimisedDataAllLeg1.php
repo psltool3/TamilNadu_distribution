@@ -76,15 +76,16 @@ require('Header.php');
                                         <tbody id="table_body">
 										<?php
 										
-										$query = "SELECT * FROM optimised_table_leg1 WHERE 1";
+										$query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated ASC";
 										$result = mysqli_query($con,$query);
 										$numrows = mysqli_num_rows($result);
 										while($row = mysqli_fetch_array($result))
 										{
 											$temp_id = (string)$row['id'];
+											$app_month = (!empty($row['applicable'])) ? $row['applicable'] : $row['month'];
 											echo "<tr><td>{$row['year']}</td>".
 											 "<td>{$row['month']}</td>".
-											 "<td>{$row['applicable']}</td>".
+											 "<td>{$app_month}</td>".
 											 "<td> <button class='btn btn-info btn-rounded' onclick=\"warehouse_open('{$temp_id}')\">View Warehouses</button></td>".
              								 "<td> <button class='btn btn-warning btn-rounded' onclick=\"fps_open('{$temp_id}')\">View FPS</button></td>".
              								 "<td> <button class='btn btn-danger btn-rounded' onclick=\"optimised_open('{$temp_id}')\">View Data</button></td></tr>";

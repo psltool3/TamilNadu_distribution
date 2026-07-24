@@ -3,8 +3,43 @@ require('util/Connection.php');
 require('util/SessionCheck.php');
 require('Header.php');
 
-$id = $_POST['id'];
-$tablename = "dcp_".$id;
+$id = "";
+if (isset($_POST['id']) && !empty($_POST['id'])) {
+    $id = $_POST['id'];
+} else if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    $query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated DESC LIMIT 1";
+    $result = mysqli_query($con, $query);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $id = $row["id"];
+    }
+}
+$id = preg_replace('/[^a-zA-Z0-9_-]/', '', $id);
+$id_lower = strtolower($id);
+
+$tablename = "dcp";
+if (!empty($id)) {
+    $candidates = [
+        "fci_leg1_" . $id,
+        "fci_leg1_" . $id_lower,
+        "dcp_leg1_" . $id,
+        "dcp_leg1_" . $id_lower,
+        "fci_" . $id,
+        "fci_" . $id_lower,
+        "dcp_" . $id,
+        "dcp_" . $id_lower,
+        "dcp"
+    ];
+    foreach ($candidates as $cand) {
+        $chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $cand) . "'");
+        if ($chk && mysqli_num_rows($chk) > 0) {
+            $tablename = $cand;
+            break;
+        }
+    }
+}
 
 ?>
 <style>
@@ -45,16 +80,27 @@ $tablename = "dcp_".$id;
                                 <div class="panel-body">
                                  <div class="table-responsive">
                                     <table id="export_table" class="table datatable">
+										<?php
+										$has_storage = false;
+										$chk_col = mysqli_query($con, "SHOW COLUMNS FROM " . mysqli_real_escape_string($con, $tablename) . " LIKE 'storage'");
+										if ($chk_col && mysqli_num_rows($chk_col) > 0) {
+											$has_storage = true;
+										}
+										?>
                                         <thead>
                                             <tr>
 												<th style="font-size:16px">District</th>
-												<th style="font-size:16px">Name of DCP</th>
-												<th style="font-size:16px">DCP ID</th>
-												<th style="font-size:16px">Type of DCP</th>
+												<th style="font-size:16px">Name of FCI</th>
+												<th style="font-size:16px">FCI ID</th>
+												<th style="font-size:16px">Type of FCI</th>
 												<th style="font-size:16px">Latitude</th>
 												<th style="font-size:16px">Longitude</th>
-												<th style="font-size:16px">Rice Procurement(Qtl)</th>
-												<th style="font-size:16px">Wheat Procurement(Qtl)</th>
+										<?php if ($has_storage) { ?>
+												<th style="font-size:16px">Storage Capacity(Qtl)</th>
+										<?php } else { ?>
+												<th style="font-size:16px">Offset of Wheat(Qtl)</th>
+												<th style="font-size:16px">Offset of Rice(Qtl)</th>
+										<?php } ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -65,15 +111,29 @@ $tablename = "dcp_".$id;
 										$numrows = mysqli_num_rows($result);
 										while($row = mysqli_fetch_array($result))
 										{
-											echo "<tr><td>{$row['district']}</td>".
-											"<td>{$row['name']}</td>".
-											"<td>{$row['id']}</td>".
-											"<td>{$row['type']}</td>".
-											"<td>{$row['latitude']}</td>".
-											"<td>{$row['longitude']}</td>".
-											"<td>{$row['demand']}</td>".
-											"<td>{$row['demand_rice']}</td></tr>";
-											
+											$type_val = isset($row['type']) ? $row['type'] : (isset($row['warehousetype']) ? $row['warehousetype'] : '');
+											if ($has_storage) {
+												$storage_val = isset($row['storage']) ? $row['storage'] : '0';
+												echo "<tr><td>{$row['district']}</td>".
+												"<td>{$row['name']}</td>".
+												"<td>{$row['id']}</td>".
+												"<td>{$type_val}</td>".
+												"<td>{$row['latitude']}</td>".
+												"<td>{$row['longitude']}</td>".
+												"<td>{$storage_val}</td></tr>";
+											} else {
+												$demand_wheat = isset($row['demand']) ? $row['demand'] : (isset($row['Allocation_Wheat']) ? $row['Allocation_Wheat'] : 0);
+												$demand_rice = isset($row['demand_rice']) ? $row['demand_rice'] : (isset($row['Allocation_Rice']) ? $row['Allocation_Rice'] : 0);
+
+												echo "<tr><td>{$row['district']}</td>".
+												"<td>{$row['name']}</td>".
+												"<td>{$row['id']}</td>".
+												"<td>{$type_val}</td>".
+												"<td>{$row['latitude']}</td>".
+												"<td>{$row['longitude']}</td>".
+												"<td>{$demand_wheat}</td>".
+												"<td>{$demand_rice}</td></tr>";
+											}
 										}
 										
 										?>
@@ -135,7 +195,7 @@ $tablename = "dcp_".$id;
 				var tableName = '<?php echo $tablename ?>';
 				const csvResponse = await fetch('api/DownloadOptimalDataDCP.php?format=csv&tableName='+tableName);
 				const csvBlob = await csvResponse.blob();
-				downloadFile(csvBlob, 'Bihar_DCP_' + getDateString() + '.csv');
+				downloadFile(csvBlob, 'TamilNadu_FCI_' + getDateString() + '.csv');
 			} catch (error) {
 				console.error('Error downloading CSV file:', error);
 			}
@@ -147,7 +207,7 @@ $tablename = "dcp_".$id;
 				var tableName = '<?php echo $tablename ?>';
 				const excelResponse = await fetch('api/DownloadOptimalDataDCP.php?format=xlsx&tableName='+tableName);
 				const excelBlob = await excelResponse.blob();
-				downloadFile(excelBlob, 'Bihar_DCP_' + getDateString() + '.xlsx');
+				downloadFile(excelBlob, 'TamilNadu_FCI_' + getDateString() + '.xlsx');
 			} catch (error) {
 				console.error('Error downloading XLSX file:', error);
 			}
@@ -163,7 +223,7 @@ $tablename = "dcp_".$id;
 				const url = window.URL.createObjectURL(pdfBlob);
 				const link = document.createElement('a');
 				link.href = url;
-				link.download = 'Bihar_DCP_' + getDateString() + '.pdf';
+				link.download = 'TamilNadu_FCI_' + getDateString() + '.pdf';
 				link.click();
 				window.URL.revokeObjectURL(url);
 			} catch (error) {

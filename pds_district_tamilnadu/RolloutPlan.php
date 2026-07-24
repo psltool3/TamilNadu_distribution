@@ -326,7 +326,12 @@ $totalidsapproved = mysqli_num_rows($result);
 	
 	function acceptAll(){
 		for (let i = 0; i < uniqueid_bool_array.length; i++) {
-			markReview(uniqueid_bool_array[i]);
+			var id = uniqueid_bool_array[i];
+			var elem = document.getElementById(id);
+			if (elem) {
+				modifiedIdData[id] = "yes";
+				elem.className = "btn btn-danger";
+			}
 		}
 	}
 
@@ -354,6 +359,7 @@ $totalidsapproved = mysqli_num_rows($result);
 						timeout: 59000,
 						success: function(result){
 							$('#table_body').empty();
+							uniqueid_bool_array = [];
 							console.log(result);
 							try{
 								var resultarray = JSON.parse(result);

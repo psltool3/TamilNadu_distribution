@@ -3,8 +3,37 @@ require('util/Connection.php');
 require('util/SessionCheck.php');
 require('Header.php');
 
-$id = $_POST['id'];
-$tablename = "fps_".$id;
+$id = "";
+if (isset($_POST['id']) && !empty($_POST['id'])) {
+    $id = $_POST['id'];
+} else if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
+    $result = mysqli_query($con, $query);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $id = $row["id"];
+    }
+}
+$id = preg_replace('/[^a-zA-Z0-9_-]/', '', $id);
+$id_lower = strtolower($id);
+
+if (!empty($id)) {
+    $chk1 = mysqli_query($con, "SHOW TABLES LIKE 'fps_" . mysqli_real_escape_string($con, $id) . "'");
+    if ($chk1 && mysqli_num_rows($chk1) > 0) {
+        $tablename = "fps_" . $id;
+    } else {
+        $chk2 = mysqli_query($con, "SHOW TABLES LIKE 'fps_" . mysqli_real_escape_string($con, $id_lower) . "'");
+        if ($chk2 && mysqli_num_rows($chk2) > 0) {
+            $tablename = "fps_" . $id_lower;
+        } else {
+            $tablename = "fps";
+        }
+    }
+} else {
+    $tablename = "fps";
+}
 
 ?>
 <style>
@@ -133,7 +162,8 @@ $tablename = "fps_".$id;
 		document.getElementById('downloadCSV').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
-				const csvResponse = await fetch('api/DownloadOptimalDataFPS.php?format=csv&tableName='+tableName);
+				var district = document.getElementById('district').value;
+				const csvResponse = await fetch('api/DownloadOptimalDataFPS.php?format=csv&tableName=' + tableName + '&district=' + district);
 				const csvBlob = await csvResponse.blob();
 				downloadFile(csvBlob, 'Tamil Nadu_FPS_' + getDateString() + '.csv');
 			} catch (error) {
@@ -145,7 +175,8 @@ $tablename = "fps_".$id;
 		document.getElementById('downloadXLSX').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
-				const excelResponse = await fetch('api/DownloadOptimalDataFPS.php?format=xlsx&tableName='+tableName);
+				var district = document.getElementById('district').value;
+				const excelResponse = await fetch('api/DownloadOptimalDataFPS.php?format=xlsx&tableName=' + tableName + '&district=' + district);
 				const excelBlob = await excelResponse.blob();
 				downloadFile(excelBlob, 'Tamil Nadu_FPS_' + getDateString() + '.xlsx');
 			} catch (error) {
@@ -217,17 +248,23 @@ $tablename = "fps_".$id;
 						$('#fps_table').empty();
 						var resultarray = JSON.parse(result);
 						var obj = resultarray["data"];
-						console.log(obj);
 						for (var datafield in obj){
-							var temp_id = obj[datafield]["uniqueid"];
-							var status = obj[datafield]["active"];
-							if(status==1){
-								status = "<span style='padding:5px' class='btn-success btn-rounded'>Active</span>";
+							var row = obj[datafield];
+							var lat = (row["latitude"] !== undefined && row["latitude"] !== null) ? row["latitude"] : "";
+							var lng = (row["longitude"] !== undefined && row["longitude"] !== null) ? row["longitude"] : "";
+							var dWheat = (row["demand"] !== undefined && row["demand"] !== null && row["demand"] !== "") ? row["demand"] : "0";
+							var dRice = (row["demand_rice"] !== undefined && row["demand_rice"] !== null && row["demand_rice"] !== "") ? row["demand_rice"] : "0";
+							var dFRice = (row["demand_frice"] !== undefined && row["demand_frice"] !== null && row["demand_frice"] !== "") ? row["demand_frice"] : "0";
+
+							if (row["Allocation_Wheat"] !== undefined && !isNaN(parseFloat(row["Allocation_Wheat"])) && parseFloat(row["Allocation_Wheat"]) < 40) {
+								lat = row["Allocation_Wheat"];
+								lng = (row["Allocation_Rice"] !== undefined && row["Allocation_Rice"] !== null) ? row["Allocation_Rice"] : "";
+								dWheat = (row["Allocation_FRice"] !== undefined && row["Allocation_FRice"] !== null) ? row["Allocation_FRice"] : "0";
+								dRice = (row["latitude"] !== undefined && row["latitude"] !== null) ? row["latitude"] : "0";
+								dFRice = (row["demand_frice"] !== undefined && row["demand_frice"] !== null) ? row["demand_frice"] : "0";
 							}
-							else{
-								status = "<span style='padding:5px' class='btn-danger btn-rounded'>InActive</span>";
-							}
-							var subpart = "<tr><td>" +  obj[datafield]["district"] +  "</td><td>"  + obj[datafield]["name"] +  "</td><td>"  + obj[datafield]["id"] +  "</td><td>"  + obj[datafield]["type"] +  "</td><td>"  + obj[datafield]["latitude"] +  "</td><td>"  + obj[datafield]["longitude"] +  "</td><td>"  + obj[datafield]["demand"] +"</td><td>"  + obj[datafield]["demand_rice"]+ "</td><td>"  + obj[datafield]["demand_frice"]+  "</td></tr>";
+
+							var subpart = "<tr><td>" +  row["district"] +  "</td><td>"  + row["name"] +  "</td><td>"  + row["id"] +  "</td><td>"  + row["type"] +  "</td><td>"  + lat +  "</td><td>"  + lng +  "</td><td>"  + dWheat +"</td><td>"  + dRice + "</td><td>"  + dFRice +  "</td></tr>";
 							$('#fps_table').append(subpart);
 						}
 					}

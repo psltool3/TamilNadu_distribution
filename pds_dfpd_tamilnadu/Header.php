@@ -55,8 +55,11 @@ if($numrows>0){
                             </div>
                         </div>
                     </li>
-					<li <?php if ($currentFile == 'OptimisedDataAll.php') echo 'class="active"'; ?>>
-						<a href="OptimisedDataAll.php"> <span class="xn-text">Optimised Data View</span></a>
+					<li <?php if ($currentFile == 'OptimisedDataAll.php' || $currentFile == 'OptimisedDataView.php') echo 'class="active"'; ?>>
+						<a href="OptimisedDataAll.php"> <span class="xn-text">Optimised Leg2 Data View</span></a>
+					</li>
+					<li <?php if ($currentFile == 'OptimisedDataAllLeg1.php' || $currentFile == 'OptimisedDataViewLeg1.php') echo 'class="active"'; ?>>
+						<a href="OptimisedDataAllLeg1.php"> <span class="xn-text">Optimised Leg1 Data View</span></a>
 					</li>
 					<!-- <li <?php if ($currentFile == 'RolloutPlan.php') echo 'class="active"'; ?>>
 						<a href="RolloutPlan.php"> <span class="xn-text">Rollout Plan</span></a>
