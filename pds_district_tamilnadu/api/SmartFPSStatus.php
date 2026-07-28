@@ -11,7 +11,7 @@ if(!SessionCheck()){
 require('Header.php');
 
 $district = $_SESSION['district_district'];
-$query = "SELECT * FROM fps WHERE type='Model FPS' AND district='$district'";
+$query = "SELECT * FROM fps WHERE type='Part Time FPS' AND district='$district'";
 $result = mysqli_query($con,$query);
 $numrows = mysqli_num_rows($result);
 
@@ -20,13 +20,13 @@ if($numrows>0){
 	$status = $row['active'];
 	$fpsname = $row['name'];
 	if($status==0){
-		$query = "UPDATE fps SET active='1' WHERE type='Model FPS' AND district='$district'";
-		writeLog("User ->" ." All Smart FPS Active -> ". $_SESSION['district_user']);
+		$query = "UPDATE fps SET active='1' WHERE type='Part Time FPS' AND district='$district'";
+		writeLog("User ->" ." All Part Time FPS Active -> ". $_SESSION['district_user']);
 		mysqli_query($con,$query);
 	}
 	else{
-		$query = "UPDATE fps SET active='0' WHERE type='Model FPS' AND district='$district'";
-		writeLog("User ->" ." All Smart FPS Active -> ". $_SESSION['district_user']);
+		$query = "UPDATE fps SET active='0' WHERE type='Part Time FPS' AND district='$district'";
+		writeLog("User ->" ." All Part Time FPS InActive -> ". $_SESSION['district_user']);
 		mysqli_query($con,$query);
 	}
 }

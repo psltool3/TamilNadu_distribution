@@ -13,7 +13,7 @@ $query = "SELECT * FROM districts ORDER BY name";
 $result = mysqli_query($con,$query);
 $numrows = mysqli_num_rows($result);
 
-if(empty(mysqli_fetch_assoc($result))){
+if($numrows == 0){
 	die("Something went wrong...");
 }
 

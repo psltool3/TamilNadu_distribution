@@ -239,14 +239,8 @@ require('Header.php');
 			var district = districtElement.value;
 			
 			if(district==""){
-				var options = districtElement.options;
-				for (var i = 0; i < options.length; i++) {
-					if (options[i].value != "all" && options[i].value != "") {
-						districtElement.selectedIndex = i;
-						district = options[i].value ;
-						break;
-					}
-				}
+				districtElement.value = "all";
+				district = "all";
 			}
 			
 			var dataString = "district=" + district;

@@ -49,9 +49,9 @@ if (isset($_POST['fromid']) && !empty($_POST['fromid'])) {
 if (isset($_POST['toid']) && !empty($_POST['toid'])) {
     $toid = $_POST['toid'];
     if($added==1){
-        $query .= " AND toid = '$toid'";
+        $query .= " AND to_id = '$toid'";
     }else{
-        $query .= " WHERE toid = '$toid'";
+        $query .= " WHERE to_id = '$toid'";
     }
 	$added = 1;
 }
@@ -90,9 +90,9 @@ if ($approved == "approved") {
 
 if ($district != "") {
     if($added==1){
-        $query .= " AND to_district='$district'";
+        $query .= " AND REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district'), ' ', '')";
     }else{
-        $query .= " WHERE to_district='$district'";
+        $query .= " WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district'), ' ', '')";
     }
 	$added = 1;
 }

@@ -574,6 +574,7 @@ if($currentTimestamp >= $targetTimestamp) {
 					}
 				}
 			});
+			var district = document.getElementById("district").value;
 			var dataStringToId = 'approved='+ approved + '&district='+ district;
 			$.ajax({
 				type: "POST",

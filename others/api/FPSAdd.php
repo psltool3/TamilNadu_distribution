@@ -4,7 +4,19 @@ require('../util/Connection.php');
 require('../structures/FPS.php');
 require('../util/SessionFunction.php');
 require('../structures/Login.php');
+$demand_original = isset($_POST['demand']) ? $_POST['demand'] : null;
+$demand_rice_original = isset($_POST['demand_rice']) ? $_POST['demand_rice'] : null;
+$demand_frice_original = isset($_POST['demand_frice']) ? $_POST['demand_frice'] : null;
 require('../util/Security.php');
+if ($demand_original === '0' || $demand_original === 0) {
+    $_POST['demand'] = '0';
+}
+if ($demand_rice_original === '0' || $demand_rice_original === 0) {
+    $_POST['demand_rice'] = '0';
+}
+if ($demand_frice_original === '0' || $demand_frice_original === 0) {
+    $_POST['demand_frice'] = '0';
+}
 require ('../util/Encryption.php');
 require('../util/Logger.php');
 $nonceValue = 'nonce_value';

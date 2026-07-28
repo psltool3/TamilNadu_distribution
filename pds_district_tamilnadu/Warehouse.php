@@ -37,10 +37,10 @@ td {
 							<div class="panel-heading">
                                     <h3 class="panel-title">Warehouse</h3>
                                 </div>
-								<!-- <a href="BulkWarehouseDataEdit.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-warning">Bulk Data Edit</button></a>
+								<a href="BulkWarehouseDataEdit.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-warning">Bulk Data Edit</button></a>
 								<a href="BulkWarehouseData.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-info">Bulk Data Add</button></a>
 								<span style="float:right;margin-top:10px;margin-right:13px"><button type="button" onclick="delete_all()"  class="btn btn-danger">Delete All</button></span>
-								<a href="WarehouseAdd.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-success">Add New</button></a> -->
+								<a href="WarehouseAdd.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-success">Add New</button></a>
                                <a href="api/BulkWarehouseDownloadEdit.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-info">Download Data</button></a>
                             <div class="panel-body">
                                  <div class="table-responsive">
@@ -56,9 +56,9 @@ td {
 												<th style="font-size:15px">Longitude</th>
 												<th style="font-size:15px">Storage(Qtl)</th>
 												<th style="font-size:16px">Status</th>
-												<!-- <th style="font-size:16px">Change Status</th>
+												<th style="font-size:16px">Change Status</th>
                                                 <th style="font-size:15px">Edit</th>
-                                                <th style="font-size:15px">Delete</th> -->
+                                                <th style="font-size:15px">Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -85,11 +85,12 @@ td {
 											"<td>{$row['latitude']}</td>".
 											"<td>{$row['longitude']}</td>".
 											"<td>{$row['storage']}</td>".
-											"<td>$status</td>";
+											"<td>$status</td>".
+											"<td> <button class='btn btn-info btn-rounded' onclick=\"change_status('{$temp_id}')\">Change Status</button></td>".
+											"<td> <button class='btn btn-warning btn-rounded' onclick=\"edit_entry('{$temp_id}')\">Edit</button></td>".
+											"<td> <button class='btn btn-danger btn-rounded' onclick=\"delete_entry('{$temp_id}')\">Delete</button></td></tr>";
+										
 										}
-										// "<td> <button class='btn btn-info btn-rounded' onclick=\"change_status('{$temp_id}')\">Change Status</button></td>".
-										// "<td> <button class='btn btn-warning btn-rounded' onclick=\"edit_entry('{$temp_id}')\">Edit</button></td>".
-										// "<td> <button class='btn btn-danger btn-rounded' onclick=\"delete_entry('{$temp_id}')\">Delete</button></td></tr>";
 										
 										?>
                                         </tbody>

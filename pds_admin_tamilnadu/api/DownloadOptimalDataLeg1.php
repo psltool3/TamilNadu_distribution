@@ -39,8 +39,8 @@ if (isset($_GET['format'])) {
 	$tablename = "optimiseddata_leg1_".$id;
 	$query = "SELECT * FROM ".$tablename." WHERE 1";
 	
-	if($district!="" and $district!="all"){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
+		if($district!="" and $district!="all"){
+		$query = "SELECT * FROM ".$tablename." WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district'), ' ', '')";
 	}
     $result = mysqli_query($con,$query);
     $numrows = mysqli_num_rows($result);

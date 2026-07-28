@@ -1,0 +1,11 @@
+[2026-07-28 13:11:32] User -> Warehouse InActive -> Ariyalur@pds| Senthurai  Og
+[2026-07-28 13:11:34] User -> Warehouse Active -> Ariyalur@pds| Senthurai  Og
+[2026-07-28 13:11:43] User -> Warehouse InActive -> Ariyalur@pds| Andimadam Og
+[2026-07-28 13:11:44] User -> Warehouse Active -> Ariyalur@pds| Andimadam Og
+[2026-07-28 13:13:17] district_user -> Warehouse added ->Ariyalur@pds| Requested JSON -> {"name":"Akshay","type":"motorable","latitude":"11","storage":"0","district":"Ariyalur","id":"900","warehousetype":"swc","longitude":"89"}
+[2026-07-28 13:13:24] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"WH_6a685d95547c"} | Akshay
+[2026-07-28 13:16:15] district_user -> Warehouse added ->Ariyalur@pds| Requested JSON -> {"name":"Akshay","type":"motorable","latitude":"11","storage":"0","district":"Ariyalur","id":"899","warehousetype":"swc","longitude":"78"}
+[2026-07-28 13:16:19] User -> Warehouse InActive -> Ariyalur@pds| Akshay
+[2026-07-28 13:16:20] User -> Warehouse Active -> Ariyalur@pds| Akshay
+[2026-07-28 13:16:34] district_user -> Warehouse Edit ->Ariyalur@pds| Requested JSON -> {"name":"Akshay","uniqueid":"WH_6a685e47aec8","active":"1","type":"motorable","latitude":"11","storage":"100","district":"Ariyalur","id":"899","warehousetype":"swc","longitude":"78"}
+[2026-07-28 13:16:40] district_user -> Warehouse deleted -> Ariyalur@pds| Requested JSON -> {"uid":"WH_6a685e47aec8"} | Akshay

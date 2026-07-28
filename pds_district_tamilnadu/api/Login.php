@@ -50,6 +50,11 @@ if ($row['role'] == 'dfpd') {
 		exit;
 }
 
+if ($row['role'] == 'fci') {
+		echo "Error: FCI are not allowed to log in here.";
+		exit;
+}
+
 if ($row["verified"] == 0) {
 		echo "Error: Your account needs to be verified. Please contact admin.";
 		exit;

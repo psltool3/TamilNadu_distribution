@@ -4,7 +4,19 @@ require('../util/Connection.php');
 require('../structures/FPS.php');
 require('../util/SessionFunction.php');
 require('../structures/Login.php');
+$demand_original = isset($_POST['demand']) ? $_POST['demand'] : null;
+$demand_rice_original = isset($_POST['demand_rice']) ? $_POST['demand_rice'] : null;
+$demand_frice_original = isset($_POST['demand_frice']) ? $_POST['demand_frice'] : null;
 require('../util/Security.php');
+if ($demand_original === '0' || $demand_original === 0) {
+    $_POST['demand'] = '0';
+}
+if ($demand_rice_original === '0' || $demand_rice_original === 0) {
+    $_POST['demand_rice'] = '0';
+}
+if ($demand_frice_original === '0' || $demand_frice_original === 0) {
+    $_POST['demand_frice'] = '0';
+}
 require('../util/Logger.php');
 require ('../util/Encryption.php');
 $nonceValue = 'nonce_value';
@@ -113,17 +125,15 @@ function validateId($id) {
     return $id;  
 }
 
-if (!is_numeric($column[$latitude]) || $column[$latitude] >= 40) {
-	echo "Error : Latitude must be less than 40. Given: " . $column[$latitude];
-	echo "</br>";
-	$redirect = 0;
+if (!isset($_POST["latitude"]) || !is_numeric($_POST["latitude"]) || $_POST["latitude"] >= 40) {
+	echo "Error : Latitude must be less than 40.";
+	exit();
 }
 
 // Longitude check (must be more than 65)
-if (!is_numeric($column[$longitude]) || $column[$longitude] <= 65) {
-	echo "Error : Longitude must be more than 65. Given: " . $column[$longitude];
-	echo "</br>";
-	$redirect = 0;
+if (!isset($_POST["longitude"]) || !is_numeric($_POST["longitude"]) || $_POST["longitude"] <= 65) {
+	echo "Error : Longitude must be more than 65.";
+	exit();
 }
 
 $dbHashedPassword = $row['password'];

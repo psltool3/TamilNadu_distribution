@@ -99,7 +99,7 @@ require('Header.php');
 											
 											if($cost==null or $cost==""){
 												$temp = "cost_".$id;
-												$cost = "<input type='text' id='".$temp."' name='".$temp."' />";
+												$cost = "<input type='number' id='".$temp."' name='".$temp."' min='0' step='any' style='width:120px' required />";
 												$reset = "";
 											}											
 											

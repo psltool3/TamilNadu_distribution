@@ -83,8 +83,8 @@ require('Header.php');
                                                     <div class="input-group">
 												   <span class="input-group-addon"><span class="fa fa-arrow-down"></span></span>
                                                     <select class="form-control" id="fpstype" name="fpstype">
-													<option value="Model FPS">Model FPS</option>
-													<option value="Normal FPS">Normal FPS</option>
+													<option value="Full Time FPS">Full Time FPS</option>
+													<option value="Part Time FPS">Part Time FPS</option>
                                                     </select>
 													</div>
                                                     <span class="help-block">FPS Type</span>
@@ -136,7 +136,7 @@ require('Header.php');
 											
                                         </div>
 										
-										<center><button class="btn btn-primary">Verify</button></center>
+										<center><button class="btn btn-primary" onclick="verifyCaptcha()">Verify</button></center>
 								</div>
                             </div>
                             </form>

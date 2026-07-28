@@ -11,7 +11,7 @@ if(!SessionCheck()){
 require('Header.php');
 
 
-$query = "SELECT * FROM fps WHERE type='Normal FPS'";
+$query = "SELECT * FROM fps WHERE type='Full Time FPS'";
 $result = mysqli_query($con,$query);
 $numrows = mysqli_num_rows($result);
 
@@ -20,13 +20,13 @@ if($numrows>0){
 	$status = $row['active'];
 	$fpsname = $row['name'];
 	if($status==0){
-		$query = "UPDATE fps SET active='1' WHERE type='Normal FPS'";
-		writeLog("User ->" ." Normal FPS Active -> ". $_SESSION['user'] . "| " . $fpsname);
+		$query = "UPDATE fps SET active='1' WHERE type='Full Time FPS'";
+		writeLog("User ->" ."Full Time FPS Active -> ". $_SESSION['user'] . "| " . $fpsname);
 		mysqli_query($con,$query);
 	}
 	else{
-		$query = "UPDATE fps SET active='0' WHERE type='Normal FPS'";
-		writeLog("User ->" ." Normal FPS InActive -> ". $_SESSION['user'] . "| " . $fpsname);
+		$query = "UPDATE fps SET active='0' WHERE type='Full Time FPS'";
+		writeLog("User ->" ."Full Time FPS InActive -> ". $_SESSION['user'] . "| " . $fpsname);
 		mysqli_query($con,$query);
 	}
 }

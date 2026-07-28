@@ -2,9 +2,28 @@
 
 require('../util/Connection.php');
 require('../structures/DCP.php');
-require('../util/SessionFunction.php');
 require('../structures/Login.php');
+require('../util/SessionFunction.php');
+
+$password_original = isset($_POST['password']) ? $_POST['password'] : null;
+$demand_original = isset($_POST['demand']) ? $_POST['demand'] : null;
+$demand_rice_original = isset($_POST['demand_rice']) ? $_POST['demand_rice'] : null;
+$demand_frice_original = isset($_POST['demand_frice']) ? $_POST['demand_frice'] : null;
+
 require('../util/Security.php');
+
+if ($password_original !== null) {
+    $_POST['password'] = $password_original;
+}
+if ($demand_original === '0' || $demand_original === 0) {
+    $_POST['demand'] = '0';
+}
+if ($demand_rice_original === '0' || $demand_rice_original === 0) {
+    $_POST['demand_rice'] = '0';
+}
+if ($demand_frice_original === '0' || $demand_frice_original === 0) {
+    $_POST['demand_frice'] = '0';
+}
 require ('../util/Encryption.php');
 require('../util/Logger.php');
 $nonceValue = 'nonce_value';
@@ -15,6 +34,15 @@ if(!SessionCheck()){
 
 require('Header.php');
 
+function renderError($message) {
+    echo "<div style='padding: 20px;'><div class='alert alert-danger' role='alert' style='font-size:16px;'><strong>Error:</strong> " . htmlspecialchars($message) . "</div></div>";
+    require('Fullui.php');
+    exit();
+}
+
+if(empty($_POST) || empty($_POST['username']) || empty($_POST['password'])){
+    renderError("Invalid request: No form data submitted.");
+}
 
 function formatName($name) {
 	$name = preg_replace('/[^a-zA-Z0-9_ ]/', '', $name);
@@ -23,15 +51,10 @@ function formatName($name) {
 }
 
 function isValidCoordinate($value, $coordinateType) {
-    // Check if the value is a number and not a string
     if (!is_numeric($value)) {
         return false;
     }
-	
-    // Convert the value to a float
     $coordinate = floatval($value);
-
-    // Check if it's latitude or longitude and validate within the range
     switch ($coordinateType) {
         case 'latitude':
             return ($coordinate >= -90 && $coordinate <= 90);
@@ -51,49 +74,40 @@ $person->setUsername($_POST["username"]);
 $Encryption = new Encryption();
 $person->setPassword($Encryption->decrypt($_POST["password"], $nonceValue));
 
-if($_SESSION['user']!=$person->getUsername()){
-	echo "User is logged in with different username and password";
-	return;
+if($_SESSION['user'] != $person->getUsername()){
+	renderError("User is logged in with different username and password");
 }
 
 $query = "SELECT * FROM login WHERE username='".$person->getUsername()."'";
 $result = mysqli_query($con,$query);
 $row = mysqli_fetch_assoc($result);
 
-if(!isValidCoordinate($_POST["latitude"],'latitude') or !isValidCoordinate($_POST["longitude"],'longitude')){
-	echo "Error : Check Latitude and Longitude Value";
-	exit();
+if(!$row){
+    renderError("Password or Username is incorrect");
+}
+
+if(!isValidCoordinate($_POST["latitude"],'latitude') || !isValidCoordinate($_POST["longitude"],'longitude')){
+	renderError("Check Latitude and Longitude Value");
 }
 
 if(!isStringNumber($_POST["demand"])){
-	echo "Error : Check Offset Wheat Value";
-	exit();
+	renderError("Check Offset Rice Value");
 }
 if(!isStringNumber($_POST["demand_rice"])){
-	echo "Error : Check Offset Rice Value";
-	exit();
+	renderError("Check Offset Wheat Value");
 }
 if(!isStringNumber($_POST["demand_frice"])){
-	echo "Error : Check Offset FRice Value";
-	exit();
+	renderError("Check Offset FRice Value");
 }
 
-if (
-    !isset($_POST["id"]) ||
-    !preg_match('/^[A-Za-z0-9]+$/', $_POST["id"])
-) {
-    echo "Error: Check FCI ID value (only letters and numbers allowed, no spaces or special characters)";
-    exit();
+if (!isset($_POST["id"]) || !preg_match('/^[A-Za-z0-9]+$/', $_POST["id"])) {
+    renderError("Check FCI ID value (only letters and numbers allowed, no spaces or special characters)");
 }
 if (!isset($_POST["latitude"]) || !is_numeric($_POST["latitude"]) || $_POST["latitude"] >= 40) {
-    echo "Check Latitude: value must be less than 40";
-    exit();
+    renderError("Check Latitude: value must be less than 40");
 }
-
-// Longitude must be greater than 65
 if (!isset($_POST["longitude"]) || !is_numeric($_POST["longitude"]) || $_POST["longitude"] <= 65) {
-    echo "Check Longitude: value must be greater than 65";
-    exit();
+    renderError("Check Longitude: value must be greater than 65");
 }
 
 $dbHashedPassword = $row['password'];
@@ -119,20 +133,18 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 	$DCP->setId($id);
 	$DCP->setType($type);
 	$DCP->setDemand($demand);
-	$DCP->setDemandRice($demand_rice);
-	$DCP->setDemandfRice($demand_frice);
+	$DCP->setDemandrice($demand_rice);
+	$DCP->setDemandfrice($demand_frice);
 	$DCP->setActive($active);
 
 	$query_check = $DCP->checkInsert($DCP);
 	$query_result = mysqli_query($con, $query_check);
 	$numrows = mysqli_num_rows($query_result);
-	if($numrows!=0){
+	if($numrows != 0){
 		$row = mysqli_fetch_assoc($query_result);
 		$uniqueid_check = $row["uniqueid"];
-		if($uniqueid!=$uniqueid_check){
-			echo "Error : in updating data as DCP id already exist ID: ".$id;
-			echo "</br>";
-			exit();
+		if($uniqueid != $uniqueid_check){
+			renderError("Update failed: DCP with ID ".$id." already exists");
 		}
 	}
 
@@ -148,9 +160,8 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 	echo "<script>window.location.href = '../DCP.php';</script>";
 } 
 else{
-    echo "Error : Password or Username is incorrect";
+    renderError("Password or Username is incorrect");
 }
 
-
 ?>
-<?php require('Fullui.php');  ?>
+<?php require('Fullui.php'); ?>

@@ -4,7 +4,11 @@ require('../util/Connection.php');
 require('../structures/Warehouse.php');
 require('../util/SessionFunction.php');
 require('../structures/Login.php');
+$storage_original = isset($_POST['storage']) ? $_POST['storage'] : null;
 require('../util/Security.php');
+if ($storage_original === '0' || $storage_original === 0) {
+    $_POST['storage'] = '0';
+}
 require ('../util/Encryption.php');
 require('../util/Logger.php');
 $nonceValue = 'nonce_value';

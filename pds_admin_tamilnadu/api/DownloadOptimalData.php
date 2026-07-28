@@ -7,94 +7,107 @@ require('../util/SessionCheck.php');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-
 // Check if format is specified in GET request
 if (isset($_GET['format'])) {
     $format = $_GET['format'];
-    
-    #$columns = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long",
-	#$columns = ["commodity","quantity","distance","new_id_district","reason_district","new_distance_district","approve_district","approve_admin","reason_admin","new_id_admin","new_distance_admin"];
-	#$columns = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance","status"];
-	$columns = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance","status"];
-	$columns_pdf = ["scenario","from","from_id","from_name","from_district","from_lat","from_long","to","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 
-    $month = $_GET['month'];
-	$district = $_GET['district'];
-	$parts = explode('_', $month);
+    $columns     = ["scenario","from","from_state","from_id","from_name","from_district",
+                    "from_lat","from_long","to","to_state","to_id","to_name",
+                    "to_district","to_lat","to_long","commodity","quantity","distance","status"];
+    $columns_pdf = ["scenario","from","from_id","from_name","from_district",
+                    "from_lat","from_long","to","to_id","to_name",
+                    "to_district","to_lat","to_long","commodity","quantity","distance"];
 
-	$month = $parts[0];
-	$year = $parts[1]; 
-	$query = "SELECT * FROM optimised_table WHERE month='$month' AND year='$year'";
-	$result = mysqli_query($con,$query);
-	$numrow = mysqli_num_rows($result);
-	$id = "";
-	if($numrow>0){
-		$row = mysqli_fetch_assoc($result);
-		$id = $row['id'];
-	}
+    $month_raw = isset($_GET['month'])   ? trim($_GET['month'])   : '';
+    $district  = isset($_GET['district']) ? trim($_GET['district']) : '';
 
-	$tablename = "optimiseddata_".$id;
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
-	if($district=="" OR $district=="all"){
-		$query = "SELECT * FROM ".$tablename." WHERE 1";
-	}
-	
-    $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
-    $tableData = array();
-	$tableData_pdf = array();
-    array_push($tableData,$columns);
-    array_push($tableData_pdf,$columns_pdf);
+    // Parse month_year (e.g. "jan_2026")
+    $month = "";
+    $year  = "";
+    if (strpos($month_raw, '_') !== false) {
+        $parts = explode('_', $month_raw);
+        $month = $parts[0];
+        $year  = $parts[1];
+    }
 
-    if($numrows>0){
-        while($row = mysqli_fetch_array($result)){
-			if($row['new_id_admin']!=null or $row['new_id_admin']!=""){
-				$id = $row['new_id_admin'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_admin'];
-				$row["from_name"] = $row['new_name_admin'];
-				$row["distance"] = $row['new_distance_admin'];
-			}
-			else if(($row['new_id_district']!=null or $row['new_id_district']!="") and $row['approve_admin']=="yes"){
-				$id = $row['new_id_district'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_district'];
-				$row["from_name"] = $row['new_name_district'];
-				$row["distance"] = $row['new_distance_district'];
-			}
-            $temp = array();
-            $temp_pdf = array();
-            for($i=0;$i<count($columns);$i++){
-                array_push($temp,$row[$columns[$i]]);
-            }
-			for($i=0;$i<count($columns_pdf);$i++){
-                array_push($temp_pdf,$row[$columns_pdf[$i]]);
-            }
-            array_push($tableData,$temp);
-            array_push($tableData_pdf,$temp_pdf);
+    // Lookup run ID
+    $run_id = "";
+    if (!empty($month) && !empty($year)) {
+        $q = "SELECT id FROM optimised_table WHERE month='$month' AND year='$year' LIMIT 1";
+        $r = mysqli_query($con, $q);
+        if ($r && mysqli_num_rows($r) > 0) {
+            $run_id = mysqli_fetch_assoc($r)['id'];
         }
     }
-    
-    // Filename for the downloaded file
-    $filename = 'table_data';
 
-    // Set headers for the chosen format
+    $tableData     = array();
+    $tableData_pdf = array();
+    array_push($tableData,     $columns);
+    array_push($tableData_pdf, $columns_pdf);
+
+    if (!empty($run_id)) {
+        $tablename = "optimiseddata_" . $run_id;
+
+        // Guard: check table exists before querying
+        $chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename) . "'");
+        if ($chk && mysqli_num_rows($chk) > 0) {
+
+            $district_escaped = mysqli_real_escape_string($con, $district);
+            if (!empty($district) && strtolower($district) !== "all") {
+                $query = "SELECT * FROM $tablename WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+            } else {
+                $query = "SELECT * FROM $tablename WHERE 1";
+            }
+
+            $result  = mysqli_query($con, $query);
+            $numrows = $result ? mysqli_num_rows($result) : 0;
+
+            if ($numrows > 0) {
+                while ($row = mysqli_fetch_array($result)) {
+                    // Apply admin override
+                    if (!empty($row['new_id_admin'])) {
+                        $wh_id = $row['new_id_admin'];
+                        $r_wh  = mysqli_query($con, "SELECT latitude,longitude,district FROM warehouse WHERE id='$wh_id'");
+                        if ($r_wh && mysqli_num_rows($r_wh) > 0) {
+                            $wh = mysqli_fetch_assoc($r_wh);
+                            $row["from_lat"]      = $wh['latitude'];
+                            $row["from_long"]     = $wh['longitude'];
+                            $row["from_district"] = $wh['district'];
+                        }
+                        $row["from_id"]   = $row['new_id_admin'];
+                        $row["from_name"] = $row['new_name_admin'];
+                        $row["distance"]  = $row['new_distance_admin'];
+                    } elseif (!empty($row['new_id_district']) && isset($row['approve_admin']) && $row['approve_admin'] === 'yes') {
+                        $wh_id = $row['new_id_district'];
+                        $r_wh  = mysqli_query($con, "SELECT latitude,longitude,district FROM warehouse WHERE id='$wh_id'");
+                        if ($r_wh && mysqli_num_rows($r_wh) > 0) {
+                            $wh = mysqli_fetch_assoc($r_wh);
+                            $row["from_lat"]      = $wh['latitude'];
+                            $row["from_long"]     = $wh['longitude'];
+                            $row["from_district"] = $wh['district'];
+                        }
+                        $row["from_id"]   = $row['new_id_district'];
+                        $row["from_name"] = $row['new_name_district'];
+                        $row["distance"]  = $row['new_distance_district'];
+                    }
+
+                    $temp     = array();
+                    $temp_pdf = array();
+                    for ($i = 0; $i < count($columns); $i++) {
+                        $temp[] = isset($row[$columns[$i]]) ? $row[$columns[$i]] : '';
+                    }
+                    for ($i = 0; $i < count($columns_pdf); $i++) {
+                        $temp_pdf[] = isset($row[$columns_pdf[$i]]) ? $row[$columns_pdf[$i]] : '';
+                    }
+                    array_push($tableData,     $temp);
+                    array_push($tableData_pdf, $temp_pdf);
+                }
+            }
+        }
+    }
+
+    $filename = 'Rollout_Plan';
+
     switch ($format) {
         case 'csv':
             header('Content-Type: text/csv');
@@ -103,18 +116,9 @@ if (isset($_GET['format'])) {
             break;
 
         case 'xlsx':
-            // Create a new PhpSpreadsheet object
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            // Set column names as the first row
-            /*$columnIndex = 1;
-            foreach ($columns as $columnName) {
-                $sheet->setCellValueByColumnAndRow($columnIndex, 1, $columnName);
-                $columnIndex++;
-            }*/
-
-            // Insert data tableData
             $rowIndex = 1;
             foreach ($tableData as $rowData) {
                 $columnIndex = 1;
@@ -125,8 +129,7 @@ if (isset($_GET['format'])) {
                 $rowIndex++;
             }
 
-
-            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
             header('Cache-Control: max-age=0');
 
@@ -138,54 +141,52 @@ if (isset($_GET['format'])) {
             require('fpdf/fpdf.php');
 
             $pdf = new FPDF('L', 'mm', 'A4');
-			$pdf->AddPage();
-			$pdf->SetFont('Arial', 'B', 15); // Set initial font size
+            $pdf->AddPage();
 
-			// Calculate column width based on the number of columns and page width
-			$pageWidth = $pdf->GetPageWidth() - 20; // Subtract margins (10 mm each side)
-			$numCols = count($tableData_pdf[0]) + 2; // Assuming all rows have the same number of columns
-			$colWidth = $pageWidth / $numCols;
-			$originalColWidth = $colWidth;
+            // Guard: need at least the header row
+            if (count($tableData_pdf) < 1) {
+                $pdf->SetFont('Arial', 'B', 12);
+                $pdf->Cell(0, 10, 'No data available for selected filters.', 0, 1, 'C');
+                header('Content-Type: application/pdf');
+                header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
+                echo $pdf->Output('S');
+                break;
+            }
 
-			// Function to add a row to the PDF with dynamic font size adjustment
-			function addRow($pdf, $row, $colWidth, $isHeader = false) {
-				global $originalColWidth;
-				global $colWidth;
-				$pdf->SetFillColor($isHeader ? 200 : 255, $isHeader ? 220 : 255, $isHeader ? 255 : 255);
-				$i = 0;
-				foreach ($row as $col) {
-					$i = $i + 1;
-					if($i==10){
-						$colWidth = $colWidth*3;
-					}else{
-						$colWidth = $originalColWidth;
-					}
-					$fontSize = 12;
-					$pdf->SetFont('Arial', 'B', $fontSize);
-					// Reduce font size if text is too wide for the cell
-					while ($pdf->GetStringWidth($col) > $colWidth - 2 && $fontSize > 1) {
-						$fontSize -= 1;
-						$pdf->SetFont('Arial', 'B', $fontSize);
-					}
-					$pdf->Cell($colWidth, 10, $col, 1, 0, 'C', true);
-				}
-				$pdf->Ln();
-			}
+            $pageWidth    = $pdf->GetPageWidth() - 20;
+            $numCols      = count($tableData_pdf[0]);
+            $colWidth     = ($numCols > 0) ? ($pageWidth / ($numCols + 2)) : 20;
+            $origColWidth = $colWidth;
 
-			// Add the header
-			addRow($pdf, $tableData_pdf[0], $colWidth, true);
+            function addPdfRow($pdf, $row, $colWidth, $origColWidth, $isHeader = false) {
+                $pdf->SetFillColor($isHeader ? 200 : 255, $isHeader ? 220 : 255, $isHeader ? 255 : 255);
+                $i = 0;
+                foreach ($row as $col) {
+                    $i++;
+                    $cellWidth = ($i == 10) ? $colWidth * 3 : $origColWidth;
+                    $fontSize  = 7;
+                    $pdf->SetFont('Arial', $isHeader ? 'B' : '', $fontSize);
+                    while ($pdf->GetStringWidth($col) > $cellWidth - 2 && $fontSize > 4) {
+                        $fontSize--;
+                        $pdf->SetFont('Arial', $isHeader ? 'B' : '', $fontSize);
+                    }
+                    $pdf->Cell($cellWidth, 8, $col, 1, 0, 'C', true);
+                }
+                $pdf->Ln();
+            }
 
-			// Add the data rows
-			$rowHeight = 10;
-			$maxRowsPerPage = ($pdf->GetPageHeight() - 20) / $rowHeight; // Subtract margins (10 mm each top and bottom)
+            // Header row
+            addPdfRow($pdf, $tableData_pdf[0], $colWidth, $origColWidth, true);
 
-			for ($i = 1; $i < count($tableData_pdf); $i++) {
-				if ($pdf->GetY() + $rowHeight > $pdf->GetPageHeight() - 10) { // Check if we need to add a new page
-					$pdf->AddPage();
-					addRow($pdf, $tableData_pdf[0], $colWidth, true); // Add the header again on the new page
-				}
-				addRow($pdf, $tableData_pdf[$i], $colWidth);
-			}
+            // Data rows
+            $rowHeight = 8;
+            for ($i = 1; $i < count($tableData_pdf); $i++) {
+                if ($pdf->GetY() + $rowHeight > $pdf->GetPageHeight() - 10) {
+                    $pdf->AddPage();
+                    addPdfRow($pdf, $tableData_pdf[0], $colWidth, $origColWidth, true);
+                }
+                addPdfRow($pdf, $tableData_pdf[$i], $colWidth, $origColWidth, false);
+            }
 
             header('Content-Type: application/pdf');
             header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
@@ -193,16 +194,13 @@ if (isset($_GET['format'])) {
             break;
 
         default:
-            echo 'Error : Invalid format specified.';
+            echo 'Error: Invalid format specified.';
             break;
     }
 } else {
-    echo 'Error : Please specify a format in the GET request (e.g., ?format=pdf).';
+    echo 'Error: Please specify a format in the GET request (e.g., ?format=pdf).';
 }
 
-
-
-// Function to output CSV data
 function outputCSV($data) {
     $output = fopen('php://output', 'w');
     foreach ($data as $row) {

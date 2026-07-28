@@ -39,8 +39,8 @@ if (!preg_match('/^[a-zA-Z0-9_]+$/', $month)) {
     die("Invalid month format");
 }
 
-// Validate district (letters only)
-if (!preg_match('/^[a-zA-Z]+$/', $district)) {
+// Validate district (letters and spaces)
+if (!preg_match('/^[a-zA-Z\s]+$/', $district)) {
     die("Invalid district name");
 }
 
@@ -80,6 +80,16 @@ $result_leg1 = $con->query($query_leg1);
 
 
 if ($result && $result->num_rows > 0 && $result_leg1 && $result_leg1->num_rows > 0) {
+	// Normalize district name to match database spelling
+	$dist_res = mysqli_query($con, "SELECT DISTINCT to_district FROM ".$tablename);
+	if ($dist_res) {
+		while($r = mysqli_fetch_assoc($dist_res)) {
+			if (strcasecmp(str_replace(' ', '', $r['to_district']), str_replace(' ', '', $district)) === 0) {
+				$district = $r['to_district'];
+				break;
+			}
+		}
+	}
 	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
 	$result = mysqli_query($con,$query);
 	$numrows = mysqli_num_rows($result);

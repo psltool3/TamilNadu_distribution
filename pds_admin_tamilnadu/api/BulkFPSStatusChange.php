@@ -39,24 +39,24 @@ $district = $_POST["district"];
 $status = $_POST["status"];
 $fpstype = $_POST["fpstype"];
 
-if($fpstype=='Model FPS'){
+if($fpstype=='Full Time FPS'){
 	if($status=='active'){
-		$query = "UPDATE fps SET active='1' WHERE district='$district' AND type='Model FPS'";
-		writeLog("User ->" ." Model FPS Active -> ". $_SESSION['user'] . "| " . $district);
+		$query = "UPDATE fps SET active='1' WHERE district='$district' AND type='Full Time FPS'";
+		writeLog("User ->" ." Full Time FPS Active -> ". $_SESSION['user'] . "| " . $district);
 	}
 	else{
-		$query = "UPDATE fps SET active='0' WHERE district='$district' AND type='Model FPS'";
-		writeLog("User ->" ." Model FPS InActive -> ". $_SESSION['user'] . "| " . $district);
+		$query = "UPDATE fps SET active='0' WHERE district='$district' AND type='Full Time FPS'";
+		writeLog("User ->" ." Full Time FPS InActive -> ". $_SESSION['user'] . "| " . $district);
 	}
 }
 else{
 	if($status=='active'){
-		$query = "UPDATE fps SET active='1' WHERE district='$district' AND type='Normal FPS'";
-		writeLog("User ->" ." Normal FPS Active -> ". $_SESSION['user'] . "| " . $district);
+		$query = "UPDATE fps SET active='1' WHERE district='$district' AND type='Part Time FPS'";
+		writeLog("User ->" ." Part Time FPS Active -> ". $_SESSION['user'] . "| " . $district);
 	}
 	else{
-		$query = "UPDATE fps SET active='0' WHERE district='$district' AND type='Normal FPS'";
-		writeLog("User ->" ." Normal FPS InActive -> ". $_SESSION['user'] . "| " . $district);
+		$query = "UPDATE fps SET active='0' WHERE district='$district' AND type='Part Time FPS'";
+		writeLog("User ->" ." Part Time FPS InActive -> ". $_SESSION['user'] . "| " . $district);
 	}
 }
 mysqli_query($con, $query);

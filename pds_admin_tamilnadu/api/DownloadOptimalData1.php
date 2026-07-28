@@ -7,79 +7,97 @@ require('../util/SessionCheck.php');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-
 // Check if format is specified in GET request
 if (isset($_GET['format'])) {
     $format = $_GET['format'];
-    
-    $columns = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance","status"];
-    $month = $_GET['month'];
-	$district = $_GET['district'];
-	$parts = explode('_', $month);
 
-	$month = $parts[0];
-	$year = $parts[1]; 
-	$query = "SELECT * FROM optimised_table WHERE month='$month' AND year='$year'";
-	$result = mysqli_query($con,$query);
-	$numrow = mysqli_num_rows($result);
-	$id = "";
-	if($numrow>0){
-		$row = mysqli_fetch_assoc($result);
-		$id = $row['id'];
-	}
+    $columns = ["scenario","from","from_state","from_id","from_name","from_district",
+                "from_lat","from_long","to","to_state","to_id","to_name",
+                "to_district","to_lat","to_long","commodity","quantity","distance","status"];
 
-	$tablename = "optimiseddata_".$id;
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
-	if($district=="" OR $district=="all"){
-		$query = "SELECT * FROM ".$tablename." WHERE 1";
-	}
-    $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
-    $tableData = array();
-    array_push($tableData,$columns);
+    $month_raw = isset($_GET['month']) ? $_GET['month'] : '';
+    $district  = isset($_GET['district']) ? trim($_GET['district']) : '';
 
-    if($numrows>0){
-        while($row = mysqli_fetch_array($result)){
-			if($row['new_id_admin']!=null or $row['new_id_admin']!=""){
-				$id = $row['new_id_admin'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_admin'];
-				$row["from_name"] = $row['new_name_admin'];
-				$row["distance"] = $row['new_distance_admin'];
-			}
-			else if(($row['new_id_district']!=null or $row['new_id_district']!="") and $row['admin_approve']=="yes"){
-				$id = $row['new_id_district'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_district'];
-				$row["from_name"] = $row['new_name_district'];
-				$row["distance"] = $row['new_distance_district'];
-			}
-            $temp = array();
-            for($i=0;$i<count($columns);$i++){
-                array_push($temp,$row[$columns[$i]]);
-            }
-            array_push($tableData,$temp);
+    // Parse month_year (e.g. "jan_2026")
+    $month = "";
+    $year  = "";
+    if (strpos($month_raw, '_') !== false) {
+        $parts = explode('_', $month_raw);
+        $month = $parts[0];
+        $year  = $parts[1];
+    }
+
+    // Lookup run ID
+    $run_id = "";
+    if (!empty($month) && !empty($year)) {
+        $q = "SELECT id FROM optimised_table WHERE month='$month' AND year='$year' LIMIT 1";
+        $r = mysqli_query($con, $q);
+        if ($r && mysqli_num_rows($r) > 0) {
+            $run_id = mysqli_fetch_assoc($r)['id'];
         }
     }
-    
+
+    $tableData = array();
+    array_push($tableData, $columns);
+
+    if (!empty($run_id)) {
+        $tablename = "optimiseddata_" . $run_id;
+
+        // Check table exists before querying
+        $chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename) . "'");
+        if ($chk && mysqli_num_rows($chk) > 0) {
+
+            $district_escaped = mysqli_real_escape_string($con, $district);
+            if (!empty($district) && strtolower($district) !== "all") {
+                $query = "SELECT * FROM $tablename WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+            } else {
+                $query = "SELECT * FROM $tablename WHERE 1";
+            }
+
+            $result  = mysqli_query($con, $query);
+            $numrows = $result ? mysqli_num_rows($result) : 0;
+
+            if ($numrows > 0) {
+                while ($row = mysqli_fetch_array($result)) {
+                    // Apply admin override
+                    if (!empty($row['new_id_admin'])) {
+                        $wh_id = $row['new_id_admin'];
+                        $r_wh  = mysqli_query($con, "SELECT latitude,longitude,district FROM warehouse WHERE id='$wh_id'");
+                        if ($r_wh && mysqli_num_rows($r_wh) > 0) {
+                            $wh = mysqli_fetch_assoc($r_wh);
+                            $row["from_lat"]      = $wh['latitude'];
+                            $row["from_long"]     = $wh['longitude'];
+                            $row["from_district"] = $wh['district'];
+                        }
+                        $row["from_id"]   = $row['new_id_admin'];
+                        $row["from_name"] = $row['new_name_admin'];
+                        $row["distance"]  = $row['new_distance_admin'];
+                    } elseif (!empty($row['new_id_district']) && isset($row['approve_admin']) && $row['approve_admin'] === 'yes') {
+                        $wh_id = $row['new_id_district'];
+                        $r_wh  = mysqli_query($con, "SELECT latitude,longitude,district FROM warehouse WHERE id='$wh_id'");
+                        if ($r_wh && mysqli_num_rows($r_wh) > 0) {
+                            $wh = mysqli_fetch_assoc($r_wh);
+                            $row["from_lat"]      = $wh['latitude'];
+                            $row["from_long"]     = $wh['longitude'];
+                            $row["from_district"] = $wh['district'];
+                        }
+                        $row["from_id"]   = $row['new_id_district'];
+                        $row["from_name"] = $row['new_name_district'];
+                        $row["distance"]  = $row['new_distance_district'];
+                    }
+
+                    $temp = array();
+                    for ($i = 0; $i < count($columns); $i++) {
+                        $temp[] = isset($row[$columns[$i]]) ? $row[$columns[$i]] : '';
+                    }
+                    array_push($tableData, $temp);
+                }
+            }
+        }
+    }
+
     // Filename for the downloaded file
-    $filename = 'table_data';
+    $filename = 'Rollout_Plan';
 
     // Set headers for the chosen format
     switch ($format) {
@@ -90,18 +108,9 @@ if (isset($_GET['format'])) {
             break;
 
         case 'xlsx':
-            // Create a new PhpSpreadsheet object
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            // Set column names as the first row
-            /*$columnIndex = 1;
-            foreach ($columns as $columnName) {
-                $sheet->setCellValueByColumnAndRow($columnIndex, 1, $columnName);
-                $columnIndex++;
-            }*/
-
-            // Insert data tableData
             $rowIndex = 1;
             foreach ($tableData as $rowData) {
                 $columnIndex = 1;
@@ -112,8 +121,7 @@ if (isset($_GET['format'])) {
                 $rowIndex++;
             }
 
-
-            header('Content-Type: application/vnd.ms-excel');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
             header('Cache-Control: max-age=0');
 
@@ -126,18 +134,15 @@ if (isset($_GET['format'])) {
 
             $pdf = new FPDF();
             $pdf->AddPage();
-            $pdf->SetFont('Arial', 'B', 0);
-
-            // Highlight the first row as header
-            $pdf->SetFillColor(200, 220, 255); // Set background color
-            $pdf->SetTextColor(0); // Reset text color
-            $case = 0;
+            $pdf->SetFont('Arial', 'B', 6);
+            $pdf->SetFillColor(200, 220, 255);
+            $pdf->SetTextColor(0);
             foreach ($tableData as $row) {
                 foreach ($row as $col) {
                     $pdf->Cell(30, 10, $col, 1, 0, 'C', true);
                 }
                 $pdf->Ln();
-                $pdf->SetFillColor(255, 255, 255); 
+                $pdf->SetFillColor(255, 255, 255);
             }
 
             header('Content-Type: application/pdf');
@@ -146,16 +151,13 @@ if (isset($_GET['format'])) {
             break;
 
         default:
-            echo 'Error : Invalid format specified.';
+            echo 'Error: Invalid format specified.';
             break;
     }
 } else {
-    echo 'Error : Please specify a format in the GET request (e.g., ?format=pdf).';
+    echo 'Error: Please specify a format in the GET request (e.g., ?format=pdf).';
 }
 
-
-
-// Function to output CSV data
 function outputCSV($data) {
     $output = fopen('php://output', 'w');
     foreach ($data as $row) {

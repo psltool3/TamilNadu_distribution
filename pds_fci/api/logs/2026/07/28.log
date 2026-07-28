@@ -1,0 +1,12 @@
+[2026-07-28 15:33:52] User -> DCP InActive -> fci@pds| FSD Egmore
+[2026-07-28 15:33:53] User -> DCP Active -> fci@pds| FSD Egmore
+[2026-07-28 15:41:24] User -> DCP added ->fci@pds| Requested JSON -> {"name":"Akshay","type":"tyk","latitude":"11","longitude":"89","demand_frice":"78","district":"Ariyalur","id":"8999","demand":"89","demand_rice":"877"}
+[2026-07-28 15:41:38] User -> DCP deleted -> fci@pds| Requested JSON -> {"uid":"DCP_6a68804ce08"} | Akshay
+[2026-07-28 15:49:27] User -> DCP InActive -> fci@pds| FSD Egmore
+[2026-07-28 15:49:28] User -> DCP Active -> fci@pds| FSD Egmore
+[2026-07-28 15:54:42] User -> DCP added ->fci@pds| Requested JSON -> {"name":"Akshay","type":"hgc","latitude":"11","longitude":"89","demand_frice":"899","district":"Ariyalur","id":"987","demand":"98","demand_rice":"766"}
+[2026-07-28 15:55:13] User -> DCP Edit ->fci@pds| Requested JSON -> {"name":"Akshay","uniqueid":"DCP_6a68836a2e1","active":"1","type":"hgc","latitude":"11","longitude":"89","demand_frice":"0","district":"Ariyalur","id":"987","demand":"0","demand_rice":"0"}
+[2026-07-28 15:55:17] User -> DCP InActive -> fci@pds| Akshay
+[2026-07-28 15:55:19] User -> DCP Active -> fci@pds| Akshay
+[2026-07-28 15:55:25] User -> DCP deleted -> fci@pds| Requested JSON -> {"uid":"DCP_6a68836a2e1"} | Akshay
+[2026-07-28 15:55:55] User -> DCP added ->fci@pds| Requested JSON -> {"name":"Akshay","type":"uhb","latitude":"11","longitude":"89","demand_frice":"0","district":"Ariyalur","id":"899","demand":"0","demand_rice":"0"}

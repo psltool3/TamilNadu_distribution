@@ -14,8 +14,8 @@ function validateInput($input) {
         die("Error: Value is not a number.");
     }
 
-    if ($input <= 0) {
-        die("Error: Value must be greater than 0.");
+    if ($input < 0) {
+        die("Error: Value must be 0 or greater.");
     }
 
     return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
@@ -23,7 +23,7 @@ function validateInput($input) {
 
 foreach ($_POST as $key => $value) {
     // Check if the parameter starts with 'cost_' and is not empty
-    if (substr($key, 0, 5) === 'cost_' && !empty($value)) {
+    if (substr($key, 0, 5) === 'cost_' && $value !== '') {
         // Extract the ID from the parameter name
         $id = substr($key, 5);
 		$value_temp = validateInput($value);

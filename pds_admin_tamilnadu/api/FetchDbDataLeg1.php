@@ -7,7 +7,7 @@ if(!SessionCheck()){
 	return;
 }
 
-if(empty($_POST) || empty($_POST['district']) || empty($_POST['approved']) || empty($_POST['reviewed']) || empty($_POST['fromid']) || empty($_POST['toid'])){
+if(empty($_POST) || empty($_POST['district'])){
 	die("Something went wrong...");
 }
 
@@ -53,9 +53,9 @@ if (isset($_POST['fromid']) && !empty($_POST['fromid'])) {
 if (isset($_POST['toid']) && !empty($_POST['toid'])) {
     $toid = $_POST['toid'];
     if($added==1){
-        $query .= " AND toid = '$toid'";
+        $query .= " AND to_id = '$toid'";
     }else{
-        $query .= " WHERE toid = '$toid'";
+        $query .= " WHERE to_id = '$toid'";
     }
 	$added = 1;
 }
@@ -94,18 +94,14 @@ if ($approved == "approved") {
 
 if ($district != "") {
     if($added==1){
-        $query .= " AND to_district='$district'";
+        $query .= " AND REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district'), ' ', '')";
     }else{
-        $query .= " WHERE to_district='$district'";
+        $query .= " WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district'), ' ', '')";
     }
 	$added = 1;
 }
 
 $result = mysqli_query($con,$query);
-
-if(empty(mysqli_fetch_assoc($result))){
-   die("Something went wrong..");
-}
 
 while($row = mysqli_fetch_assoc($result))
 {

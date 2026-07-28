@@ -11,7 +11,7 @@ if(!SessionCheck()){
 
 require('Header.php');
 
-if(empty($_POST) || empty($_POST["uid"]))){
+if(empty($_POST) || empty($_POST["uid"])){
 	die("Something went wrong...");
 }
 
