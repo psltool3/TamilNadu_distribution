@@ -55,6 +55,11 @@ if ($row['role'] == 'fci') {
 		exit;
 }
 
+if ($row['role'] == 'others') {
+		echo "Error: Others are not allowed to log in here.";
+		exit;
+}
+
 if ($row["verified"] == 0) {
 		echo "Error: Your account needs to be verified. Please contact admin.";
 		exit;

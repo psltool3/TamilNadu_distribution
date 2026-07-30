@@ -250,7 +250,7 @@ require('Header.php');
 		function hidePopup() {
             document.getElementById('popup').style.display = 'none';
         }
-		
+
 		
 		</script>	
     </body>

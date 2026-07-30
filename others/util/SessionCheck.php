@@ -9,7 +9,7 @@ $timeout_duration = 1800;
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > $timeout_duration) {
     session_unset();
     session_destroy();
-    header("Location: AdminLogin.html?error=session_timeout");
+    header("Location: Login.html?error=session_timeout");
     exit();
 }
 $_SESSION['last_activity'] = time();
@@ -27,7 +27,7 @@ if (!isset($_SESSION['USER_IP']) || !isset($_SESSION['USER_AGENT'])) {
     if ($_SESSION['USER_IP'] !== $user_ip || $_SESSION['USER_AGENT'] !== $user_agent) {
         session_unset();
         session_destroy();
-        header("Location: AdminLogin.html?error=session_hijacked");
+        header("Location: Login.html?error=session_hijacked");
         exit();
     }
 }
@@ -46,7 +46,7 @@ if (isset($_SESSION['user']) && isset($_SESSION['token'])) {
     if (mysqli_num_rows($result) === 0) {
         session_unset();
         session_destroy();
-        header("Location: AdminLogin.html?error=invalid_token");
+        header("Location: Login.html?error=invalid_token");
         exit();
     }
 
@@ -54,7 +54,7 @@ if (isset($_SESSION['user']) && isset($_SESSION['token'])) {
     $queryUpdate = "UPDATE login SET lastlogin='$currentLoginTime' WHERE username='$user'";
     mysqli_query($con, $queryUpdate);
 } else {
-    header("Location: AdminLogin.html?error=no_session");
+    header("Location: Login.html?error=no_session");
     exit();
 }
 ?>

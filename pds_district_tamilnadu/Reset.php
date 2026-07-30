@@ -63,6 +63,19 @@ require('util/SessionCheck.php');
           generateCaptcha();
           return false;
         }
+      function togglePasswordVisibility(inputId, iconElement) {
+        var input = document.getElementById(inputId);
+        if (input) {
+          if (input.type === "password") {
+            input.type = "text";
+            iconElement.classList.remove("fa-eye");
+            iconElement.classList.add("fa-eye-slash");
+          } else {
+            input.type = "password";
+            iconElement.classList.remove("fa-eye-slash");
+            iconElement.classList.add("fa-eye");
+          }
+        }
       }
     </script>
     <style>
@@ -103,41 +116,48 @@ require('util/SessionCheck.php');
                   name="username"
                   class="form-control"
                   placeholder="Username"
+                  style="background-color: #2b2929; color: #fff;"
                 />
               </div>
             </div>
 
             <div class="form-group">
-              <div class="col-md-12">
+              <div class="col-md-12" style="position: relative;">
                 <input
                   type="password"
                   id="oldpassword"
                   name="oldpassword"
                   class="form-control"
                   placeholder="Current Password"
+                  style="background-color: #2b2929; color: #fff; padding-right: 40px;"
                 />
+                <span class="fa fa-eye" onclick="togglePasswordVisibility('oldpassword', this)" style="position: absolute; right: 25px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #fff; z-index: 10; font-size: 16px;" title="Show/Hide Password"></span>
               </div>
             </div>
             <div class="form-group">
-              <div class="col-md-12">
+              <div class="col-md-12" style="position: relative;">
                 <input
                   type="password"
                   id="newpassword"
                   name="newpassword"
                   class="form-control"
                   placeholder="New Password"
+                  style="background-color: #2b2929; color: #fff; padding-right: 40px;"
                 />
+                <span class="fa fa-eye" onclick="togglePasswordVisibility('newpassword', this)" style="position: absolute; right: 25px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #fff; z-index: 10; font-size: 16px;" title="Show/Hide Password"></span>
               </div>
             </div>
             <div class="form-group">
-              <div class="col-md-12">
+              <div class="col-md-12" style="position: relative;">
                 <input
                   type="password"
                   id="confirmpassword"
                   name="confirmpassword"
                   class="form-control"
                   placeholder="Confirm Password"
+                  style="background-color: #2b2929; color: #fff; padding-right: 40px;"
                 />
+                <span class="fa fa-eye" onclick="togglePasswordVisibility('confirmpassword', this)" style="position: absolute; right: 25px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #fff; z-index: 10; font-size: 16px;" title="Show/Hide Password"></span>
               </div>
             </div>
             <div class="form-group">
@@ -149,6 +169,7 @@ require('util/SessionCheck.php');
                   class="form-control"
                   placeholder="Captcha Code"
                   required
+                  style="background-color: #2b2929; color: #fff;"
                 />
               </div>
             </div>

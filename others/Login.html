@@ -63,6 +63,21 @@
       }
     }
 
+    function togglePasswordVisibility(inputId, iconElement) {
+      var input = document.getElementById(inputId);
+      if (input) {
+        if (input.type === "password") {
+          input.type = "text";
+          iconElement.classList.remove("fa-eye");
+          iconElement.classList.add("fa-eye-slash");
+        } else {
+          input.type = "password";
+          iconElement.classList.remove("fa-eye-slash");
+          iconElement.classList.add("fa-eye");
+        }
+      }
+    }
+
     // Fetch CSRF Token
     function injectCSRFToken() {
       fetch("get_token.php")
@@ -160,9 +175,12 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="col-md-12">
+            <div class="col-md-12" style="position: relative;">
               <input type="password" id="password" name="password" class="form-control" placeholder="Password"
-                style="background-color: #2b2929" ; />
+                style="background-color: #2b2929; padding-right: 40px;" />
+              <span class="fa fa-eye" onclick="togglePasswordVisibility('password', this)"
+                style="position: absolute; right: 25px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #fff; z-index: 10; font-size: 16px;"
+                title="Show/Hide Password"></span>
             </div>
           </div>
           <div class="form-group">

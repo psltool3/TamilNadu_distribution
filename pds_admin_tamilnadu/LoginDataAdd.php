@@ -69,6 +69,7 @@ require('Header.php');
 														<option value="admin">Admin</option>
                                                         <option value="fci">FCI</option>
                                                         <option value="dfpd">DFPD</option>
+                                                        <option value="others">Others</option>
                                                     </select>
 													</div>
                                                     <span class="help-block">District Name/Admin Role</span>

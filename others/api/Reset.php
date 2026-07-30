@@ -106,6 +106,6 @@ mysqli_close($con);
 session_unset();
 session_destroy();
 
-echo "<script>window.location.href = '../AdminLogin.html';</script>";
+echo "<script>window.location.href = '../Login.html';</script>";
 ?>
 <?php require('Fullui.php'); ?>

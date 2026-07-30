@@ -39,7 +39,7 @@ if (!$result || mysqli_num_rows($result) == 0) {
 		mysqli_query($con, $queryUpdate);
 
 		mysqli_close($con);
-		echo "<script>alert('Password updated successfully!'); window.location.href = '../AdminLogin.html';</script>";
+		echo "<script>alert('Password updated successfully!'); window.location.href = '../Login.html';</script>";
 	} else {
 		echo "Error: Username or Old Password is incorrect.";
 	}
