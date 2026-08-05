@@ -5,7 +5,7 @@ require('Header.php');
 
 $uid_email = [];
 
-$query = "SELECT * FROM login WHERE role!='admin'";
+$query = "SELECT * FROM login";
 $result = mysqli_query($con,$query);
 while($row = mysqli_fetch_assoc($result)){
 	$uniqueid = $row['uid'];
@@ -119,7 +119,7 @@ while($row = mysqli_fetch_assoc($result)){
 										while($row = mysqli_fetch_array($result))
 										{
 											$temp_id = (string)$row['id'];
-											$email = $uid_email[$row['user_id']];
+											$email = isset($uid_email[$row['user_id']]) ? $uid_email[$row['user_id']] : $row['user_id'];
 											echo "<tr><td>{$email}</td>".
 											 "<td>{$row['message']}</td>".
 											 "<td>{$row['date']}</td>".
