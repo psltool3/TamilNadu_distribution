@@ -1,23 +1,20 @@
 <?php
+ob_start();
 
 require('../util/Connection.php');
 require '../vendor/autoload.php';
 require('../util/SessionCheck.php');
 
-
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
 
 // Check if format is specified in GET request
 if (isset($_GET['format'])) {
     $format = $_GET['format'];
     $district = $_SESSION['district_district'];
-    #$columns = ["from_district","from_id","from_name","to_district","to_id","to_name"];
 	$columns = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 	$columns_pdf = ["scenario","from","from_id","from_name","from_district","from_lat","from_long","to","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 
-	
 	$query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
 	$result = mysqli_query($con,$query);
 	$numrow = mysqli_num_rows($result);
@@ -28,7 +25,75 @@ if (isset($_GET['format'])) {
 	}
 
 	$tablename = "optimiseddata_".$id;
-    $query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
+
+	$reviewed = isset($_GET['reviewed']) ? mysqli_real_escape_string($con, $_GET['reviewed']) : '';
+	$approved = isset($_GET['approved']) ? mysqli_real_escape_string($con, $_GET['approved']) : '';
+	$from_id = isset($_GET['fromid']) ? mysqli_real_escape_string($con, $_GET['fromid']) : '';
+	$to_id = isset($_GET['toid']) ? mysqli_real_escape_string($con, $_GET['toid']) : '';
+
+	$query = "SELECT * FROM " . $tablename . " WHERE to_district='$district'";
+	if($reviewed=="reviewed"){
+		$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district'";
+	}
+	else if($reviewed=="notreviewed"){
+		$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district'";
+	}
+
+	if($approved=="approved"){
+		$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district'";
+	}
+	else if($approved=="notapproved"){
+		$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district'";
+	}
+	if($from_id!=""){
+		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND from_id='$from_id'";
+		if($reviewed=="reviewed"){
+			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND from_id='$from_id'";
+		}
+		else if($reviewed=="notreviewed"){
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND from_id='$from_id'";
+		}
+
+		if($approved=="approved"){
+			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND from_id='$from_id'";
+		}
+		else if($approved=="notapproved"){
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND from_id='$from_id'";
+		}
+	}
+	if($to_id!=""){
+		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to_id`='$to_id'";
+		if($reviewed=="reviewed"){
+			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to_id`='$to_id'";
+		}
+		else if($reviewed=="notreviewed"){
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to_id`='$to_id'";
+		}
+
+		if($approved=="approved"){
+			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to_id`='$to_id'";
+		}
+		else if($approved=="notapproved"){
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to_id`='$to_id'";
+		}
+	}
+	if($to_id!="" and $from_id!=""){
+		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
+		if($reviewed=="reviewed"){
+			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
+		}
+		else if($reviewed=="notreviewed"){
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
+		}
+
+		if($approved=="approved"){
+			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
+		}
+		else if($approved=="notapproved"){
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id' ";
+		}
+	}
+
     $result = mysqli_query($con,$query);
     $numrows = mysqli_num_rows($result);
     $tableData = array();
@@ -87,6 +152,9 @@ if (isset($_GET['format'])) {
     // Set headers for the chosen format
     switch ($format) {
         case 'csv':
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="' . $filename . '.csv"');
             outputCSV($tableData);
@@ -102,14 +170,16 @@ if (isset($_GET['format'])) {
             foreach ($tableData as $rowData) {
                 $columnIndex = 1;
                 foreach ($rowData as $value) {
-                    $sheet->setCellValueByColumnAndRow($columnIndex, $rowIndex, $value);
+                    $sheet->setCellValue([$columnIndex, $rowIndex], $value ?? '');
                     $columnIndex++;
                 }
                 $rowIndex++;
             }
 
-
-            header('Content-Type: application/vnd.ms-excel');
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
             header('Cache-Control: max-age=0');
 
@@ -136,6 +206,7 @@ if (isset($_GET['format'])) {
 				$pdf->SetFillColor($isHeader ? 200 : 255, $isHeader ? 220 : 255, $isHeader ? 255 : 255);
 				$i = 0;
 				foreach ($row as $col) {
+					$colStr = ($col === null) ? '' : (string)$col;
 					$i = $i + 1;
 					if($i==10){
 						$colWidth = $colWidth*3;
@@ -145,11 +216,11 @@ if (isset($_GET['format'])) {
 					$fontSize = 12;
 					$pdf->SetFont('Arial', 'B', $fontSize);
 					// Reduce font size if text is too wide for the cell
-					while ($pdf->GetStringWidth($col) > $colWidth - 2 && $fontSize > 1) {
+					while ($pdf->GetStringWidth($colStr) > $colWidth - 2 && $fontSize > 1) {
 						$fontSize -= 1;
 						$pdf->SetFont('Arial', 'B', $fontSize);
 					}
-					$pdf->Cell($colWidth, 10, $col, 1, 0, 'C', true);
+					$pdf->Cell($colWidth, 10, $colStr, 1, 0, 'C', true);
 				}
 				$pdf->Ln();
 			}
@@ -159,7 +230,6 @@ if (isset($_GET['format'])) {
 
 			// Add the data rows
 			$rowHeight = 10;
-			$maxRowsPerPage = ($pdf->GetPageHeight() - 20) / $rowHeight; // Subtract margins (10 mm each top and bottom)
 
 			for ($i = 1; $i < count($tableData_pdf); $i++) {
 				if ($pdf->GetY() + $rowHeight > $pdf->GetPageHeight() - 10) { // Check if we need to add a new page
@@ -169,6 +239,9 @@ if (isset($_GET['format'])) {
 				addRow($pdf, $tableData_pdf[$i], $colWidth);
 			}
 
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
             header('Content-Type: application/pdf');
             header('Content-Disposition: attachment;filename="' . $filename . '.pdf"');
             echo $pdf->Output('S');
@@ -183,8 +256,6 @@ if (isset($_GET['format'])) {
     echo 'Error : Please specify a format in the GET request (e.g., ?format=pdf).';
 }
 
-
-
 // Function to output CSV data
 function outputCSV($data) {
     $output = fopen('php://output', 'w');
@@ -195,3 +266,5 @@ function outputCSV($data) {
 }
 
 exit();
+
+?>

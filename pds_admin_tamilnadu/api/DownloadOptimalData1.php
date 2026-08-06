@@ -49,9 +49,9 @@ if (isset($_GET['format'])) {
 
             $district_escaped = mysqli_real_escape_string($con, $district);
             if (!empty($district) && strtolower($district) !== "all") {
-                $query = "SELECT * FROM $tablename WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+                $query = "SELECT * FROM $tablename WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '') AND status='implemented'";
             } else {
-                $query = "SELECT * FROM $tablename WHERE 1";
+                $query = "SELECT * FROM $tablename WHERE status='implemented'";
             }
 
             $result  = mysqli_query($con, $query);

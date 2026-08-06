@@ -299,6 +299,7 @@ try{
 					$DCP->setType($column[$type]);
 					$DCP->setDemand($column[$demand]);
 					$DCP->setDemandrice($column[$demand_rice]);
+					$DCP->setDemandfrice($column[$demand_frice]);
 					$DCP->setActive($column[$active]);
 					$query_check = $DCP->checkEdit($DCP);
 					$query_result = mysqli_query($con, $query_check);

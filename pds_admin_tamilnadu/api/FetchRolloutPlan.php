@@ -75,9 +75,14 @@ if ($result && $result->num_rows > 0) {
 			}
 		}
 	}
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
+	$district_escaped = mysqli_real_escape_string($con, $district);
+	if (strtolower($district) === 'all' || empty($district)) {
+		$query = "SELECT * FROM ".$tablename." WHERE status='implemented'";
+	} else {
+		$query = "SELECT * FROM ".$tablename." WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '') AND status='implemented'";
+	}
 	$result = mysqli_query($con,$query);
-	$numrows = mysqli_num_rows($result);
+	$numrows = $result ? mysqli_num_rows($result) : 0;
 	while($row = mysqli_fetch_assoc($result))
 	{
 		if($row['new_id_admin']!=null or $row['new_id_admin']!=""){
@@ -115,7 +120,11 @@ if ($result && $result->num_rows > 0) {
 	if($numrows==0){
 		$data = "";
 	}
-	$query = "SELECT * FROM ".$tablename." WHERE 1";
+	if (strtolower($district) === 'all' || empty($district)) {
+		$query = "SELECT * FROM ".$tablename." WHERE status='implemented'";
+	} else {
+		$query = "SELECT * FROM ".$tablename." WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '') AND status='implemented'";
+	}
 	$result = mysqli_query($con,$query);
 	$numrows = mysqli_num_rows($result);
 	while($row = mysqli_fetch_assoc($result))

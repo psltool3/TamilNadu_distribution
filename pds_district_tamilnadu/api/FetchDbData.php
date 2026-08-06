@@ -7,10 +7,6 @@ if(!SessionCheck()){
 	return;
 }
 
-//if(empty($_POST) || empty($_POST['month']) || empty($_POST['district'])){
-//	die("Something went wrong...");
-//}
-
 if(empty($_POST)){
 	die("Something went wrong...");
 }
@@ -43,123 +39,76 @@ if (isset($_POST['reviewed'])) {
     $reviewed = $_POST['reviewed'];
 }
 
-
 $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
 $result = mysqli_query($con,$query);
-$response = array();
 $id = "";
-while($row = mysqli_fetch_array($result))
-{
-	$id= $row["id"];
+$rolled_out = "0";
+if($result && mysqli_num_rows($result) > 0){
+	$row = mysqli_fetch_array($result);
+	$id = $row["id"];
+	$rolled_out = isset($row["rolled_out"]) ? (string)$row["rolled_out"] : "0";
 }
 
+if($rolled_out !== "1" || empty($id)){
+	echo json_encode(["data" => [], "warehouse" => []]);
+	exit();
+}
 
 $tablename = "optimiseddata_".$id;
+$district = isset($_SESSION['district_district']) ? $_SESSION['district_district'] : '';
+$reviewed = isset($_POST['reviewed']) ? $_POST['reviewed'] : '';
+$approved = isset($_POST['approved']) ? $_POST['approved'] : '';
+$from_id = isset($_POST['fromid']) ? $_POST['fromid'] : '';
+$to_id = isset($_POST['toid']) ? $_POST['toid'] : '';
 
-$district = $_SESSION['district_district'];
-$reviewed = "";
-$approved = "";
-$from_id = "";
-$to_id = "";
+$district_escaped = mysqli_real_escape_string($con, $district);
+$where = array();
+$where[] = "REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
 
-if(isset($_POST['fromid'])){
-	$from_id = $_POST['fromid'];
+if ($reviewed == "reviewed") {
+    $where[] = "approve_district='yes'";
+} else if ($reviewed == "notreviewed") {
+    $where[] = "(approve_district = '' OR approve_district IS NULL)";
 }
 
-if(isset($_POST['toid'])){
-	$to_id = $_POST['toid'];
+if ($approved == "approved") {
+    $where[] = "approve_admin='yes'";
+} else if ($approved == "notapproved") {
+    $where[] = "(approve_admin='no' OR approve_admin IS NULL)";
 }
 
-if(isset($_POST['approved'])){
-	$approved = $_POST['approved'];
+if (!empty($from_id)) {
+    $from_id_escaped = mysqli_real_escape_string($con, $from_id);
+    $where[] = "from_id='$from_id_escaped'";
 }
 
-if(isset($_POST['reviewed'])){
-	$reviewed = $_POST['reviewed'];
+if (!empty($to_id)) {
+    $to_id_escaped = mysqli_real_escape_string($con, $to_id);
+    $where[] = "`to_id`='$to_id_escaped'";
 }
 
-
-
-$query = "SELECT * FROM " . $tablename . " WHERE to_district='$district'";
-if($reviewed=="reviewed"){
-	$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district'";
-}
-else if($reviewed=="notreviewed"){
-	$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district'";
-}
-
-if($approved=="approved"){
-	$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district'";
-}
-else if($approved=="notapproved"){
-	$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district'";
-}
-if($from_id!=""){
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND from_id='$from_id'";
-	if($reviewed=="reviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND from_id='$from_id'";
-	}
-	else if($reviewed=="notreviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND from_id='$from_id'";
-	}
-
-	if($approved=="approved"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND from_id='$from_id'";
-	}
-	else if($approved=="notapproved"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND from_id='$from_id'";
-	}
-}
-if($to_id!=""){
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to`='$to_id'";
-	if($reviewed=="reviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to`='$to_id'";
-	}
-	else if($reviewed=="notreviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to`='$to_id'";
-	}
-
-	if($approved=="approved"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to`='$to_id'";
-	}
-	else if($approved=="notapproved"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to`='$to_id'";
-	}
-}
-if($to_id!="" and $from_id!=""){
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
-	if($reviewed=="reviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
-	}
-	else if($reviewed=="notreviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
-	}
-
-	if($approved=="approved"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
-	}
-	else if($approved=="notapproved"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id' ";
-	}
+$query = "SELECT * FROM " . $tablename . " WHERE " . implode(" AND ", $where);
+$data = array();
+$result = mysqli_query($con, $query);
+if ($result) {
+    while($row = mysqli_fetch_array($result)) {
+        $data[] = $row;
+    }
 }
 
-$result = mysqli_query($con,$query);
-while($row = mysqli_fetch_array($result))
-{
-	$data[] = $row;
+$query_warehouse = "SELECT * FROM warehouse WHERE REPLACE(LOWER(district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+$warehouse = array();
+$result_warehouse = mysqli_query($con, $query_warehouse);
+if ($result_warehouse) {
+    while($row_warehouse = mysqli_fetch_array($result_warehouse)) {
+        $warehouse[] = $row_warehouse;
+    }
 }
 
-$query_warehouse = "SELECT * from warehouse WHERE district='$district' ";
-$result_warehouse = mysqli_query($con,$query_warehouse);
-while($row_warehouse = mysqli_fetch_array($result_warehouse)){
-	$warehouse[] = $row_warehouse;
-}
-$resultarray = [];
-if($data==null){
-	$data = array();
-}
-$resultarray["data"] = $data;
-$resultarray["warehouse"] = $warehouse;
+$resultarray = array(
+    "data" => $data,
+    "warehouse" => $warehouse
+);
+
 echo json_encode($resultarray);
-
 ?>

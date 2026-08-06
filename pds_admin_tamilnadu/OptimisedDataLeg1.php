@@ -277,7 +277,8 @@ if($currentTimestamp >= $targetTimestamp) {
 												<th style="font-size:16px">FCI Release Warehouse</th>
 												<th style="font-size:16px">Reason for not Approve</th>
 												<th style="font-size:16px">Distance</th>
-												<th style="font-size:16px">Status</th>										
+												<th style="font-size:16px">Status</th>
+												<th style="font-size:16px">Action</th>
                                             </tr>
                                         </thead>
 										<tbody id="table_body">
@@ -449,6 +450,119 @@ if($currentTimestamp >= $targetTimestamp) {
 				delete modifiedReasonData[selectedId];
 			}
 		}
+
+		function enableDisableApprove(selectedId){
+			newvalue = document.getElementById(selectedId).value;
+			
+			if(newvalue=="yes"){
+				modifiedApproveData[selectedId] = "yes";
+			}
+			else if(newvalue=="no"){
+				modifiedApproveData[selectedId] = "no";
+			}
+			else{
+				modifiedApproveData[selectedId] = "";
+			}
+		}
+
+		function saveRowData(fromId, toId, commodity, uniqueid) {
+			var boolElem = document.getElementById(uniqueid + "_bool");
+			var idApproveElem = document.getElementById(uniqueid + "_approve");
+			
+			var boolVal = boolElem ? boolElem.value : "";
+			var idApproveVal = idApproveElem ? idApproveElem.value : "";
+			
+			if ((!boolElem || boolVal === "") && (!idApproveElem || idApproveVal === "")) {
+				alert("Please select an approval option before saving.");
+				return;
+			}
+			
+			var newId = "";
+			var reason = "";
+			var distance = "";
+			
+			if (boolVal === "no") {
+				var idElem = document.getElementById(uniqueid);
+				var reasonElem = document.getElementById(uniqueid + "_idreason");
+				var distanceElem = document.getElementById(uniqueid + "_iddistance");
+				
+				newId = idElem ? idElem.value : "";
+				reason = reasonElem ? reasonElem.value : "";
+				distance = distanceElem ? distanceElem.value : "";
+				
+				if (newId === "") {
+					alert("New Id needs to be selected");
+					return;
+				}
+				if (reason === "") {
+					alert("Reason needs to be selected");
+					return;
+				}
+				if (distance === "" || distance.trim() === "") {
+					alert("Distance needs to be filled");
+					return;
+				}
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "api/SaveRowDataLeg1.php",
+				data: {
+					fromid: fromId,
+					toid: toId,
+					commodity: commodity,
+					approve_bool: boolVal,
+					id_approve: idApproveVal,
+					new_id_admin: newId,
+					reason_admin: reason,
+					new_distance_admin: distance
+				},
+				cache: false,
+				success: function(response) {
+					location.reload();
+				},
+				error: function() {
+					alert("Error saving row data. Please try again.");
+				}
+			});
+		}
+
+		function resetRowData(fromId, toId, commodity, uniqueid) {
+			if (confirm("Are you sure you want to reset this item?")) {
+				if (modifiedData.hasOwnProperty(uniqueid)) {
+					delete modifiedData[uniqueid];
+				}
+				if (modifiedIdData.hasOwnProperty(uniqueid)) {
+					delete modifiedIdData[uniqueid];
+				}
+				if (modifiedReasonData.hasOwnProperty(uniqueid + "_idreason")) {
+					delete modifiedReasonData[uniqueid + "_idreason"];
+				}
+				if (modifiedDistanceData.hasOwnProperty(uniqueid + "_iddistance")) {
+					delete modifiedDistanceData[uniqueid + "_iddistance"];
+				}
+				if (modifiedApproveData.hasOwnProperty(uniqueid + "_approve")) {
+					delete modifiedApproveData[uniqueid + "_approve"];
+				}
+
+				$.ajax({
+					type: "POST",
+					url: "api/ResetRowDataLeg1.php",
+					data: {
+						fromid: fromId,
+						toid: toId,
+						commodity: commodity
+					},
+					cache: false,
+					success: function(response) {
+						location.reload();
+					},
+					error: function() {
+						alert("Error resetting row data. Please try again.");
+					}
+				});
+			}
+		}
 		
 		function sendData(){
 			for (var key in modifiedData) {
@@ -599,7 +713,7 @@ if($currentTimestamp >= $targetTimestamp) {
 						if(result!=""){
 							var resultarray = JSON.parse(result);
 							var toidarray = resultarray.map(function(item) {
-								return item.to;
+								return item.to_id;
 							});
 							if (toidarray.length > 0) {
 								toidarray.forEach(function(toId) {
@@ -722,7 +836,16 @@ if($currentTimestamp >= $targetTimestamp) {
 									var admin_reason = "<td><select class='form-control' onchange='handleReasonChange(\"" + uniqueid_idreason + "\")' id='" + uniqueid_idreason + "' name='" + uniqueid_idreason + "' disabled><option value=''>Select</option><option value='Road not accessible'>Road not accessible</option><option value='Road repair going on'>Road repair going on</option><option value='Pertaining to Distance'>Pertaining to Distance</option></select></td>";
 								}
 								
-								$('#table_body').append(subpart1 + warehouse_id_part + admin_reason + newdistance  + admin_approve + "</tr>");
+								var toIdVal = obj[datafield]["to_id"] !== undefined && obj[datafield]["to_id"] !== null ? obj[datafield]["to_id"] : obj[datafield]["to"];
+								var saveDisabled = (approve_admin !== "") ? "disabled" : "";
+								var resetDisabled = (approve_admin === "") ? "disabled" : "";
+								
+								var action_buttons = "<td>" +
+									"<button type='button' class='btn btn-primary' style='margin-right:5px;' " + saveDisabled + " onclick='saveRowData(\"" + obj[datafield]["from_id"] + "\", \"" + toIdVal + "\", \"" + obj[datafield]["commodity"] + "\", \"" + uniqueid + "\")'>Save</button>" +
+									"<button type='button' class='btn btn-warning' " + resetDisabled + " onclick='resetRowData(\"" + obj[datafield]["from_id"] + "\", \"" + toIdVal + "\", \"" + obj[datafield]["commodity"] + "\", \"" + uniqueid + "\")'>Reset</button>" +
+									"</td>";
+								
+								$('#table_body').append(subpart1 + warehouse_id_part + admin_reason + newdistance  + admin_approve + action_buttons + "</tr>");
 							}
 							//fetchCardDataFromServer();							
 						}

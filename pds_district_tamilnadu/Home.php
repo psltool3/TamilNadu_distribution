@@ -9,30 +9,39 @@ $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
 $result = mysqli_query($con,$query);
 $response = array();
 $id = "";
-while($row = mysqli_fetch_array($result))
-{
-	$id= $row["id"];
+$rolled_out = "0";
+if($result && mysqli_num_rows($result) > 0){
+	$row = mysqli_fetch_assoc($result);
+	$id = $row["id"];
+	$rolled_out = isset($row["rolled_out"]) ? (string)$row["rolled_out"] : "0";
 }
 
+if ($rolled_out !== "1" || empty($id)) {
+	$totalids = 0;
+	$totalidsreviewed = 0;
+	$totalidsrequested = 0;
+	$totalidsapproved = 0;
+} else {
+	$tablename = "optimiseddata_".$id;
+	$district_escaped = mysqli_real_escape_string($con, $district);
+	$district_cond = "REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
 
-$tablename = "optimiseddata_".$id;
+	$query = "SELECT to_district FROM ". $tablename ." WHERE " . $district_cond;
+	$result = mysqli_query($con,$query);
+	$totalids = $result ? mysqli_num_rows($result) : 0;
 
+	$query = "SELECT approve_district FROM ". $tablename ." WHERE " . $district_cond . " AND approve_district='yes'";
+	$result = mysqli_query($con,$query);
+	$totalidsreviewed = $result ? mysqli_num_rows($result) : 0;
 
-$query = "SELECT to_district FROM ". $tablename ." WHERE to_district='$district'";
-$result = mysqli_query($con,$query);
-$totalids = mysqli_num_rows($result);
+	$query = "SELECT new_id_district FROM ". $tablename ." WHERE " . $district_cond . " AND new_id_district<>'' AND new_id_district IS NOT NULL";
+	$result = mysqli_query($con,$query);
+	$totalidsrequested = $result ? mysqli_num_rows($result) : 0;
 
-$query = "SELECT approve_district FROM ". $tablename ." WHERE to_district='$district' AND approve_district='yes'";
-$result = mysqli_query($con,$query);
-$totalidsreviewed = mysqli_num_rows($result);
-
-$query = "SELECT new_id_district FROM ". $tablename ." WHERE to_district='$district' AND new_id_district<>''";
-$result = mysqli_query($con,$query);
-$totalidsrequested = mysqli_num_rows($result);
-
-$query = "SELECT approve_admin FROM ". $tablename ." WHERE to_district='$district' AND approve_admin='yes'";
-$result = mysqli_query($con,$query);
-$totalidsapproved = mysqli_num_rows($result);
+	$query = "SELECT approve_admin FROM ". $tablename ." WHERE " . $district_cond . " AND approve_admin='yes'";
+	$result = mysqli_query($con,$query);
+	$totalidsapproved = $result ? mysqli_num_rows($result) : 0;
+}
 
 //code to check the time expiry
 
@@ -586,10 +595,17 @@ if($currentTimestamp >= $targetTimestamp) {
 				});
 			}
 		}
+		function getDownloadQueryString(format) {
+			var approved = document.getElementById("approved") ? document.getElementById("approved").value : "";
+			var reviewed = document.getElementById("reviewed") ? document.getElementById("reviewed").value : "";
+			var from_id = document.getElementById("from_id") ? document.getElementById("from_id").value : "";
+			var to_id = document.getElementById("to_id") ? document.getElementById("to_id").value : "";
+			return 'format=' + format + '&approved=' + encodeURIComponent(approved) + '&reviewed=' + encodeURIComponent(reviewed) + '&fromid=' + encodeURIComponent(from_id) + '&toid=' + encodeURIComponent(to_id);
+		}
+
 		document.getElementById('downloadCSV').addEventListener('click', async function() {
 			try {
-				
-				const csvResponse = await fetch('api/DownloadOptimalData.php?format=csv');
+				const csvResponse = await fetch('api/DownloadOptimalData.php?' + getDownloadQueryString('csv'));
 				const csvBlob = await csvResponse.blob();
 				downloadFile(csvBlob, 'Tamilnadu_Result' + getDateString() + '.csv');
 			} catch (error) {
@@ -609,8 +625,7 @@ if($currentTimestamp >= $targetTimestamp) {
 		// Event listener for downloading XLSX
 		document.getElementById('downloadXLSX').addEventListener('click', async function() {
 			try {
-				
-				const excelResponse = await fetch('api/DownloadOptimalData.php?format=xlsx');
+				const excelResponse = await fetch('api/DownloadOptimalData.php?' + getDownloadQueryString('xlsx'));
 				const excelBlob = await excelResponse.blob();
 				downloadFile(excelBlob, 'Tamilnadu_Result' + getDateString() + '.xlsx');
 			} catch (error) {
@@ -620,8 +635,7 @@ if($currentTimestamp >= $targetTimestamp) {
 		
 		document.getElementById('downloadPDF').addEventListener('click', async function() {
 			try {
-				
-				const excelResponse = await fetch('api/DownloadOptimalData.php?format=pdf');
+				const excelResponse = await fetch('api/DownloadOptimalData.php?' + getDownloadQueryString('pdf'));
 				const excelBlob = await excelResponse.blob();
 				downloadFile(excelBlob, 'Tamilnadu_Result' + getDateString() + '.pdf');
 			} catch (error) {
@@ -725,7 +739,7 @@ if($currentTimestamp >= $targetTimestamp) {
 						if(result!=""){
 							var resultarray = JSON.parse(result);
 							var toidarray = resultarray.map(function(item) {
-								return item.to;
+								return item.to_id;
 							});
 							if (toidarray.length > 0) {
 								toidarray.forEach(function(toId) {

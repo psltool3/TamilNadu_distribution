@@ -42,7 +42,7 @@ require('Header.php');
 								<a href="BulkFPSData.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-info">Bulk Data Add</button></a>
 								<span style="float:right;margin-top:10px;margin-right:13px"><button type="button" onclick="delete_all()"  class="btn btn-danger">Delete All</button></span>
 								<a href="FPSAdd.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-success">Add New</button></a>
-                                <a href="api/BulkFPSDownloadEdit.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-info">Download Data</button></a>
+                                <button type="button" class="btn btn-info" onclick="downloadFPSData()" style="float:right;margin-top:10px;margin-right:13px">Download Data</button>
                             
 								</br></br>
 								<div>
@@ -253,6 +253,11 @@ require('Header.php');
 				}
 			}
 			
+			if(district=="all"){
+				$('#fps_table').empty();
+				return;
+			}
+			
 			var dataString = "district=" + district;
 			
 			$.ajax({
@@ -289,6 +294,11 @@ require('Header.php');
 					}
 				}
 			});
+		}
+		
+		function downloadFPSData(){
+			var district = document.getElementById('district').value;
+			window.location.href = "api/BulkFPSDownloadEdit.php?district=" + encodeURIComponent(district);
 		}
 		
 		fetchDataFromServer();

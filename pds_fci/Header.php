@@ -100,7 +100,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 					<a href="HomeLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Step 2.1 Optimise Leg1</span></a>
 				</li>
 				<li <?php echo ($current_page === 'OptimisedDataLeg1.php') ? 'class="active"' : ''; ?>>
-					<a href="OptimisedDataLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Step 2.2 Optimise Plan Leg1</span></a>
+					<a href="OptimisedDataLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Optimise Plan Leg1</span></a>
 				</li>
 				<li <?php echo ($current_page === 'RolloutPlanLeg1.php') ? 'class="active"' : ''; ?>>
 					<a href="RolloutPlanLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Step 2.3 Rollout Plan Leg1</span></a>
@@ -127,7 +127,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 					<a href="DCP.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Edit FCI</span></a>
 				</li>
 				<li <?php echo ($current_page === 'OptimisedDataLeg1.php') ? 'class="active"' : ''; ?>>
-					<a href="OptimisedDataLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Step 2.2 OptimisedPlan Leg1</span></a>
+					<a href="OptimisedDataLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">OptimisedPlan Leg1</span></a>
 				</li>
 				<li <?php echo ($current_page === 'api/Logout.php') ? 'class="active"' : ''; ?> style="margin-bottom: 30px;">
 					<a href="api/Logout.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Logout</span></a>

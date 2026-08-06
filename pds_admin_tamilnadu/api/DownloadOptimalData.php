@@ -1,4 +1,5 @@
 <?php
+ob_start();
 
 require('../util/Connection.php');
 require '../vendor/autoload.php';
@@ -54,9 +55,9 @@ if (isset($_GET['format'])) {
 
             $district_escaped = mysqli_real_escape_string($con, $district);
             if (!empty($district) && strtolower($district) !== "all") {
-                $query = "SELECT * FROM $tablename WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+                $query = "SELECT * FROM $tablename WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '') AND status='implemented'";
             } else {
-                $query = "SELECT * FROM $tablename WHERE 1";
+                $query = "SELECT * FROM $tablename WHERE status='implemented'";
             }
 
             $result  = mysqli_query($con, $query);
@@ -123,12 +124,15 @@ if (isset($_GET['format'])) {
             foreach ($tableData as $rowData) {
                 $columnIndex = 1;
                 foreach ($rowData as $value) {
-                    $sheet->setCellValueByColumnAndRow($columnIndex, $rowIndex, $value);
+                    $sheet->setCellValue([$columnIndex, $rowIndex], $value ?? '');
                     $columnIndex++;
                 }
                 $rowIndex++;
             }
 
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
             header('Cache-Control: max-age=0');

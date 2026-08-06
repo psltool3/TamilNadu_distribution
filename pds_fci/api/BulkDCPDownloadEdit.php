@@ -53,7 +53,15 @@ header('Cache-Control: max-age=0');
 // Render excel data 
 echo $excelDataColumns;
 
-$query = "SELECT * FROM dcp WHERE 1";
+$district = isset($_GET['district']) ? $_GET['district'] : (isset($_POST['district']) ? $_POST['district'] : '');
+
+$whereClause = " WHERE 1";
+if(!empty($district) && strtolower($district) !== 'all'){
+	$district_escaped = mysqli_real_escape_string($con, $district);
+	$whereClause = " WHERE district='$district_escaped'";
+}
+
+$query = "SELECT * FROM dcp" . $whereClause;
 $result = mysqli_query($con,$query);
 $numrows = mysqli_num_rows($result);
 if($numrows>0){

@@ -14,6 +14,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 		<script> var pythonUrl = "http://localhost:5019/"; var directory = "" </script>
+		<!-- <script> var pythonUrl = "/proxy.php?api=api19&path="; var directory = "" </script> -->
 								
 		<style>
 		.popup {

@@ -20,11 +20,6 @@ if(empty($_POST) || empty($_POST['username']) || empty($_POST['password'])){
 }
 
 function formatName($name) {
-	if(preg_match('/[^a-zA-Z\s]/', $name)){
-        echo "Error : Name contains invalid characters. Only letters and spaces are allowed.";
-		exit();
-    }
-    $name = ucwords(strtolower($name));
     return trim($name);
 }
 
@@ -58,8 +53,8 @@ $dbHashedPassword = $row['password'];
 if(password_verify($person->getPassword(), $dbHashedPassword)){
     $District = new District;
 
-	$District->setName(formatName(str_replace("'","",$_POST['name'])));
-	$District->setId(formatUID($_POST['uid']));
+	$District->setName(mysqli_real_escape_string($con, formatName($_POST['name'])));
+	$District->setId(mysqli_real_escape_string($con, formatUID($_POST['uid'])));
 
 	$query = $District->update($District);
 	$result = mysqli_query($con,$query);

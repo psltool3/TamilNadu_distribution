@@ -8,29 +8,40 @@ $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
 $result = mysqli_query($con,$query);
 $response = array();
 $id = "";
-while($row = mysqli_fetch_array($result))
-{
-	$id= $row["id"];
+$rolled_out = "0";
+if($result && mysqli_num_rows($result) > 0){
+	$row = mysqli_fetch_assoc($result);
+	$id = $row["id"];
+	$rolled_out = isset($row["rolled_out"]) ? (string)$row["rolled_out"] : "0";
 }
 
+if ($rolled_out !== "1" || empty($id)) {
+	$totalids = 0;
+	$totalidsreviewed = 0;
+	$totalidsrequested = 0;
+	$totalidsapproved = 0;
+} else {
+	$tablename = "optimiseddata_".$id;
+	$district_escaped = mysqli_real_escape_string($con, $district);
+	$district_cond = "REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+	$approved_cond = "approve_district='yes' AND approve_admin='yes'";
 
-$tablename = "optimiseddata_".$id;
+	$query = "SELECT from_district FROM " . $tablename . " WHERE " . $district_cond . " AND " . $approved_cond;
+	$result = mysqli_query($con,$query);
+	$totalids = $result ? mysqli_num_rows($result) : 0;
 
-$query = "SELECT from_district FROM " . $tablename . " WHERE 1";
-$result = mysqli_query($con,$query);
-$totalids = mysqli_num_rows($result);
+	$query = "SELECT approve_district FROM " . $tablename . " WHERE " . $district_cond . " AND " . $approved_cond;
+	$result = mysqli_query($con,$query);
+	$totalidsreviewed = $result ? mysqli_num_rows($result) : 0;
 
-$query = "SELECT approve_district FROM " . $tablename . " WHERE approve_district='yes'";
-$result = mysqli_query($con,$query);
-$totalidsreviewed = mysqli_num_rows($result);
+	$query = "SELECT new_id_district FROM " . $tablename . " WHERE " . $district_cond . " AND " . $approved_cond . " AND new_id_district<>'' AND new_id_district IS NOT NULL";
+	$result = mysqli_query($con,$query);
+	$totalidsrequested = $result ? mysqli_num_rows($result) : 0;
 
-$query = "SELECT new_id_district FROM " . $tablename . " WHERE new_id_district<>''";
-$result = mysqli_query($con,$query);
-$totalidsrequested = mysqli_num_rows($result);
-
-$query = "SELECT approve_admin FROM " . $tablename . " WHERE approve_admin='yes'";
-$result = mysqli_query($con,$query);
-$totalidsapproved = mysqli_num_rows($result);
+	$query = "SELECT approve_admin FROM " . $tablename . " WHERE " . $district_cond . " AND " . $approved_cond;
+	$result = mysqli_query($con,$query);
+	$totalidsapproved = $result ? mysqli_num_rows($result) : 0;
+}
 							
 ?>
 <style>

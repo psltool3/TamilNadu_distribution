@@ -7,24 +7,31 @@ if(!SessionCheck()){
 	return;
 }
 
-$district = $_SESSION['district_district'];
+$district = isset($_SESSION['district_district']) ? $_SESSION['district_district'] : '';
 $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
 $result = mysqli_query($con,$query);
-$numrow = mysqli_num_rows($result);
 $id = "";
-if($numrow>0){
+$rolled_out = "0";
+if($result && mysqli_num_rows($result) > 0){
 	$row = mysqli_fetch_assoc($result);
 	$id = $row['id'];
+	$rolled_out = isset($row["rolled_out"]) ? (string)$row["rolled_out"] : "0";
+}
+
+if($rolled_out !== "1" || empty($id)){
+	echo json_encode([]);
+	exit();
 }
 
 $tablename = "optimiseddata_".$id;
-$result = $con->query("SELECT DISTINCT from_id from $tablename WHERE to_district='$district'");
+$district_escaped = mysqli_real_escape_string($con, $district);
+$result = $con->query("SELECT DISTINCT from_id from $tablename WHERE REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')");
 
-if ($result->num_rows > 0) {
-    $rows = array();
+$rows = array();
+if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $rows[] = $row;
     }
-    echo json_encode($rows);
 }
+echo json_encode($rows);
 ?>

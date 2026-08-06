@@ -82,8 +82,10 @@ if (!empty($id)) {
 												<span class="input-group-addon"><span class="fa fa-certificate"></span></span>						
 												<select class="form-control" id="district" name="district" onchange="fetchDataFromServer()">
 													<option value=''>Select</option>
+													<option value='all'>All</option>
 												</select>
 												</div>
+												<span class="help-block">All option will work only for download</span>
 											</div>
 										</div>
 									</div>
@@ -96,12 +98,12 @@ if (!empty($id)) {
 												<th style="font-size:16px">District</th>
 												<th style="font-size:16px">Name of FPS</th>
 												<th style="font-size:16px">FPS ID</th>
-												<th style="font-size:16px">Model FPS/Normal FPS</th>
+												<th style="font-size:16px">Full Time FPS/Part Time FPS</th>
 												<th style="font-size:16px">Latitude</th>
 												<th style="font-size:16px">Longitude</th>
-												<th style="font-size:16px">Demand of Wheat(Qtl)</th>
-												<th style="font-size:16px">Demand of Rice(Qtl)</th>
-												<th style="font-size:16px">Demand of FRice(Qtl)</th>
+												<th style="font-size:16px">Entitlement of Wheat(Qtl)</th>
+												<th style="font-size:16px">Entitlement of Rice(Qtl)</th>
+												<th style="font-size:16px">Entitlement of FRice(Qtl)</th>
                                             </tr>
                                         </thead>
 										 <tbody id="fps_table">
@@ -227,6 +229,11 @@ if (!empty($id)) {
 						break;
 					}
 				}
+			}
+
+			if(district=="all"){
+				$('#fps_table').empty();
+				return;
 			}
 			
 			var dataString = "district=" + district + "&tablename=" + '<?php echo $tablename ?>';

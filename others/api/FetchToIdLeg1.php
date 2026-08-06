@@ -18,7 +18,7 @@ if($numrow>0){
 }
 
 $tablename = "optimiseddata_leg1_".$id;
-$result = $con->query("SELECT DISTINCT `to` from $tablename WHERE 1");
+$result = $con->query("SELECT DISTINCT `to_id` from $tablename WHERE 1");
 
 if ($result->num_rows > 0) {
     $rows = array();

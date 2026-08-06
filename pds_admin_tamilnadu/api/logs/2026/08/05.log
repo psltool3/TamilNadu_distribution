@@ -1,0 +1,3 @@
+[2026-08-05 15:30:50] User -> Warehouse added ->admin@pds| Requested JSON -> {"name":"Aksay#$#","type":"motorable","latitude":"11","storage":"0","district":"Ariyalur","id":"788","warehousetype":"swc","longitude":"90"}
+[2026-08-05 15:31:22] User -> Warehouse Edit ->admin@pds| Requested JSON -> {"name":"Aksay@@#@$@","uniqueid":"WH_6a7309d23d5f","active":"1","type":"motorable","latitude":"11","storage":"0","district":"Ariyalur","id":"788","warehousetype":"swc","longitude":"90"}
+[2026-08-05 15:31:27] User -> Warehouse deleted -> admin@pds| Requested JSON -> {"uid":"WH_6a7309d23d5f"} | Aksay

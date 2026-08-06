@@ -24,8 +24,6 @@ if(empty($_POST) || empty($_POST["username"]) || empty($_POST["password"])){
 }
 
 function formatName($name) {
-	$name = preg_replace('/[^a-zA-Z0-9_ ]/', '', $name);
-    $name = ucwords(strtolower($name));
     return trim($name);
 }
 
@@ -101,16 +99,16 @@ function validateId($id) {
 $dbHashedPassword = $row['password'];
 if(password_verify($person->getPassword(), $dbHashedPassword)){
     
-    $district = formatName($_POST["district"]);
-    $latitude = $_POST["latitude"];
-    $longitude = $_POST["longitude"];
-    $name = formatName($_POST["name"]);
-    $id = validateId($_POST["id"]);
-    $type = $_POST["type"];
-    $storage = $_POST["storage"];
-    $warehousetype = $_POST["warehousetype"];
-    $uniqueid = $_POST["uniqueid"];
-    $active = $_POST["active"];
+    $district = mysqli_real_escape_string($con, formatName($_POST["district"]));
+    $latitude = mysqli_real_escape_string($con, $_POST["latitude"]);
+    $longitude = mysqli_real_escape_string($con, $_POST["longitude"]);
+    $name = mysqli_real_escape_string($con, formatName($_POST["name"]));
+    $id = mysqli_real_escape_string($con, validateId($_POST["id"]));
+    $type = mysqli_real_escape_string($con, $_POST["type"]);
+    $storage = mysqli_real_escape_string($con, $_POST["storage"]);
+    $warehousetype = mysqli_real_escape_string($con, $_POST["warehousetype"]);
+    $uniqueid = mysqli_real_escape_string($con, $_POST["uniqueid"]);
+    $active = mysqli_real_escape_string($con, $_POST["active"]);
 
     $Warehouse = new Warehouse;
     $Warehouse->setUniqueid($uniqueid);

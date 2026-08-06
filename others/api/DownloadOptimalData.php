@@ -1,4 +1,5 @@
 <?php
+ob_start();
 
 require('../util/Connection.php');
 require '../vendor/autoload.php';
@@ -119,14 +120,16 @@ if (isset($_GET['format'])) {
             foreach ($tableData as $rowData) {
                 $columnIndex = 1;
                 foreach ($rowData as $value) {
-                    $sheet->setCellValueByColumnAndRow($columnIndex, $rowIndex, $value);
+                    $sheet->setCellValue([$columnIndex, $rowIndex], $value ?? '');
                     $columnIndex++;
                 }
                 $rowIndex++;
             }
 
-
-            header('Content-Type: application/vnd.ms-excel');
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
             header('Cache-Control: max-age=0');
 

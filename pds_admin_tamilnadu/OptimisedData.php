@@ -970,7 +970,7 @@ while($row = mysqli_fetch_array($result))
 						if(result!=""){
 							var resultarray = JSON.parse(result);
 							var toidarray = resultarray.map(function(item) {
-								return item.to;
+								return item.to_id;
 							});
 							if (toidarray.length > 0) {
 								toidarray.forEach(function(toId) {

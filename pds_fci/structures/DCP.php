@@ -140,7 +140,7 @@ class DCP {
     }
 	
 	function updateEdit(DCP $dcp){
-      return  "UPDATE dcp SET district = '".$dcp->getDistrict()."',name = '".$dcp->getName()."',id = '".$dcp->getId()."',type = '".$dcp->getType()."',latitude = '".$dcp->getLatitude()."',longitude = '".$dcp->getLongitude()."',demand = '".$dcp->getDemand()."',demand_rice = '".$dcp->getDemandrice()."', demand_frice = '".$dcp->getDemandfrice()."' WHERE id = '".$dcp->getId()."'";
+      return  "UPDATE dcp SET district = '".$dcp->getDistrict()."',name = '".$dcp->getName()."',id = '".$dcp->getId()."',type = '".$dcp->getType()."',latitude = '".$dcp->getLatitude()."',longitude = '".$dcp->getLongitude()."',demand = '".$dcp->getDemand()."',demand_rice = '".$dcp->getDemandrice()."', demand_frice = '".$dcp->getDemandfrice()."', active = '".$dcp->getActive()."' WHERE id = '".$dcp->getId()."'";
     }
 }  
 

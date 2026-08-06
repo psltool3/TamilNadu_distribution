@@ -41,7 +41,7 @@ require('Header.php');
 								<a href="BulkDCPData.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-info">Bulk Data Add</button></a>
 								<span style="float:right;margin-top:10px;margin-right:13px"><button type="button" onclick="delete_all()"  class="btn btn-danger">Delete All</button></span>
 								<a href="DCPAdd.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-success">Add New</button></a>
-                                <a href="api/BulkDCPDownloadEdit.php" style="float:right;margin-top:10px;margin-right:13px"><button type="button" class="btn btn-info">Download Data</button></a>
+                                <button type="button" class="btn btn-info" onclick="downloadDCPData()" style="float:right;margin-top:10px;margin-right:13px">Download Data</button>
                             
 								</br></br>
 								<div>
@@ -239,8 +239,19 @@ require('Header.php');
 			var district = districtElement.value;
 			
 			if(district==""){
-				districtElement.value = "all";
-				district = "all";
+				var options = districtElement.options;
+				for (var i = 0; i < options.length; i++) {
+					if (options[i].value != "all" && options[i].value != "") {
+						districtElement.selectedIndex = i;
+						district = options[i].value;
+						break;
+					}
+				}
+			}
+			
+			if(district=="all"){
+				$('#fps_table').empty();
+				return;
 			}
 			
 			var dataString = "district=" + district;
@@ -279,6 +290,11 @@ require('Header.php');
 					}
 				}
 			});
+		}
+		
+		function downloadDCPData(){
+			var district = document.getElementById('district').value;
+			window.location.href = "api/BulkDCPDownloadEdit.php?district=" + encodeURIComponent(district);
 		}
 		
 		fetchDataFromServer();

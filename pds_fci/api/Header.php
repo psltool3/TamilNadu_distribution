@@ -103,7 +103,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 					<a href="../DCP.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Edit FCI</span></a>
 				</li>
 				<li>
-					<a href="../OptimisedDataLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Step 2.2 OptimisedPlan Leg1</span></a>
+					<a href="../OptimisedDataLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">OptimisedPlan Leg1</span></a>
 				</li>
 				<li style="margin-bottom: 30px;">
 					<a href="Logout.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Logout</span></a>

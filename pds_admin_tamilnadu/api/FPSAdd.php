@@ -32,8 +32,6 @@ if(empty($_POST) || empty($_POST["username"]) || empty($_POST["password"])){
 }
 
 function formatName($name) {
-	$name = preg_replace('/[^a-zA-Z0-9_ ]/', '', $name);
-    $name = ucwords(strtolower($name));
     return trim($name);
 }
 
@@ -120,15 +118,15 @@ function validateId($id) {
 $dbHashedPassword = $row['password'];
 if(password_verify($person->getPassword(), $dbHashedPassword)){
 	
-    $district = $_POST["district"];
-	$latitude = $_POST["latitude"];
-	$longitude = $_POST["longitude"];
-	$name = $_POST["name"];
-	$id = validateId($_POST["id"]);
-	$type = $_POST["type"];
-	$demand = $_POST["demand"];
-	$demand_rice = $_POST["demand_rice"];
-	$demand_frice = $_POST["demand_frice"];
+    $district = mysqli_real_escape_string($con, formatName($_POST["district"]));
+	$latitude = mysqli_real_escape_string($con, $_POST["latitude"]);
+	$longitude = mysqli_real_escape_string($con, $_POST["longitude"]);
+	$name = mysqli_real_escape_string($con, formatName($_POST["name"]));
+	$id = mysqli_real_escape_string($con, validateId($_POST["id"]));
+	$type = mysqli_real_escape_string($con, $_POST["type"]);
+	$demand = mysqli_real_escape_string($con, $_POST["demand"]);
+	$demand_rice = mysqli_real_escape_string($con, $_POST["demand_rice"]);
+	$demand_frice = mysqli_real_escape_string($con, $_POST["demand_frice"]);
 	$uniqueid = uniqid("FPS_",);
 
 

@@ -15,13 +15,15 @@ if(empty($_SESSION) || !isset($_SESSION['district_district'])){
 $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
 $result = mysqli_query($con,$query);
 $id = "";
+$rolled_out = "0";
 
 if($result && mysqli_num_rows($result) > 0){
 	$row = mysqli_fetch_assoc($result);
 	$id = $row["id"];
+	$rolled_out = isset($row["rolled_out"]) ? (string)$row["rolled_out"] : "0";
 }
 
-if(empty($id)){
+if($rolled_out !== "1" || empty($id)){
 	$resultarray = array();
 	$resultarray["data"] = array();
 	$resultarray["implemented"] = 0;
@@ -39,20 +41,27 @@ $query = "SHOW TABLES LIKE '$tablename'";
 $result = $con->query($query);
 
 if ($result && $result->num_rows > 0) {
-	$query_implemented = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND status='implemented'";
+	$district_escaped = mysqli_real_escape_string($con, $district);
+	$district_cond = "REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+	$approved_cond = "approve_district='yes' AND approve_admin='yes'";
+	
+	$query_implemented = "SELECT * FROM ".$tablename." WHERE " . $district_cond . " AND " . $approved_cond . " AND status='implemented'";
 	$result_implemented = mysqli_query($con,$query_implemented);
-	$count_implemented = mysqli_num_rows($result_implemented);
+	$count_implemented = $result_implemented ? mysqli_num_rows($result_implemented) : 0;
 	
-	$query_notimplemented = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND (status IS NULL OR status='')";
+	$query_notimplemented = "SELECT * FROM ".$tablename." WHERE " . $district_cond . " AND " . $approved_cond . " AND (status IS NULL OR status='' OR status<>'implemented')";
 	$result_notimplemented = mysqli_query($con,$query_notimplemented);
-	$count_notimplemented = mysqli_num_rows($result_notimplemented);
+	$count_notimplemented = $result_notimplemented ? mysqli_num_rows($result_notimplemented) : 0;
 	
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
+	$base_query = "SELECT * FROM ".$tablename." WHERE " . $district_cond . " AND " . $approved_cond;
 	if($status=="implemented"){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND status='implemented'";
+		$query = $base_query . " AND status='implemented'";
 	}
 	else if($status=="not implemented"){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND (status IS NULL OR status='')";
+		$query = $base_query . " AND (status IS NULL OR status='' OR status<>'implemented')";
+	}
+	else {
+		$query = $base_query;
 	}
 	
 	$result = mysqli_query($con,$query);

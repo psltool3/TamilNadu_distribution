@@ -125,35 +125,35 @@ if ($result && $result->num_rows > 0) {
 		}
 	}
 	if($to_id!=""){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to`='$to_id'";
+		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to_id`='$to_id'";
 		if($reviewed=="reviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to`='$to_id'";
+			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to_id`='$to_id'";
 		}
 		else if($reviewed=="notreviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to`='$to_id'";
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to_id`='$to_id'";
 		}
 
 		if($approved=="approved"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to`='$to_id'";
+			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to_id`='$to_id'";
 		}
 		else if($approved=="notapproved"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to`='$to_id'";
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to_id`='$to_id'";
 		}
 	}
 	if($to_id!="" and $from_id!=""){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
+		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
 		if($reviewed=="reviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
+			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
 		}
 		else if($reviewed=="notreviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
 		}
 
 		if($approved=="approved"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id'";
+			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
 		}
 		else if($approved=="notapproved"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to`='$to_id' AND from_id='$from_id' ";
+			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id' ";
 		}
 	}
 	$result = mysqli_query($con,$query);

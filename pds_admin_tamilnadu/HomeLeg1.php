@@ -962,15 +962,24 @@ require('Header.php');
 							})
 								.then(response => response.json())
 								.then(data => {
-									document.getElementById("total_warehouse").innerHTML = data["Warehouse_No"].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-									document.getElementById("total_demand").innerHTML = data["Total_Demand"].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-									document.getElementById("total_demand_rice").innerHTML = data["Total_Demand_Rice"].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-									document.getElementById("total_demand_frice").innerHTML = data["Total_Demand_FRice"].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-									document.getElementById("total_fps").innerHTML = data["FPS_No"].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-									document.getElementById("total_supply").innerHTML = data["Total_Supply"].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-									document.getElementById("total_supply1").innerHTML = formatNumberWithCommasWithoutDecimal(data["Total_Supply1"]);
-									document.getElementById("total_supply2").innerHTML = formatNumberWithCommasWithoutDecimal(data["Total_Supply2"]);
-									document.getElementById("total_district").innerHTML = data["District_Count"].toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+									function formatSmartNumber(val) {
+										if (val === undefined || val === null || isNaN(Number(val))) return "0";
+										var num = Number(val);
+										if (Math.abs(num - Math.round(num)) < 0.0001) {
+											return formatNumberWithCommasWithoutDecimal(Math.round(num));
+										}
+										return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+									}
+
+									document.getElementById("total_warehouse").innerHTML = formatSmartNumber(data["Warehouse_No"]);
+									document.getElementById("total_demand").innerHTML = formatSmartNumber(data["Total_Demand"]);
+									document.getElementById("total_demand_rice").innerHTML = formatSmartNumber(data["Total_Demand_Rice"]);
+									document.getElementById("total_demand_frice").innerHTML = formatSmartNumber(data["Total_Demand_FRice"] !== undefined ? data["Total_Demand_FRice"] : data["Total_Demand_Price"]);
+									document.getElementById("total_fps").innerHTML = formatSmartNumber(data["FPS_No"]);
+									document.getElementById("total_supply").innerHTML = formatSmartNumber(data["Total_Supply"]);
+									document.getElementById("total_supply1").innerHTML = formatSmartNumber(data["Total_Supply1"]);
+									document.getElementById("total_supply2").innerHTML = formatSmartNumber(data["Total_Supply2"]);
+									document.getElementById("total_district").innerHTML = formatSmartNumber(data["District_Count"]);
 							        document.getElementById("processingPopup").style.display = "none";
 									
 									if(firstStart==0){
