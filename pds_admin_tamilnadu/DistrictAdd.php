@@ -46,7 +46,7 @@ require('Header.php');
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
-                                                        <input type="text" class="form-control" id="name" name="name" required />
+                                                        <input type="text" class="form-control" id="name" name="name" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required />
                                                     </div>
                                                     <span class="help-block">District</span>
                                                 </div>

@@ -20,7 +20,7 @@ if(empty($_POST) || empty($_POST['username']) || empty($_POST['password'])){
 }
 
 function formatName($name) {
-    return trim($name);
+    return strtoupper(trim($name));
 }
 
 function formatUID($name) {

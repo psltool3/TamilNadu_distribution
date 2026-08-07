@@ -163,7 +163,7 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 						$redirect = 0;
 					}
 
-					if(!in_array($column[$district], $districts)){
+					if(!in_array(strtoupper(trim($column[$district])), $districts)){
 						echo "Error : Check District Name: ".$column[$district];
 						echo "</br>";
 						$redirect = 0;
@@ -200,7 +200,7 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 					filterData($column[$storage]);
 					filterData($column[$warehousetype]);
 					filterData($column[$active]);
-					$Warehouse->setDistrict(ucwords(strtolower($column[$district])));
+					$Warehouse->setDistrict(strtoupper(trim($column[$district])));
 					$Warehouse->setLatitude($column[$latitude]);
 					$Warehouse->setLongitude($column[$longitude]);
 					$Warehouse->setName($column[$name]);
@@ -296,7 +296,7 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 					filterData($column[$storage]);
 					filterData($column[$warehousetype]);
 					filterData($column[$active]);
-					$Warehouse->setDistrict($column[$district]);
+					$Warehouse->setDistrict(strtoupper(trim($column[$district])));
 					$Warehouse->setLatitude($column[$latitude]);
 					$Warehouse->setLongitude($column[$longitude]);
 					$Warehouse->setName($column[$name]);

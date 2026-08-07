@@ -112,7 +112,7 @@ if (!isset($_POST["longitude"]) || !is_numeric($_POST["longitude"]) || $_POST["l
 
 $dbHashedPassword = $row['password'];
 if(password_verify($person->getPassword(), $dbHashedPassword)){
-	$district = formatName($_POST["district"]);
+	$district = strtoupper(trim($_POST["district"]));
 	$latitude = $_POST["latitude"];
 	$longitude = $_POST["longitude"];
 	$name = formatName($_POST["name"]);

@@ -43,7 +43,7 @@ $result = mysqli_query($con,$query);
 $numrows = mysqli_num_rows($result);
 if($numrows>0){
 	while($row=mysqli_fetch_assoc($result)){
-		array_push($districts,$row["name"]);
+		array_push($districts,strtoupper(trim($row["name"])));
 	}
 }
 
@@ -126,7 +126,7 @@ try{
 					echo "</br>";
 					$redirect = 0;
 				}
-				if(!in_array($column[$district], $districts)){
+				if(!in_array(strtoupper(trim($column[$district])), $districts)){
 					echo "Error : Check District Name: ".$column[$district];
 					echo "</br>";
 					$redirect = 0;
@@ -235,7 +235,7 @@ try{
 					$DCP = new DCP;
 					$uniqueid = uniqid("DCP_",);
 					$DCP->setUniqueid(substr($uniqueid,0,15));
-					$DCP->setDistrict(ucwords(strtolower($column[$district])));
+					$DCP->setDistrict(strtoupper(trim($column[$district])));
 					$DCP->setLatitude($column[$latitude]);
 					$DCP->setLongitude($column[$longitude]);
 					$DCP->setName($column[$name]);

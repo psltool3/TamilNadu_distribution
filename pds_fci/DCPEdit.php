@@ -55,8 +55,9 @@ else{
 <script>
 	function setSelectedValue(obj_value,valueToSet) {
 		var obj = document.getElementById(obj_value);
+		if (!obj) return;
 		for (var i = 0; i < obj.options.length; i++) {
-			if (obj.options[i].value== valueToSet) {
+			if (obj.options[i].value.trim().toLowerCase() === String(valueToSet).trim().toLowerCase()) {
 				obj.options[i].selected = true;
 				return;
 			}

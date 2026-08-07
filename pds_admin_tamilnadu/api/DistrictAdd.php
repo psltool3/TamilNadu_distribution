@@ -20,7 +20,7 @@ if(empty($_POST) || empty($_SESSION) || empty($_POST['username']) || empty($_POS
 }
 
 function formatName($name) {
-    return trim($name);
+    return strtoupper(trim($name));
 }
 
 $person = new Login;

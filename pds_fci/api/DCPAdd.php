@@ -129,7 +129,7 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 
     $DCP = new DCP;
     $DCP->setUniqueid(substr($uniqueid,0,15));
-    $DCP->setDistrict(ucwords(strtolower($district)));
+    $DCP->setDistrict(strtoupper(trim($district)));
     $DCP->setLatitude($latitude);
     $DCP->setLongitude($longitude);
     $DCP->setName($name);

@@ -661,14 +661,6 @@ require('Header.php');
 								<center style="margin-top:20px">
 									<h4><b id="result"></b></h4>
 								</center>
-								<div id="districtcheckbox" style="display:none">
-									<center style="margin-top:20px;">
-										<h4><b><span style="color: white;">District-wise Supply and Demand &nbsp <input type="checkbox" id="districtwiseCheckbox" onchange="handleDistrictCheckboxChange()" /></b></h4>
-									</center>
-									<center style="margin-top:20px">
-										<h4><b id="resultdistrict"></b></h4>
-									</center>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -813,6 +805,15 @@ require('Header.php');
 		return integerPart;
 	}
 	
+	function formatSmartNumber(val) {
+		if (val === undefined || val === null || isNaN(Number(val))) return "0";
+		var num = Number(val);
+		if (Math.abs(num - Math.round(num)) < 0.0001) {
+			return formatNumberWithCommasWithoutDecimal(Math.round(num));
+		}
+		return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+	
 
 	function toggleState(element) {
 		if (element.classList.contains('toggle--off')) {
@@ -929,7 +930,6 @@ require('Header.php');
 						});
 					}*/
 					applicableLength = Math.max(applicableLength,1);
-					document.getElementById("districtcheckbox").style.display = "none";
 					document.getElementById("result").innerHTML = "";
 					document.getElementById("totalFciDemand").innerHTML = "";
 					document.getElementById("totalFciDemandRice").innerHTML = "";
@@ -937,7 +937,6 @@ require('Header.php');
 					document.getElementById("totalFciSupply").innerHTML = "";
 					document.getElementById("totalFciSupply1").innerHTML = "";
 					document.getElementById("totalFciSupply2").innerHTML = ""; 
-					document.getElementById("districtwiseCheckbox").checked = false;
 					document.getElementById("statewiseCheckbox").checked = false;
 					document.getElementById("generateoptinizedplanbutton").style.display = "none";
 
@@ -962,17 +961,8 @@ require('Header.php');
 							})
 								.then(response => response.json())
 								.then(data => {
-									function formatSmartNumber(val) {
-										if (val === undefined || val === null || isNaN(Number(val))) return "0";
-										var num = Number(val);
-										if (Math.abs(num - Math.round(num)) < 0.0001) {
-											return formatNumberWithCommasWithoutDecimal(Math.round(num));
-										}
-										return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-									}
-
 									document.getElementById("total_warehouse").innerHTML = formatSmartNumber(data["Warehouse_No"]);
-									document.getElementById("total_demand").innerHTML = formatSmartNumber(data["Total_Demand"]);
+									document.getElementById("total_demand").innerHTML = formatSmartNumber(data["Total_Demand_Wheat"] !== undefined ? data["Total_Demand_Wheat"] : (data["Total_Demand"] !== undefined ? data["Total_Demand"] : 0));
 									document.getElementById("total_demand_rice").innerHTML = formatSmartNumber(data["Total_Demand_Rice"]);
 									document.getElementById("total_demand_frice").innerHTML = formatSmartNumber(data["Total_Demand_FRice"] !== undefined ? data["Total_Demand_FRice"] : data["Total_Demand_Price"]);
 									document.getElementById("total_fps").innerHTML = formatSmartNumber(data["FPS_No"]);
@@ -982,10 +972,8 @@ require('Header.php');
 									document.getElementById("total_district").innerHTML = formatSmartNumber(data["District_Count"]);
 							        document.getElementById("processingPopup").style.display = "none";
 									
-									if(firstStart==0){
-										document.getElementById("statewiseCheckbox").checked = true;
-										handleStateCheckboxChange();
-									}
+									document.getElementById("statewiseCheckbox").checked = true;
+									handleStateCheckboxChange();
 								})
 								.catch(error => {
 									console.error('Error:', error);
@@ -1008,28 +996,6 @@ require('Header.php');
 	}
 	
 	function handleDistrictCheckboxChange() {
-		var checkbox = document.getElementById("districtwiseCheckbox");
-		if (checkbox.checked) {
-			if (isOptimizationFeasible) {
-				document.getElementById("generateoptinizedplanbutton").style.display = "";
-			} else {
-				document.getElementById("generateoptinizedplanbutton").style.display = "none";
-			}
-			if (district_names["District_Name_All"].length > 0) {
-				var concatenatedNames = district_names["District_Name_All"].join(', ');
-				document.getElementById("resultdistrict").innerHTML = "Intra district movement is infeasble- " + concatenatedNames;
-				document.getElementById("resultdistrict").style.color = "#ADFF2F"; 
-			} else {
-				document.getElementById("resultdistrict").innerHTML = "Intra scenario in every district is feasible";
-				document.getElementById("resultdistrict").style.color = "#1111BB";
-			}
-			// Increase font size and make text bold
-			document.getElementById("resultdistrict").style.fontSize = "18px";
-			document.getElementById("resultdistrict").style.fontWeight = "bold";
-		} else {
-			document.getElementById("resultdistrict").innerHTML = "";
-			document.getElementById("generateoptinizedplanbutton").style.display = "none";
-		}
 	}
 	
 	let controller;
@@ -1274,7 +1240,6 @@ function capitalizeFirstLetter(string) {
 
 function handleStateCheckboxChange() {
 	var checkbox = document.getElementById("statewiseCheckbox");
-	document.getElementById("districtwiseCheckbox").checked = false;
 	
 	if (checkbox.checked) {
 		const formData = new FormData();
@@ -1288,13 +1253,13 @@ function handleStateCheckboxChange() {
 				console.log(data.District_Capacity2, data);
 				
 				district_names = data.District_Name;
-				var totalCapacity = Object.values(data.District_Capacity).reduce((acc, capacity) => acc + capacity, 0);
-				var totalCapacity1 = Object.values(data.District_Capacity1).reduce((acc, capacity) => acc + capacity, 0);
-				var totalCapacity2 = Object.values(data.District_Capacity2).reduce((acc, capacity) => acc + capacity, 0);
-				var totalDemandWheat = Object.values(data.District_Demand).reduce((acc, demand) => acc + demand, 0);
-				var totalDemandRice = Object.values(data.District_Demand_Rice).reduce((acc, demand_rice) => acc + demand_rice, 0);
-				var totalDemandFRice = Object.values(data.District_Demand_FRice).reduce((acc, demand_frice) => acc + demand_frice, 0);
-				var totalDemand = totalDemandWheat + totalDemandRice + totalDemandFRice;
+				var totalCapacity = Object.values(data.District_Capacity || {}).reduce((acc, capacity) => acc + (capacity || 0), 0);
+				var totalCapacity1 = Object.values(data.District_Capacity1 || {}).reduce((acc, capacity) => acc + (capacity || 0), 0);
+				var totalCapacity2 = Object.values(data.District_Capacity2 || {}).reduce((acc, capacity) => acc + (capacity || 0), 0);
+				var totalDemandWheat = Object.values(data.District_Demand || {}).reduce((acc, demand) => acc + (demand || 0), 0);
+				var totalDemandRice = Object.values(data.District_Demand_Rice || {}).reduce((acc, demand_rice) => acc + (demand_rice || 0), 0);
+				var totalDemandFRice = Object.values(data.District_Demand_FRice || {}).reduce((acc, demand_frice) => acc + (demand_frice || 0), 0);
+				var totalDemand = totalDemandWheat;
 
 				var month = document.getElementById("month").value;
 				console.log(totalDemandWheat)
@@ -1305,6 +1270,13 @@ function handleStateCheckboxChange() {
 				// Format the total demand and total capacity values with commas
 				var formattedTotalDemand = totalDemand.toLocaleString();
 				var formattedTotalCapacity = totalCapacity.toLocaleString();
+
+				document.getElementById("total_demand").innerHTML = formatSmartNumber(totalDemandWheat);
+				document.getElementById("total_demand_rice").innerHTML = formatSmartNumber(totalDemandRice);
+				document.getElementById("total_demand_frice").innerHTML = formatSmartNumber(totalDemandFRice);
+				document.getElementById("total_supply").innerHTML = formatSmartNumber(totalCapacity);
+				document.getElementById("total_supply1").innerHTML = formatSmartNumber(totalCapacity1);
+				document.getElementById("total_supply2").innerHTML = formatSmartNumber(totalCapacity2);
 
 				document.getElementById("totalFciDemand").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand Wheat: " + totalDemand.toFixed(2) + " (Qtl)</span>";
 				document.getElementById("totalFciSupply").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply Wheat: " + totalCapacity.toFixed(2) + " (Qtl)</span>";
@@ -1320,96 +1292,84 @@ function handleStateCheckboxChange() {
 
 				districtdata = data.District_Name;
 
-				if (totalCapacity > 0 && totalDemand > 0 && totalCapacity1 > 0 && totalDemandRice > 0 && totalCapacity2 > 0 && totalDemandFRice > 0) {
-					if (totalCapacity >= totalDemand && totalCapacity1 >= totalDemandRice && totalCapacity2 >= totalDemandFRice) {
-						isOptimizationFeasible = true;
-						// document.getElementById("result").innerHTML = "Optimization can be done.";
-						document.getElementById("result").innerHTML = "<span style='font-weight: bold; font-size: 20px; color: green;'>Optimization can be done.</span>";
+				if (totalCapacity >= totalDemandWheat && totalCapacity1 >= totalDemandRice && totalCapacity2 >= totalDemandFRice) {
+					isOptimizationFeasible = true;
+					// document.getElementById("result").innerHTML = "Optimization can be done.";
+					document.getElementById("result").innerHTML = "<span style='font-weight: bold; font-size: 20px; color: green;'>Optimization can be done.</span>";
 
-						document.getElementById("districtcheckbox").style.display = "block";
-					}
-					else {
-						isOptimizationFeasible = false;
-						// document.getElementById("result").innerHTML = "Optimiazation cannot be done infeasible solution";
-						document.getElementById("result").innerHTML = "<span style='font-weight: bold; font-size: 20px; color: red;'>Optimiazation cannot be done infeasible solution.</span>";
-
-						document.getElementById("districtcheckbox").style.display = "none";
-						document.getElementById("generateoptinizedplanbutton").style.display = "none";
-					}
-
-					// Get district names from the JSON data
-					var districtNamesCapacity = Object.keys(data.District_Capacity);
-					var districtNamesDemand = Object.keys(data.District_Demand);
-					
-					const unionSet = new Set([...districtNamesCapacity, ...districtNamesDemand]);
-					const unionArray = Array.from(unionSet);
-
-					// Get capacities and demands for each district
-					var capacities = unionArray.map(district => data.District_Capacity[district]);
-					var capacities1 = unionArray.map(district => data.District_Capacity1[district]);
-					var capacities2 = unionArray.map(district => data.District_Capacity2[district]);
-					var demands = unionArray.map(district => data.District_Demand[district]);
-					var demands_rice = unionArray.map(district => data.District_Demand_Rice[district]);
-					var demands_frice = unionArray.map(district => data.District_Demand_FRice[district]);
-
-
-					// Generate newData object
-					var newData = {
-						labels: unionArray,
-						datasets: [
-							{
-								label: 'Wheat Demand',
-								backgroundColor: '#5383FF',
-								data: demands
-							},
-							{
-								label: 'Rice Demand',
-								backgroundColor: '#5383FF',
-								data: demands_rice
-							},
-							{
-								label: 'FRice Demand',
-								backgroundColor: '#5383FF',
-								data: demands_frice
-							},
-							{
-								label: 'Wheat Supply',
-								backgroundColor: '#9085AE',
-								data: capacities
-							},
-							{
-								label: 'Rice Supply',
-								backgroundColor: '#9085AE',
-								data: capacities1
-							},
-							{
-								label: 'FRice Supply',
-								backgroundColor: '#9085AE',
-								data: capacities2
-							}
-						]
-					};
-
-					// Update the chart with new data
-					myChart.data = newData;
-					myChart.update();
-					document.getElementById("processingPopup").style.display = "none";
-					if(firstStart==0){
-						document.getElementById("districtwiseCheckbox").checked = true;
-						handleDistrictCheckboxChange();
-						firstStart = 1;
-					}
-					
-					// Final guard for the button visibility
-					if (!isOptimizationFeasible) {
-						document.getElementById("generateoptinizedplanbutton").style.display = "none";
-					}
+					document.getElementById("generateoptinizedplanbutton").style.display = "";
 				}
 				else {
-					document.getElementById("result").innerHTML = "Optimization cannot be provided.";
-					document.getElementById("result").style.color = "red";
-					document.getElementById("districtcheckbox").style.display = "none";
-					document.getElementById("processingPopup").style.display = "none";
+					isOptimizationFeasible = false;
+					// document.getElementById("result").innerHTML = "Optimiazation cannot be done infeasible solution";
+					document.getElementById("result").innerHTML = "<span style='font-weight: bold; font-size: 20px; color: red;'>Optimization cannot be done infeasible solution.</span>";
+
+					document.getElementById("generateoptinizedplanbutton").style.display = "none";
+				}
+
+				// Get district names from the JSON data
+				var districtNamesCapacity = Object.keys(data.District_Capacity || {});
+				var districtNamesDemand = Object.keys(data.District_Demand || {});
+				
+				const unionSet = new Set([...districtNamesCapacity, ...districtNamesDemand]);
+				const unionArray = Array.from(unionSet);
+
+				// Get capacities and demands for each district
+				var capacities = unionArray.map(district => (data.District_Capacity && data.District_Capacity[district]) || 0);
+				var capacities1 = unionArray.map(district => (data.District_Capacity1 && data.District_Capacity1[district]) || 0);
+				var capacities2 = unionArray.map(district => (data.District_Capacity2 && data.District_Capacity2[district]) || 0);
+				var demands = unionArray.map(district => (data.District_Demand && data.District_Demand[district]) || 0);
+				var demands_rice = unionArray.map(district => (data.District_Demand_Rice && data.District_Demand_Rice[district]) || 0);
+				var demands_frice = unionArray.map(district => (data.District_Demand_FRice && data.District_Demand_FRice[district]) || 0);
+
+
+				// Generate newData object
+				var newData = {
+					labels: unionArray,
+					datasets: [
+						{
+							label: 'Wheat Demand',
+							backgroundColor: '#5383FF',
+							data: demands
+						},
+						{
+							label: 'Rice Demand',
+							backgroundColor: '#5383FF',
+							data: demands_rice
+						},
+						{
+							label: 'FRice Demand',
+							backgroundColor: '#5383FF',
+							data: demands_frice
+						},
+						{
+							label: 'Wheat Supply',
+							backgroundColor: '#9085AE',
+							data: capacities
+						},
+						{
+							label: 'Rice Supply',
+							backgroundColor: '#9085AE',
+							data: capacities1
+						},
+						{
+							label: 'FRice Supply',
+							backgroundColor: '#9085AE',
+							data: capacities2
+						}
+					]
+				};
+
+				// Update the chart with new data
+				myChart.data = newData;
+				myChart.update();
+				document.getElementById("processingPopup").style.display = "none";
+				if(firstStart==0){
+					firstStart = 1;
+				}
+				
+				// Final guard for the button visibility
+				if (!isOptimizationFeasible) {
 					document.getElementById("generateoptinizedplanbutton").style.display = "none";
 				}
 
@@ -1428,8 +1388,6 @@ function handleStateCheckboxChange() {
 		document.getElementById("totalFciSupply").innerHTML = "";
 		document.getElementById("totalFciSupply1").innerHTML = "";
 		document.getElementById("totalFciSupply2").innerHTML = "";
-		document.getElementById("districtwiseCheckbox").checked = false;
-		document.getElementById("districtcheckbox").style.display = "none";
 		document.getElementById("processingPopup").style.display = "none";
 		document.getElementById("generateoptinizedplanbutton").style.display = "none";
 	}
@@ -1449,7 +1407,7 @@ currentYearOption.textContent = currentYear;
 currentYearOption.style.fontWeight = "bold";
 currentYearOption.style.color = "#000";
 dropdown_year.appendChild(currentYearOption);
-currentYearOption.selected = false; 
+currentYearOption.selected = true; 
  
 const nextYearOption = document.createElement("option");
 nextYearOption.value = nextYear;
@@ -1457,7 +1415,7 @@ nextYearOption.textContent = nextYear;
 nextYearOption.style.fontWeight = "bold";
 nextYearOption.style.color = "#000";
 dropdown_year.appendChild(nextYearOption);
-nextYearOption.selected = true; 
+nextYearOption.selected = false; 
 
 var dropdown = document.getElementById("month");
 var option = document.createElement('option');
@@ -1469,7 +1427,8 @@ dropdown.options[1].selected = true;
 fetchApplicableMonth(currentMonthValue);
 
 function fetchApplicableMonth(month){
-	var datastring = "month=" + month;
+	var year = document.getElementById('year').value;
+	var datastring = "month=" + month + "&year=" + year;
 	$.ajax({
 		type: "POST",
 		url: "api/fetchTableDataAllMonth.php",
@@ -1522,13 +1481,10 @@ document.getElementById('month').addEventListener('change', function() {
 	fetchApplicableMonth(selectedMonth);
 });
 
-var dropdown = document.getElementById('year');
-for (var i = 0; i < dropdown.options.length; i++) {
-    if (dropdown.options[i].value == currentYear) {
-        dropdown.options[i].selected = true;
-        break;
-    }
-}
+document.getElementById('year').addEventListener('change', function() {
+    var selectedMonth = document.getElementById('month').value;
+	fetchApplicableMonth(selectedMonth);
+});
 
 var dropdown = document.getElementById('type');
 var currentType = "inter"
