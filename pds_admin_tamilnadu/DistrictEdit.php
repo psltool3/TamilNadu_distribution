@@ -28,12 +28,16 @@ require('Header.php');
 <script src="js/Encryption.js"></script>
 <script>
     function verifyCaptcha() {
-    var readableString = document.getElementById("password").value;
-    var nonceValue = "nonce_value";
+        var nameInput = document.getElementById("name");
+        if (nameInput) {
+            nameInput.value = nameInput.value.toUpperCase();
+        }
+        var readableString = document.getElementById("password").value;
+        var nonceValue = "nonce_value";
 
-    let encryption = new Encryption();
-    var encrypted = encryption.encrypt(readableString, nonceValue);
-    document.getElementById("password").value = encrypted;
+        let encryption = new Encryption();
+        var encrypted = encryption.encrypt(readableString, nonceValue);
+        document.getElementById("password").value = encrypted;
     }
 </script>
               
@@ -68,7 +72,7 @@ require('Header.php');
                                                 <div class="col-md-9">                                            
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
-                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required />
+                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" required />
                                                     </div>                                            
                                                     <span class="help-block">District Name</span>
                                                 </div>
