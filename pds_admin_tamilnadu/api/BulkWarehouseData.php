@@ -139,14 +139,8 @@ try{
 				}
                 
 				$column[$district] = htmlspecialchars($column[$district], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-				if (!preg_match('/^[A-Za-z ]+$/', $column[$district])) {
-					die("Error: Name of Warehouse should contain only letters and spaces. Found: " . $column[$district]);
-				}
 
 				$column[$name] = htmlspecialchars($column[$name], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-				if (!preg_match('/^[A-Za-z ]+$/', $column[$name])) {
-					die("Error: Name of Warehouse should contain only letters and spaces. Found: " . $column[$name]);
-				}
 
 				$column[$type] = htmlspecialchars($column[$type], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 				if (!preg_match('/^[A-Za-z ]+$/', $column[$type])) {

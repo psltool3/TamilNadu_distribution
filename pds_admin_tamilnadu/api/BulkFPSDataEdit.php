@@ -154,9 +154,6 @@ try{
 					}
 					
 					$column[$district] = htmlspecialchars($column[$district], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if (!preg_match('/^[A-Za-z ]+$/', $column[$district])) {
-						die("Error: Name of District should contain only letters and spaces. Found: " . $column[$district]);
-					}
 
 					$column[$type] = htmlspecialchars($column[$type], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 					if (!preg_match('/^[A-Za-z ]+$/', $column[$type])) {
@@ -164,9 +161,6 @@ try{
 					}
 
 					$column[$name] = htmlspecialchars($column[$name], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if (!preg_match('/^[A-Za-z ]+$/', $column[$name])) {
-						die("Error: Name of FPS should contain only letters and spaces. Found: " . $column[$name]);
-					}
 			
 					$column[$demand] = htmlspecialchars($column[$demand], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 					if(!isStringNumber($column[$demand])){
