@@ -21,126 +21,132 @@ if (isset($_GET['format'])) {
 
 	$month = $parts[0];
 	$year = $parts[1]; 
-	$query = "SELECT * FROM optimised_table WHERE month='$month' AND year='$year'";
-	$result = mysqli_query($con,$query);
-	$numrow = mysqli_num_rows($result);
-	$id = "";
-	if($numrow>0){
-		$row = mysqli_fetch_assoc($result);
-		$id = $row['id'];
-	}
+    $month_escaped = mysqli_real_escape_string($con, $month);
+    $year_escaped = mysqli_real_escape_string($con, $year);
 
-	$tablename = "optimiseddata_".$id;
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
-	if($district=="" OR $district=="all"){
-		$query = "SELECT * FROM ".$tablename." WHERE 1";
-	}
-    $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
     $tableData = array();
     $tableData_pdf = array();
     array_push($tableData,$columns);
     array_push($tableData_pdf,$columns_pdf);
 
-    if($numrows>0){
-        while($row = mysqli_fetch_array($result)){
-			if($row['new_id_admin']!=null or $row['new_id_admin']!=""){
-				$id = $row['new_id_admin'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_admin'];
-				$row["from_name"] = $row['new_name_admin'];
-				$row["distance"] = $row['new_distance_admin'];
-			}
-			else if(($row['new_id_district']!=null or $row['new_id_district']!="") and $row['admin_approve']=="yes"){
-				$id = $row['new_id_district'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_district'];
-				$row["from_name"] = $row['new_name_district'];
-				$row["distance"] = $row['new_distance_district'];
-			}
-            $temp = array();
-			for($i=0;$i<count($columns);$i++){
-				array_push($temp,$row[$columns[$i]]);
-            }
-            array_push($tableData,$temp);
-        }
-    }
-	
-	$query = "SELECT * FROM optimised_table_leg1 WHERE month='$month' AND year='$year'";
+    $query = "SELECT * FROM optimised_table WHERE month='$month_escaped' AND year='$year_escaped'";
 	$result = mysqli_query($con,$query);
-	$numrow = mysqli_num_rows($result);
 	$id = "";
-	if($numrow>0){
+	if($result && mysqli_num_rows($result)>0){
 		$row = mysqli_fetch_assoc($result);
 		$id = $row['id'];
 	}
 
-	$tablename = "optimiseddata_leg1_".$id;
-	$query = "SELECT * FROM ".$tablename." WHERE to_district='$district'";
-	if($district=="" OR $district=="all"){
-		$query = "SELECT * FROM ".$tablename." WHERE 1";
+    if(!empty($id)){
+        $tablename = "optimiseddata_".$id;
+        $chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename) . "'");
+        if ($chk && mysqli_num_rows($chk) > 0) {
+            $query = "SELECT * FROM ".$tablename." WHERE 1";
+            if($district!="" and $district!="all"){
+                $district_escaped = mysqli_real_escape_string($con, $district);
+                $query = "SELECT * FROM ".$tablename." WHERE to_district='$district_escaped'";
+            }
+            $result = mysqli_query($con,$query);
+            if ($result && mysqli_num_rows($result)>0) {
+                while($row = mysqli_fetch_array($result)){
+                    if(isset($row['new_id_admin']) && ($row['new_id_admin']!=null or $row['new_id_admin']!="")){
+                        $new_id = $row['new_id_admin'];
+                        $query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$new_id'";
+                        $result_warehouse = mysqli_query($con,$query_warehouse);
+                        if($result_warehouse && mysqli_num_rows($result_warehouse)!=0){
+                            $row_warehouse = mysqli_fetch_assoc($result_warehouse);
+                            $row["from_lat"] = $row_warehouse['latitude'];
+                            $row["from_long"] = $row_warehouse['longitude'];
+                            $row["from_district"] = $row_warehouse['district'];
+                        }
+                        $row["from_id"] = $row['new_id_admin'];
+                        $row["from_name"] = $row['new_name_admin'];
+                        $row["distance"] = $row['new_distance_admin'];
+                    }
+                    else if(isset($row['new_id_district']) && ($row['new_id_district']!=null or $row['new_id_district']!="") && isset($row['admin_approve']) && $row['admin_approve']=="yes"){
+                        $new_id = $row['new_id_district'];
+                        $query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$new_id'";
+                        $result_warehouse = mysqli_query($con,$query_warehouse);
+                        if($result_warehouse && mysqli_num_rows($result_warehouse)!=0){
+                            $row_warehouse = mysqli_fetch_assoc($result_warehouse);
+                            $row["from_lat"] = $row_warehouse['latitude'];
+                            $row["from_long"] = $row_warehouse['longitude'];
+                            $row["from_district"] = $row_warehouse['district'];
+                        }
+                        $row["from_id"] = $row['new_id_district'];
+                        $row["from_name"] = $row['new_name_district'];
+                        $row["distance"] = $row['new_distance_district'];
+                    }
+                    $temp = array();
+                    for($i=0;$i<count($columns);$i++){
+                        array_push($temp, isset($row[$columns[$i]]) ? $row[$columns[$i]] : '');
+                    }
+                    array_push($tableData,$temp);
+                }
+            }
+        }
+    }
+	
+	$query = "SELECT * FROM optimised_table_leg1 WHERE month='$month_escaped' AND year='$year_escaped'";
+	$result = mysqli_query($con,$query);
+	$id = "";
+	if($result && mysqli_num_rows($result)>0){
+		$row = mysqli_fetch_assoc($result);
+		$id = $row['id'];
 	}
-    $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
-    
-    if($numrows>0){
-        while($row = mysqli_fetch_assoc($result)){
-			if($row['new_id_admin']!=null or $row['new_id_admin']!=""){
-				$new_id = $row['new_id_admin'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse_leg1_".$id." WHERE id='$new_id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_admin'];
-				$row["from_name"] = $row['new_name_admin'];
-				$row["distance"] = $row['new_distance_admin'];
-			}
-			else if(($row['new_id_district']!=null or $row['new_id_district']!="") and $row['admin_approve']=="yes"){
-				$new_id = $row['new_id_district'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse_leg1_".$id." WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_district'];
-				$row["from_name"] = $row['new_name_district'];
-				$row["distance"] = $row['new_distance_district'];
-			}
-            $temp = array();
-            $temp_pdf = array();
-			for($i=0;$i<count($columns);$i++){
-                array_push($temp,$row[$columns[$i]]);
+
+    if(!empty($id)){
+        $tablename = "optimiseddata_leg1_".$id;
+        $chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename) . "'");
+        if ($chk && mysqli_num_rows($chk) > 0) {
+            $query = "SELECT * FROM ".$tablename." WHERE 1";
+            if($district!="" and $district!="all"){
+                $district_escaped = mysqli_real_escape_string($con, $district);
+                $query = "SELECT * FROM ".$tablename." WHERE to_district='$district_escaped'";
             }
-            for($i=0;$i<count($columns_pdf);$i++){
-                array_push($temp_pdf,$row[$columns_pdf[$i]]);
+            $result = mysqli_query($con,$query);
+            if ($result && mysqli_num_rows($result)>0) {
+                while($row = mysqli_fetch_assoc($result)){
+                    if(isset($row['new_id_admin']) && ($row['new_id_admin']!=null or $row['new_id_admin']!="")){
+                        $new_id = $row['new_id_admin'];
+                        $query_warehouse = "SELECT latitude,longitude,district FROM warehouse_leg1_".$new_id." WHERE id='$new_id'";
+                        $result_warehouse = mysqli_query($con,$query_warehouse);
+                        if($result_warehouse && mysqli_num_rows($result_warehouse)!=0){
+                            $row_warehouse = mysqli_fetch_assoc($result_warehouse);
+                            $row["from_lat"] = $row_warehouse['latitude'];
+                            $row["from_long"] = $row_warehouse['longitude'];
+                            $row["from_district"] = $row_warehouse['district'];
+                        }
+                        $row["from_id"] = $row['new_id_admin'];
+                        $row["from_name"] = $row['new_name_admin'];
+                        $row["distance"] = $row['new_distance_admin'];
+                    }
+                    else if(isset($row['new_id_district']) && ($row['new_id_district']!=null or $row['new_id_district']!="") && isset($row['admin_approve']) && $row['admin_approve']=="yes"){
+                        $new_id = $row['new_id_district'];
+                        $query_warehouse = "SELECT latitude,longitude,district FROM warehouse_leg1_".$new_id." WHERE id='$new_id'";
+                        $result_warehouse = mysqli_query($con,$query_warehouse);
+                        if($result_warehouse && mysqli_num_rows($result_warehouse)!=0){
+                            $row_warehouse = mysqli_fetch_assoc($result_warehouse);
+                            $row["from_lat"] = $row_warehouse['latitude'];
+                            $row["from_long"] = $row_warehouse['longitude'];
+                            $row["from_district"] = $row_warehouse['district'];
+                        }
+                        $row["from_id"] = $row['new_id_district'];
+                        $row["from_name"] = $row['new_name_district'];
+                        $row["distance"] = $row['new_distance_district'];
+                    }
+                    $temp = array();
+                    $temp_pdf = array();
+                    for($i=0;$i<count($columns);$i++){
+                        array_push($temp, isset($row[$columns[$i]]) ? $row[$columns[$i]] : '');
+                    }
+                    for($i=0;$i<count($columns_pdf);$i++){
+                        array_push($temp_pdf, isset($row[$columns_pdf[$i]]) ? $row[$columns_pdf[$i]] : '');
+                    }
+                    array_push($tableData,$temp);
+                    array_push($tableData_pdf,$temp_pdf);
+                }
             }
-            array_push($tableData,$temp);
-            array_push($tableData_pdf,$temp_pdf);
         }
     }
     

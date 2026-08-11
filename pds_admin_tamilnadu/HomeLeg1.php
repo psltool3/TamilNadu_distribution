@@ -411,7 +411,7 @@ require('Header.php');
 			<div class="panel panel-default">
 				<div class="panel-heading" style="text-align: center;">
 					<h1 style="font-weight: bold; color: #335566;">Tamil Nadu PDS Route Optimisation</h1>
-					<h1 style="font-weight: bold; color: #FF6666;">Kindly Optimised the Leg1-FCI to Warehouse</h1>
+					<h1 style="font-weight: bold; color: #FF6666;">Kindly Optimise the Leg1-FCI to Warehouse</h1>
 
 				</div>
 			</div>
@@ -1038,7 +1038,7 @@ require('Header.php');
 				
 				var thead = document.createElement("thead");
 				var headerRow = document.createElement("tr");
-				var headers = ["Scenario", "WH_Used", "FPS_Used", "Total_Allocation", "Total_QKM", "Average Distance"];
+				var headers = ["Scenario", "FCI_Used", "WH_Used", "Total_Allocation", "Total_QKM", "Average Distance"];
 				headers.forEach(function(headerText) {
 					var th = document.createElement("th");
 					th.textContent = headerText;
@@ -1102,7 +1102,9 @@ require('Header.php');
 			//toggleTableAndDownloadButton(); // Call the function to show/hide download button
 		})
 		.catch(error => {
-			alert("Error in Processing");
+			if (error.name !== 'AbortError') {
+				alert("Error in Processing");
+			}
 			var toggleButton = document.querySelector('.toggle');
 			toggleButton.classList.remove('toggle--on');
 			toggleButton.classList.add('toggle--off');
@@ -1271,12 +1273,12 @@ function handleStateCheckboxChange() {
 				var formattedTotalDemand = totalDemand.toLocaleString();
 				var formattedTotalCapacity = totalCapacity.toLocaleString();
 
-				document.getElementById("total_demand").innerHTML = formatSmartNumber(totalDemandWheat);
-				document.getElementById("total_demand_rice").innerHTML = formatSmartNumber(totalDemandRice);
-				document.getElementById("total_demand_frice").innerHTML = formatSmartNumber(totalDemandFRice);
-				document.getElementById("total_supply").innerHTML = formatSmartNumber(totalCapacity);
-				document.getElementById("total_supply1").innerHTML = formatSmartNumber(totalCapacity1);
-				document.getElementById("total_supply2").innerHTML = formatSmartNumber(totalCapacity2);
+				//document.getElementById("total_demand").innerHTML = formatSmartNumber(totalDemandWheat);
+				//document.getElementById("total_demand_rice").innerHTML = formatSmartNumber(totalDemandRice);
+				//document.getElementById("total_demand_frice").innerHTML = formatSmartNumber(totalDemandFRice);
+				//document.getElementById("total_supply").innerHTML = formatSmartNumber(totalCapacity);
+				//document.getElementById("total_supply1").innerHTML = formatSmartNumber(totalCapacity1);
+				//document.getElementById("total_supply2").innerHTML = formatSmartNumber(totalCapacity2);
 
 				document.getElementById("totalFciDemand").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand Wheat: " + totalDemand.toFixed(2) + " (Qtl)</span>";
 				document.getElementById("totalFciSupply").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply Wheat: " + totalCapacity.toFixed(2) + " (Qtl)</span>";

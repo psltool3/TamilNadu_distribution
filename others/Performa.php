@@ -94,8 +94,7 @@ require('Header.php');
 											$reset = "<input class='btn btn-info btn-block' style='width:25%' onclick='resetFunction(\"".$id."\")' value='Reset'></input>";
 											
 											if($cost==null or $cost==""){
-												$temp = "cost_".$id;
-												$cost = "<input type='text' id='".$temp."' name='".$temp."' />";
+												$cost = "";
 												$reset = "";
 											}											
 											

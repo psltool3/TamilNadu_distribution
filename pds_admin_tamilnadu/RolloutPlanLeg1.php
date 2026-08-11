@@ -89,8 +89,8 @@ require('Header.php');
 								<thead>
 									<tr>
 										<th>Scenario</th>
+										<th>FCI_Used</th>
 										<th>WH_Used</th>
-										<th>FPS_Used</th>
 										<th>Total_Allocation</th>
 										<th>Total_QKM</th>
 										<th>Average Distance</th>
@@ -410,7 +410,10 @@ require('Header.php');
 	
 	function acceptAll(){
 		for (let i = 0; i < uniqueid_bool_array.length; i++) {
-			markReview(uniqueid_bool_array[i]);
+			var id = uniqueid_bool_array[i];
+			if (modifiedIdData[id] === undefined) {
+				markReview(id);
+			}
 		}
 	}
 
@@ -457,6 +460,7 @@ require('Header.php');
 				timeout: 59000,
 				success: function(result){
 					$('#table_body').empty();
+					uniqueid_bool_array = [];
 					try{
 						var resultarray = JSON.parse(result);
 						var obj = resultarray["data"];
@@ -481,7 +485,7 @@ require('Header.php');
 						var obj = resultarray["table"];
 						var thead = document.createElement("thead");
 						var headerRow = document.createElement("tr");
-						var headers = ["Scenario", "WH_Used", "FPS_Used", "Total_Allocation", "Total_QKM", "Average Distance"];
+						var headers = ["Scenario", "FCI_Used", "WH_Used", "Total_Allocation", "Total_QKM", "Average Distance"];
 						headers.forEach(function(headerText) {
 							var th = document.createElement("th");
 							th.textContent = headerText;

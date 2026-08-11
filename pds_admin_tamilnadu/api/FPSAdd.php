@@ -7,7 +7,11 @@ require('../structures/Login.php');
 $demand_original = isset($_POST['demand']) ? $_POST['demand'] : null;
 $demand_rice_original = isset($_POST['demand_rice']) ? $_POST['demand_rice'] : null;
 $demand_frice_original = isset($_POST['demand_frice']) ? $_POST['demand_frice'] : null;
+$name_original = isset($_POST['name']) ? $_POST['name'] : null;
 require('../util/Security.php');
+if ($name_original !== null) {
+    $_POST['name'] = $name_original;
+}
 if ($demand_original === '0' || $demand_original === 0) {
     $_POST['demand'] = '0';
 }

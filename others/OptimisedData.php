@@ -813,14 +813,11 @@ while($row = mysqli_fetch_array($result))
 							var fromidarray = resultarray.map(function(item) {
 								return item.from_id;
 							});
-							var fromid_fromnamearray = resultarray.map(function(item) {
-								return item.from_id.toString() + "_" + item.from_name.toString();
-							});
-							if (fromid_fromnamearray.length > 0) {
-								fromid_fromnamearray.forEach(function(fromId_fromName) {
+							if (fromidarray.length > 0) {
+								fromidarray.forEach(function(fromId) {
 									var option = document.createElement("option");
-									option.text = fromId_fromName;
-									option.value = fromId_fromName.split('_')[0];
+									option.text = fromId;
+									option.value = fromId;
 									selectInput.appendChild(option);
 								});
 							}

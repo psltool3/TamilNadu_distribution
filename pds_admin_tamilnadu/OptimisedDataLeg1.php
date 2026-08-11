@@ -498,8 +498,8 @@ if($currentTimestamp >= $targetTimestamp) {
 					alert("Reason needs to be selected");
 					return;
 				}
-				if (distance === "" || distance.trim() === "") {
-					alert("Distance needs to be filled");
+				if (distance === "" || distance.trim() === "" || isNaN(distance) || Number(distance) < 0) {
+					alert("Distance must be a valid non-negative numeric value (0 or greater)");
 					return;
 				}
 			}
@@ -573,8 +573,8 @@ if($currentTimestamp >= $targetTimestamp) {
 							alert("New Id " + String(value) + " Reason needs to be selected");
 							return;
 						}
-						if(!modifiedDistanceData.hasOwnProperty(key + "_iddistance")){
-							alert("New Id " + String(value) + " distance needs to be filled");
+						if(!modifiedDistanceData.hasOwnProperty(key + "_iddistance") || modifiedDistanceData[key + "_iddistance"] === undefined || modifiedDistanceData[key + "_iddistance"] === null || modifiedDistanceData[key + "_iddistance"].trim() === "" || isNaN(modifiedDistanceData[key + "_iddistance"]) || Number(modifiedDistanceData[key + "_iddistance"]) < 0){
+							alert("New Id " + String(value) + " distance must be a valid non-negative numeric value (0 or greater)");
 							return;
 						}
 					}
@@ -823,7 +823,7 @@ if($currentTimestamp >= $targetTimestamp) {
 								}
 								
 								if(distance_admin==null || distance_admin==""){
-									var newdistance = "<td><input type='text' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
+									var newdistance = "<td><input type='text' oninput='this.value = this.value.replace(/[^0-9.]/g, \"\").replace(/(\\..*?)\\..*/g, \"$1\");' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
 								}
 								else{
 									var newdistance = "<td>" + distance_admin + "</td>"

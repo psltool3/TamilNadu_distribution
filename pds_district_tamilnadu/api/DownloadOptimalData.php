@@ -15,136 +15,105 @@ if (isset($_GET['format'])) {
 	$columns = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 	$columns_pdf = ["scenario","from","from_id","from_name","from_district","from_lat","from_long","to","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 
+	$tableData = array();
+	$tableData_pdf = array();
+	array_push($tableData,$columns);
+	array_push($tableData_pdf,$columns_pdf);
+
 	$query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
 	$result = mysqli_query($con,$query);
-	$numrow = mysqli_num_rows($result);
 	$id = "";
-	if($numrow>0){
+	$rolled_out = "0";
+	if($result && mysqli_num_rows($result) > 0){
 		$row = mysqli_fetch_assoc($result);
 		$id = $row['id'];
+		$rolled_out = isset($row["rolled_out"]) ? (string)$row["rolled_out"] : "0";
 	}
 
-	$tablename = "optimiseddata_".$id;
+	if ($rolled_out === "1" && !empty($id)) {
+		$tablename = "optimiseddata_".$id;
+		$checkTable = $con->query("SHOW TABLES LIKE '$tablename'");
+		if ($checkTable && $checkTable->num_rows > 0) {
+			$district_escaped = mysqli_real_escape_string($con, $district);
+			$district_cond = "REPLACE(LOWER(to_district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
 
-	$reviewed = isset($_GET['reviewed']) ? mysqli_real_escape_string($con, $_GET['reviewed']) : '';
-	$approved = isset($_GET['approved']) ? mysqli_real_escape_string($con, $_GET['approved']) : '';
-	$from_id = isset($_GET['fromid']) ? mysqli_real_escape_string($con, $_GET['fromid']) : '';
-	$to_id = isset($_GET['toid']) ? mysqli_real_escape_string($con, $_GET['toid']) : '';
+			$reviewed = isset($_GET['reviewed']) ? mysqli_real_escape_string($con, $_GET['reviewed']) : '';
+			$approved = isset($_GET['approved']) ? mysqli_real_escape_string($con, $_GET['approved']) : '';
+			$from_id = isset($_GET['fromid']) ? mysqli_real_escape_string($con, $_GET['fromid']) : '';
+			$to_id = isset($_GET['toid']) ? mysqli_real_escape_string($con, $_GET['toid']) : '';
 
-	$query = "SELECT * FROM " . $tablename . " WHERE to_district='$district'";
-	if($reviewed=="reviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district'";
-	}
-	else if($reviewed=="notreviewed"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district'";
-	}
+			$status_filter = isset($_GET['status']) ? mysqli_real_escape_string($con, $_GET['status']) : '';
 
-	if($approved=="approved"){
-		$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district'";
-	}
-	else if($approved=="notapproved"){
-		$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district'";
-	}
-	if($from_id!=""){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND from_id='$from_id'";
-		if($reviewed=="reviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND from_id='$from_id'";
-		}
-		else if($reviewed=="notreviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND from_id='$from_id'";
-		}
-
-		if($approved=="approved"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND from_id='$from_id'";
-		}
-		else if($approved=="notapproved"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND from_id='$from_id'";
-		}
-	}
-	if($to_id!=""){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to_id`='$to_id'";
-		if($reviewed=="reviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to_id`='$to_id'";
-		}
-		else if($reviewed=="notreviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to_id`='$to_id'";
-		}
-
-		if($approved=="approved"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to_id`='$to_id'";
-		}
-		else if($approved=="notapproved"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to_id`='$to_id'";
-		}
-	}
-	if($to_id!="" and $from_id!=""){
-		$query = "SELECT * FROM ".$tablename." WHERE to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
-		if($reviewed=="reviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_district='yes' AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
-		}
-		else if($reviewed=="notreviewed"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_district = '' OR approve_district IS NULL) AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
-		}
-
-		if($approved=="approved"){
-			$query = "SELECT * FROM ".$tablename." WHERE approve_admin='yes' AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id'";
-		}
-		else if($approved=="notapproved"){
-			$query = "SELECT * FROM ".$tablename." WHERE (approve_admin='no' or approve_admin IS NULL) AND to_district='$district' AND `to_id`='$to_id' AND from_id='$from_id' ";
-		}
-	}
-
-    $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
-    $tableData = array();
-    $tableData_pdf = array();
-    array_push($tableData,$columns);
-    array_push($tableData_pdf,$columns_pdf);
-
-    if($numrows>0){
-        while($row = mysqli_fetch_array($result)){
-			if($row['new_id_admin']!=null or $row['new_id_admin']!=""){
-				$id = $row['new_id_admin'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_admin'];
-				$row["from_name"] = $row['new_name_admin'];
-				$row["distance"] = $row['new_distance_admin'];
+			$query = "SELECT * FROM " . $tablename . " WHERE " . $district_cond;
+			if ($reviewed === "reviewed") {
+				$query .= " AND approve_district='yes'";
+			} else if ($reviewed === "notreviewed") {
+				$query .= " AND (approve_district = '' OR approve_district IS NULL)";
 			}
-			else if(($row['new_id_district']!=null or $row['new_id_district']!="") and $row['admin_approve']=="yes"){
-				$id = $row['new_id_district'];
-				$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$id'";
-				$result_warehouse = mysqli_query($con,$query_warehouse);
-				$numrows_warehouse = mysqli_num_rows($result_warehouse);
-				if($numrows_warehouse!=0){
-					$row_warehouse = mysqli_fetch_assoc($result_warehouse);
-					$row["from_lat"] = $row_warehouse['latitude'];
-					$row["from_long"] = $row_warehouse['longitude'];
-					$row["from_district"] = $row_warehouse['district'];
-				}
-				$row["from_id"] = $row['new_id_district'];
-				$row["from_name"] = $row['new_name_district'];
-				$row["distance"] = $row['new_distance_district'];
+
+			if ($approved === "approved") {
+				$query .= " AND approve_admin='yes'";
+			} else if ($approved === "notapproved") {
+				$query .= " AND (approve_admin='no' OR approve_admin IS NULL)";
 			}
-            $temp = array();
-            $temp_pdf = array();
-            for($i=0;$i<count($columns);$i++){
-                array_push($temp,$row[$columns[$i]]);
-            }
-            for($i=0;$i<count($columns_pdf);$i++){
-                array_push($temp_pdf,$row[$columns_pdf[$i]]);
-            }
-            array_push($tableData,$temp);
-            array_push($tableData_pdf,$temp_pdf);
-        }
-    }
+
+			if ($status_filter === 'implemented') {
+				$query .= " AND status='implemented'";
+			} else if ($status_filter === 'not implemented') {
+				$query .= " AND (status IS NULL OR status='' OR status<>'implemented')";
+			}
+
+			if ($from_id !== '') {
+				$query .= " AND from_id='$from_id'";
+			}
+			if ($to_id !== '') {
+				$query .= " AND `to_id`='$to_id'";
+			}
+
+			$result = mysqli_query($con, $query);
+			if ($result && mysqli_num_rows($result) > 0) {
+				while ($row = mysqli_fetch_assoc($result)) {
+					if ($row['new_id_admin'] != null && $row['new_id_admin'] != "") {
+						$wid = $row['new_id_admin'];
+						$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$wid'";
+						$result_warehouse = mysqli_query($con, $query_warehouse);
+						if ($result_warehouse && mysqli_num_rows($result_warehouse) != 0) {
+							$row_warehouse = mysqli_fetch_assoc($result_warehouse);
+							$row["from_lat"] = $row_warehouse['latitude'];
+							$row["from_long"] = $row_warehouse['longitude'];
+							$row["from_district"] = $row_warehouse['district'];
+						}
+						$row["from_id"] = $row['new_id_admin'];
+						$row["from_name"] = $row['new_name_admin'];
+						$row["distance"] = $row['new_distance_admin'];
+					} else if (($row['new_id_district'] != null && $row['new_id_district'] != "") && $row['approve_admin'] == "yes") {
+						$wid = $row['new_id_district'];
+						$query_warehouse = "SELECT latitude,longitude,district FROM warehouse WHERE id='$wid'";
+						$result_warehouse = mysqli_query($con, $query_warehouse);
+						if ($result_warehouse && mysqli_num_rows($result_warehouse) != 0) {
+							$row_warehouse = mysqli_fetch_assoc($result_warehouse);
+							$row["from_lat"] = $row_warehouse['latitude'];
+							$row["from_long"] = $row_warehouse['longitude'];
+							$row["from_district"] = $row_warehouse['district'];
+						}
+						$row["from_id"] = $row['new_id_district'];
+						$row["from_name"] = $row['new_name_district'];
+						$row["distance"] = $row['new_distance_district'];
+					}
+					$temp = array();
+					$temp_pdf = array();
+					for ($i = 0; $i < count($columns); $i++) {
+						array_push($temp, $row[$columns[$i]]);
+					}
+					for ($i = 0; $i < count($columns_pdf); $i++) {
+						array_push($temp_pdf, $row[$columns_pdf[$i]]);
+					}
+					array_push($tableData, $temp);
+					array_push($tableData_pdf, $temp_pdf);
+				}
+			}
+		}
+	}
     
     // Filename for the downloaded file
     $filename = 'table_data';

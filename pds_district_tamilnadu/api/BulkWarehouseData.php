@@ -4,7 +4,11 @@ require('../structures/Warehouse.php');
 require('../util/SessionFunction.php');
 ini_set('max_execution_time', 3000);
 require('../structures/Login.php');
+$data_original = isset($_POST['data']) ? $_POST['data'] : null;
 require('../util/Security.php');
+if ($data_original !== null) {
+    $_POST['data'] = $data_original;
+}
 require('../util/Logger.php');
 require ('../util/Encryption.php');
 $nonceValue = 'nonce_value';

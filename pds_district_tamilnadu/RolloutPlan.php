@@ -421,28 +421,30 @@ if ($rolled_out !== "1" || empty($id)) {
 				success: function(result){
 					try{
 						var data = JSON.parse(result);
-						var monthYearCombinations = data.map(item => `${item.month}_${item.year}`);
-						var dropdown = document.getElementById("month");
+						if (data && data.length > 0) {
+							var monthYearCombinations = data.map(item => `${item.month}_${item.year}`);
+							var dropdown = document.getElementById("month");
 
-						var year = data[0].year;
-						var month = data[0].month;
-						var applicable = data[0].applicable;
-						var lastUpdated = data[0].last_updated;
+							var year = data[0].year;
+							var month = data[0].month;
+							var applicable = data[0].applicable;
+							var lastUpdated = data[0].last_updated;
 
-						var resultString = "Optimised Data for Year <b>" + year + "</b> and Month <b>" + month + "</b>, Applicable for <b>" + applicable + "</b>. Last updated at <b>" + lastUpdated + "</b>";
-						document.getElementById("mainheading_big").innerHTML = resultString;
+							var resultString = "Optimised Data for Year <b>" + year + "</b> and Month <b>" + month + "</b>, Applicable for <b>" + applicable + "</b>. Last updated at <b>" + lastUpdated + "</b>";
+							document.getElementById("mainheading_big").innerHTML = resultString;
 
-						  // Clear existing options
-						  dropdown.innerHTML = '';
+							// Clear existing options
+							dropdown.innerHTML = '';
 
-						  // Add new options based on the array
-						  monthYearCombinations.forEach(function(item) {
-							var option = document.createElement("option");
-							option.value = item;
-							option.text = item;
-							dropdown.add(option);
-						  });
-						  fetchDataFromServer();
+							// Add new options based on the array
+							monthYearCombinations.forEach(function(item) {
+								var option = document.createElement("option");
+								option.value = item;
+								option.text = item;
+								dropdown.add(option);
+							});
+						}
+						fetchDataFromServer();
 					}
 					catch (error) {
 					}

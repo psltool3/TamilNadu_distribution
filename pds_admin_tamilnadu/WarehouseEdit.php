@@ -111,7 +111,7 @@ require('Header.php');
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
-                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo $name ?>" required />
+                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" required />
                                                     </div>
                                                     <span class="help-block">Warehouse Name</span>
                                                 </div>

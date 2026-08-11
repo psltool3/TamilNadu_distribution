@@ -78,7 +78,7 @@ td {
 												$status = "<span style='padding:5px' class='btn-danger btn-rounded'>InActive</span>";
 											}
 											echo "<tr><td>{$row['district']}</td>".
-											"<td>{$row['name']}</td>".
+											"<td>".htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8')."</td>".
 											"<td>{$row['id']}</td>".
 											"<td>{$row['type']}</td>".
 											"<td>{$row['warehousetype']}</td>".

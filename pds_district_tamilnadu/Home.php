@@ -827,13 +827,10 @@ if($currentTimestamp >= $targetTimestamp) {
 										obj[datafield]["new_id"] = "";
 									}
 									
-									if(approve_admin=="yes" && newid_admin==""){
+									if(district_change_approve=="yes" || (approve_admin=="yes" && newid_admin=="")){
 										var admin_approve = "<td><button class='btn btn-info'>Approved</button></td>";
 									}
-									else if(approve_admin=="yes" && newid_district!=""){
-										var admin_approve = "<td><button class='btn btn-danger'>Not Approved</button></td>";
-									}
-									else if(approve_admin=="no"){
+									else if(district_change_approve=="no" || approve_admin=="no" || (approve_admin=="yes" && newid_district!="")){
 										var admin_approve = "<td><button class='btn btn-danger'>Not Approved</button></td>";
 									}
 									else if(approve_admin==""){
@@ -867,7 +864,7 @@ if($currentTimestamp >= $targetTimestamp) {
 									}
 									
 									var isExpired = <?php echo $expired; ?>;
-									var isApproved = (approve_admin !== "");
+									var isApproved = (approve_admin !== "" || district_change_approve !== "");
 									var saveDisabled = (isExpired == 1 || isApproved || approve_district == "yes") ? "disabled" : "";
 									var resetDisabled = (isExpired == 1 || isApproved) ? "disabled" : "";
 									

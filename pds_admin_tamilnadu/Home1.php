@@ -1089,7 +1089,9 @@ require('Header.php');
 			//toggleTableAndDownloadButton(); // Call the function to show/hide download button
 		})
 		.catch(error => {
-			alert("Error in Processing");
+			if (error.name !== 'AbortError') {
+				alert("Error in Processing");
+			}
 			var toggleButton = document.querySelector('.toggle');
 			toggleButton.classList.remove('toggle--on');
 			toggleButton.classList.add('toggle--off');

@@ -411,7 +411,7 @@ require('Header.php');
 			<div class="panel panel-default">
 				<div class="panel-heading" style="text-align: center;">
 					<h1 style="font-weight: bold; color: #335566;">Tamil Nadu PDS Route Optimisation</h1>
-					<h1 style="font-weight: bold; color: #FF6666;">Kindly Optimised the Leg2-State Warehouse to FPS</h1>
+					<h1 style="font-weight: bold; color: #FF6666;">Kindly Optimise the Leg2-State Warehouse to FPS</h1>
 
 				</div>
 			</div>
@@ -876,21 +876,21 @@ require('Header.php');
 				try{
 					if(firstStart==0){
 						var resultarray = JSON.parse(result);
-						var monthsString = resultarray[0]["applicable"];
-						var monthsArray = monthsString.split(',');
-						applicableLength = monthsArray.length;
-						var dropdownMultiple = document.querySelectorAll('#checkboxes input[type="checkbox"]');
-						for (const fillMonth of monthsArray) {
+						if (resultarray && resultarray.length > 0 && resultarray[0]["applicable"]) {
+							var monthsString = resultarray[0]["applicable"];
+							var monthsArray = monthsString.split(',');
+							applicableLength = monthsArray.length;
+							var dropdownMultiple = document.querySelectorAll('#checkboxes input[type="checkbox"]');
 							dropdownMultiple.forEach(function(checkbox) {
 							  checkbox.checked = false;
 							});
-						}
-						for (const fillMonth of monthsArray) {
-							dropdownMultiple.forEach(function(checkbox) {
-							  if (checkbox.value===fillMonth) {
-								checkbox.checked = true;
-							  }
-							});
+							for (const fillMonth of monthsArray) {
+								dropdownMultiple.forEach(function(checkbox) {
+								  if (checkbox.value===fillMonth) {
+									checkbox.checked = true;
+								  }
+								});
+							}
 						}
 					}
 					else{
@@ -933,6 +933,12 @@ require('Header.php');
 							})
 								.then(response => response.json())
 								.then(data => {
+									function formatNumberWithCommasWithoutDecimal(value) {
+										if (value === undefined || value === null || isNaN(Number(value))) return "0";
+										const roundedNumber = Math.round(Number(value));
+										return roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+									}
+
 									function formatSmartNumber(val) {
 										if (val === undefined || val === null || isNaN(Number(val))) return "0";
 										var num = Number(val);
@@ -1092,7 +1098,7 @@ require('Header.php');
 				
 				cell1.innerHTML = data["Scenario"];
 				cell2.innerHTML = data["WH_Used"];
-				cell3.innerHTML = formatNumberWithCommas(data["FPS_Used"]);
+				cell3.innerHTML = formatNumberWithCommasWithoutDecimal(data["FPS_Used"]);
 				cell4.innerHTML = formatNumberWithCommas(data["Demand"]);
 				cell5.innerHTML = formatNumberWithCommas(data["Total_QKM"]);
 				cell6.innerHTML = formatNumberWithCommas(data["Average_Distance"]);
@@ -1134,7 +1140,9 @@ require('Header.php');
 			//toggleTableAndDownloadButton(); // Call the function to show/hide download button
 		})
 		.catch(error => {
-			alert("Error in Processing");
+			if (error.name !== 'AbortError') {
+				alert("Error in Processing");
+			}
 			var toggleButton = document.querySelector('.toggle');
 			toggleButton.classList.remove('toggle--on');
 			toggleButton.classList.add('toggle--off');

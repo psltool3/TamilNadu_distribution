@@ -560,8 +560,8 @@ while($row = mysqli_fetch_array($result))
 							alert("New Id " + String(value) + " Reason needs to be selected");
 							return;
 						}
-						if(!modifiedDistanceData.hasOwnProperty(key + "_iddistance")){
-							alert("New Id " + String(value) + " distance needs to be filled");
+						if(!modifiedDistanceData.hasOwnProperty(key + "_iddistance") || modifiedDistanceData[key + "_iddistance"] === undefined || modifiedDistanceData[key + "_iddistance"] === null || modifiedDistanceData[key + "_iddistance"].trim() === "" || isNaN(modifiedDistanceData[key + "_iddistance"]) || Number(modifiedDistanceData[key + "_iddistance"]) < 0){
+							alert("New Id " + String(value) + " distance must be a valid non-negative numeric value (0 or greater)");
 							return;
 						}
 					}
@@ -626,8 +626,8 @@ while($row = mysqli_fetch_array($result))
 					alert("Reason needs to be selected");
 					return;
 				}
-				if (distance === "" || distance.trim() === "") {
-					alert("Distance needs to be filled");
+				if (distance === "" || distance.trim() === "" || isNaN(distance) || Number(distance) < 0) {
+					alert("Distance must be a valid non-negative numeric value (0 or greater)");
 					return;
 				}
 			}
@@ -799,38 +799,27 @@ while($row = mysqli_fetch_array($result))
 									var admin_reason = "<td><select class='form-control' onchange='handleReasonChange(\"" + uniqueid_idreason + "\")' id='" + uniqueid_idreason + "' name='" + uniqueid_idreason + "' disabled><option value=''>Select</option><option value='Road not accessible'>Road not accessible</option><option value='Road repair going on'>Road repair going on</option><option value='Pertaining to Distance'>Pertaining to Distance</option></select></td>";
 								}
 								
-								if(newid_district.length>0){
-									if(district_change_approve=="yes"){
-										var approve_district_change = "<td><button class='btn btn-info'>Already Approved</button></td>";
-									}
-									else if(district_change_approve=="no"){
-										var approve_district_change = "<td><button class='btn btn-danger'>Not Approved</button></td>";
-									}
-									else{
-										var approve_district_change = "<td><select class='form-control' onchange='enableDisableApprove(\"" + uniqueid_idapprove + "\")' id='" + uniqueid_idapprove + "' name='" + uniqueid_idapprove + "' required><option value=''>Select</option><option value='yes'>Approve</option><option value='no'>Not Approve</option></select></td>";
-									}
+								if(approve_admin=="yes"){
+									var approve_district_change = "<td><button class='btn btn-info'>Already Reviewed</button></td>";
 								}
-								else{
-									var approve_district_change = "<td></td>";
+								else if(approve_admin=="no"){
+									var approve_district_change = "<td><button class='btn btn-danger'>Not Approved</button></td>";
 								}
-								
-								if(newid_admin.length>0){
-									if(district_change_approve=="yes"){
-										var approve_district_change = "<td><button class='btn btn-info'>Already Approved</button></td>";
-									}
-									else if(district_change_approve=="no"){
-										var approve_district_change = "<td><button class='btn btn-danger'>Not Approved</button></td>";
-									}
-									else{
-										var approve_district_change = "<td><select class='form-control' onchange='enableDisableApprove(\"" + uniqueid_idapprove + "\")' id='" + uniqueid_idapprove + "' name='" + uniqueid_idapprove + "' required><option value=''>Select</option><option value='yes'>Approve</option><option value='no'>Not Approve</option></select></td>";
-									}
+								else if(district_change_approve=="yes"){
+									var approve_district_change = "<td><button class='btn btn-info'>Already Approved</button></td>";
+								}
+								else if(district_change_approve=="no"){
+									var approve_district_change = "<td><button class='btn btn-danger'>Not Approved</button></td>";
+								}
+								else if(newid_district.length>0 || newid_admin.length>0){
+									var approve_district_change = "<td><select class='form-control' onchange='enableDisableApprove(\"" + uniqueid_idapprove + "\")' id='" + uniqueid_idapprove + "' name='" + uniqueid_idapprove + "' required><option value=''>Select</option><option value='yes'>Approve</option><option value='no'>Not Approve</option></select></td>";
 								}
 								else{
 									var approve_district_change = "<td></td>";
 								}
 								
 								if(distance_admin==null || distance_admin==""){
-									var distance_admin_part = "<td><input type='text' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
+									var distance_admin_part = "<td><input type='text' oninput='this.value = this.value.replace(/[^0-9.]/g, \"\").replace(/(\\..*?)\\..*/g, \"$1\");' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
 								}
 								else{
 									var distance_admin_part = "<td>" + distance_admin + "</td>"
@@ -843,8 +832,8 @@ while($row = mysqli_fetch_array($result))
 									var newid_admin_part = "<td><select class='form-control' onchange='handleNewIdChange(\"" + uniqueid + "\")' id='" + uniqueid + "' name='" + uniqueid + "' disabled required><option value=''>Select Id</option>" + warehousepart + "</select></td>";
 								}
 								var toIdVal = obj[datafield]["to_id"] !== undefined && obj[datafield]["to_id"] !== null ? obj[datafield]["to_id"] : obj[datafield]["to"];
-								var saveDisabled = (approve_district === "" || approve_admin !== "") ? "disabled" : "";
-								var resetDisabled = (approve_admin === "" && approve_district === "") ? "disabled" : "";
+								var saveDisabled = (approve_district === "" || approve_admin !== "" || district_change_approve !== "") ? "disabled" : "";
+								var resetDisabled = (approve_admin === "" && approve_district === "" && district_change_approve === "") ? "disabled" : "";
 								
 								var action_buttons = "<td>" +
 									"<button type='button' class='btn btn-primary' style='margin-right:5px;' " + saveDisabled + " onclick='saveRowData(\"" + obj[datafield]["from_id"] + "\", \"" + toIdVal + "\", \"" + obj[datafield]["commodity"] + "\", \"" + uniqueid + "\")'>Save</button>" +
@@ -927,14 +916,11 @@ while($row = mysqli_fetch_array($result))
 							var fromidarray = resultarray.map(function(item) {
 								return item.from_id;
 							});
-							var fromid_fromnamearray = resultarray.map(function(item) {
-								return item.from_id.toString() + "_" + item.from_name.toString();
-							});
-							if (fromid_fromnamearray.length > 0) {
-								fromid_fromnamearray.forEach(function(fromId_fromName) {
+							if (fromidarray.length > 0) {
+								fromidarray.forEach(function(fromId) {
 									var option = document.createElement("option");
-									option.text = fromId_fromName;
-									option.value = fromId_fromName.split('_')[0];
+									option.text = fromId;
+									option.value = fromId;
 									selectInput.appendChild(option);
 								});
 							}

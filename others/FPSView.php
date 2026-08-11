@@ -70,9 +70,9 @@ $tablename = "fps_".$id;
 												<th style="font-size:16px">Model FPS/Normal FPS</th>
 												<th style="font-size:16px">Latitude</th>
 												<th style="font-size:16px">Longitude</th>
-												<th style="font-size:16px">Demand of Wheat(Qtl)</th>
-												<th style="font-size:16px">Demand of Rice(Qtl)</th>
-												<th style="font-size:16px">Demand of FRice(Qtl)</th>
+												<th style="font-size:16px">Entitlement of Wheat(Qtl)</th>
+												<th style="font-size:16px">Entitlement of Rice(Qtl)</th>
+												<th style="font-size:16px">Entitlement of FRice(Qtl)</th>
                                             </tr>
                                         </thead>
 										 <tbody id="fps_table">

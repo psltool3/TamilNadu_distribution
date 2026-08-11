@@ -7,9 +7,13 @@ require('../structures/Login.php');
 require('../util/Logger.php');
 
 $storage_original = isset($_POST['storage']) ? $_POST['storage'] : null;
+$name_original = isset($_POST['name']) ? $_POST['name'] : null;
 require('../util/Security.php');
 if ($storage_original === '0' || $storage_original === 0) {
     $_POST['storage'] = '0';
+}
+if ($name_original !== null) {
+    $_POST['name'] = $name_original;
 }
 require ('../util/Encryption.php');
 $nonceValue = 'nonce_value';

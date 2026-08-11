@@ -13,7 +13,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-		<script> var pythonUrl = "http://localhost:5000/"; var directory = "" </script>
+		<script> var pythonUrl = "http://localhost:5019/"; var directory = "" </script>
 								
 		<style>
 		.popup {

@@ -29,7 +29,7 @@ if (empty($id)) {
 
 $tablename = "optimiseddata_leg1_" . $id;
 
-$updateQuery = "UPDATE " . $tablename . " SET approve_admin='', new_id_admin='', new_name_admin='', reason_admin='', new_distance_admin='', district_change_approve='', approve_district='', new_id_district='', new_name_district='', reason_district='', new_distance_district='' WHERE from_id='$fromid' AND (to_id='$toid' OR `to`='$toid') AND commodity='$commodity'";
+$updateQuery = "UPDATE " . $tablename . " SET approve_admin='', new_id_admin='', new_name_admin='', reason_admin='', new_distance_admin='', district_change_approve='' WHERE from_id='$fromid' AND (to_id='$toid' OR `to`='$toid') AND commodity='$commodity'";
 
 if (mysqli_query($con, $updateQuery)) {
     $user = isset($_SESSION['user']) ? $_SESSION['user'] : '';

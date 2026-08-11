@@ -9,11 +9,15 @@ $password_original = isset($_POST['password']) ? $_POST['password'] : null;
 $demand_original = isset($_POST['demand']) ? $_POST['demand'] : null;
 $demand_rice_original = isset($_POST['demand_rice']) ? $_POST['demand_rice'] : null;
 $demand_frice_original = isset($_POST['demand_frice']) ? $_POST['demand_frice'] : null;
+$name_original = isset($_POST['name']) ? $_POST['name'] : null;
 
 require('../util/Security.php');
 
 if ($password_original !== null) {
     $_POST['password'] = $password_original;
+}
+if ($name_original !== null) {
+    $_POST['name'] = $name_original;
 }
 if ($demand_original === '0' || $demand_original === 0) {
     $_POST['demand'] = '0';

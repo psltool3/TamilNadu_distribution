@@ -101,7 +101,7 @@ else{
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
-                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo $name ?>" required />
+                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" required />
                                                     </div>
                                                     <span class="help-block">DCP Name</span>
                                                 </div>
@@ -115,7 +115,9 @@ else{
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
-                                                        <input type="text" class="form-control" id="type" name="type" value="<?php echo $type ?>" required />
+                                                        <select name="type" id="type" class="form-control" required>
+                                                            <option value="fci" <?php if(strtolower($type) == 'fci') echo 'selected'; ?>>FCI</option>
+                                                        </select>
                                                     </div>
                                                     <span class="help-block">Type of DCP</span>
                                                 </div>
