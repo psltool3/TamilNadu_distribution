@@ -15,12 +15,18 @@ if (isset($_GET['format'])) {
     $columns = ["district","name","id","type","latitude","longitude","demand","demand_rice","demand_frice"];
 	$columnsName = ["district","name","id","type","latitude","longitude","Allocation Wheat","Allocation Rice","Allocation_FRice"];
     $tablename = $_GET['tableName'];
+    $district = isset($_GET['district']) ? $_GET['district'] : '';
 	$tableData = array();
     array_push($tableData,$columnsName);
 
-	$query = "SELECT * FROM ".$tablename." WHERE 1";
+    if (!empty($district) && strtolower($district) !== 'all') {
+        $district_escaped = mysqli_real_escape_string($con, $district);
+        $query = "SELECT * FROM " . $tablename . " WHERE REPLACE(LOWER(district), ' ', '') = REPLACE(LOWER('$district_escaped'), ' ', '')";
+    } else {
+        $query = "SELECT * FROM " . $tablename . " WHERE 1";
+    }
     $result = mysqli_query($con,$query);
-    $numrows = mysqli_num_rows($result);
+    $numrows = $result ? mysqli_num_rows($result) : 0;
     
     if($numrows>0){
         while($row = mysqli_fetch_array($result)){

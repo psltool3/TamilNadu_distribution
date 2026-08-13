@@ -20,7 +20,7 @@ require('Header.php');
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="#">Home</a></li>
-                    <li class="active">Performa</li>
+                    <li class="active">Proforma Leg2</li>
                 </ul>
                 <!-- END BREADCRUMB -->
 
@@ -34,7 +34,7 @@ require('Header.php');
                             <!-- START SIMPLE DATATABLE -->
                             <div class="panel panel-default">
 							<div class="panel-heading">
-								<h3 class="panel-title">Performa</h3>
+								<h3 class="panel-title">Proforma Leg2</h3>
 							</div>
 								<div class="panel-body">
 								
@@ -104,7 +104,7 @@ require('Header.php');
 										?>
                                         </tbody>
                                     </table>
-									<button class="btn btn-info btn-block pull-right" style="width:25%;margin-right:20px">Save</button>
+									<!-- <button class="btn btn-info btn-block pull-right" style="width:25%;margin-right:20px">Save</button> -->
 									</form>
                                   </div>
                                 </div>

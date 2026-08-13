@@ -42,32 +42,43 @@ if (isset($_GET['format'])) {
 			$from_id = isset($_GET['fromid']) ? mysqli_real_escape_string($con, $_GET['fromid']) : '';
 			$to_id = isset($_GET['toid']) ? mysqli_real_escape_string($con, $_GET['toid']) : '';
 
+			$page = isset($_GET['page']) ? $_GET['page'] : '';
 			$status_filter = isset($_GET['status']) ? mysqli_real_escape_string($con, $_GET['status']) : '';
 
-			$query = "SELECT * FROM " . $tablename . " WHERE " . $district_cond;
-			if ($reviewed === "reviewed") {
-				$query .= " AND approve_district='yes'";
-			} else if ($reviewed === "notreviewed") {
-				$query .= " AND (approve_district = '' OR approve_district IS NULL)";
-			}
+			if ($page === 'rollout') {
+				$approved_cond = "approve_district='yes' AND approve_admin='yes'";
+				$query = "SELECT * FROM " . $tablename . " WHERE " . $district_cond . " AND " . $approved_cond;
+				if ($status_filter === 'not implemented') {
+					$query .= " AND (status IS NULL OR status='' OR status<>'implemented')";
+				} else {
+					$query .= " AND status='implemented'";
+				}
+			} else {
+				$query = "SELECT * FROM " . $tablename . " WHERE " . $district_cond;
+				if ($reviewed === "reviewed") {
+					$query .= " AND approve_district='yes'";
+				} else if ($reviewed === "notreviewed") {
+					$query .= " AND (approve_district = '' OR approve_district IS NULL)";
+				}
 
-			if ($approved === "approved") {
-				$query .= " AND approve_admin='yes'";
-			} else if ($approved === "notapproved") {
-				$query .= " AND (approve_admin='no' OR approve_admin IS NULL)";
-			}
+				if ($approved === "approved") {
+					$query .= " AND approve_admin='yes'";
+				} else if ($approved === "notapproved") {
+					$query .= " AND (approve_admin='no' OR approve_admin IS NULL)";
+				}
 
-			if ($status_filter === 'implemented') {
-				$query .= " AND status='implemented'";
-			} else if ($status_filter === 'not implemented') {
-				$query .= " AND (status IS NULL OR status='' OR status<>'implemented')";
-			}
+				if ($status_filter === 'implemented') {
+					$query .= " AND status='implemented'";
+				} else if ($status_filter === 'not implemented') {
+					$query .= " AND (status IS NULL OR status='' OR status<>'implemented')";
+				}
 
-			if ($from_id !== '') {
-				$query .= " AND from_id='$from_id'";
-			}
-			if ($to_id !== '') {
-				$query .= " AND `to_id`='$to_id'";
+				if ($from_id !== '') {
+					$query .= " AND from_id='$from_id'";
+				}
+				if ($to_id !== '') {
+					$query .= " AND `to_id`='$to_id'";
+				}
 			}
 
 			$result = mysqli_query($con, $query);

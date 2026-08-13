@@ -42,7 +42,7 @@ require('Header.php');
                                     <table id="export_table" class="table">
                                         <thead>
                                             <tr>
-												<th>Email Id</th>
+												<th>User Id</th>
 												<th>Password</th>
                                                 <th>Verified</th>
                                                 <th>Role/District</th>

@@ -52,7 +52,8 @@ if (isset($_POST['approve_bool']) && $_POST['approve_bool'] !== "") {
     } else if ($approve_bool == "no") {
         $new_id_admin = mysqli_real_escape_string($con, isset($_POST['new_id_admin']) ? $_POST['new_id_admin'] : '');
         $reason_admin = mysqli_real_escape_string($con, isset($_POST['reason_admin']) ? $_POST['reason_admin'] : '');
-        $new_distance_admin = mysqli_real_escape_string($con, isset($_POST['new_distance_admin']) ? $_POST['new_distance_admin'] : '');
+        $raw_dist = isset($_POST['new_distance_admin']) ? $_POST['new_distance_admin'] : '';
+        $new_distance_admin = mysqli_real_escape_string($con, $raw_dist !== '' ? abs(intval($raw_dist)) : '');
 
         $query_name = "SELECT name FROM warehouse WHERE id='$new_id_admin'";
         $result_name = mysqli_query($con, $query_name);

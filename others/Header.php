@@ -115,10 +115,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 					<a href="DistrictPerformance.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">District Analysis</span></a>
 				</li>
 				<li <?php echo ($current_page === 'Performa.php') ? 'class="active"' : ''; ?>>
-					<a href="Performa.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Performa Leg2</span></a>
+					<a href="Performa.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Proforma Leg2</span></a>
 				</li>
 				<li <?php echo ($current_page === 'PerformaLeg1.php') ? 'class="active"' : ''; ?>>
-					<a href="PerformaLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Performa Leg1</span></a>
+					<a href="PerformaLeg1.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Proforma Leg1</span></a>
 				</li>
 				<li <?php echo ($current_page === 'api/Logout.php') ? 'class="active"' : ''; ?> style="margin-bottom: 30px;">
 					<a href="api/Logout.php" style="padding-left:0px"><span class="xn-text" style="font-family:sans-serif;font-weight:italic;font-size:16px;">Logout</span></a>

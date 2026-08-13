@@ -436,7 +436,18 @@ if($currentTimestamp >= $targetTimestamp) {
 		}
 		
 		function handleDistanceChange(selectedId){
-			newvalue = document.getElementById(selectedId).value;
+			var elem = document.getElementById(selectedId);
+			var newvalue = elem ? elem.value : '';
+			newvalue = newvalue.replace(/[^0-9]/g, '');
+			if (elem && elem.value !== newvalue) {
+				elem.value = newvalue;
+			}
+			if(newvalue !== '' && (parseInt(newvalue, 10) <= 0 || !/^[1-9]\d*$/.test(newvalue))){
+				alert("Distance must be a positive integer.");
+				if(elem) elem.value = '';
+				delete modifiedDistanceData[selectedId];
+				return;
+			}
 			modifiedDistanceData[selectedId] = newvalue;
 			if(newvalue==''){
 				delete modifiedDistanceData[selectedId];
@@ -486,6 +497,10 @@ if($currentTimestamp >= $targetTimestamp) {
 				}
 				if (distance === "" || distance.trim() === "") {
 					alert("Distance needs to be filled");
+					return;
+				}
+				if (!/^[1-9]\d*$/.test(distance.trim()) || parseInt(distance, 10) <= 0) {
+					alert("Distance must be a positive integer.");
 					return;
 				}
 			}
@@ -561,6 +576,11 @@ if($currentTimestamp >= $targetTimestamp) {
 						}
 						if(!modifiedDistanceData.hasOwnProperty(key + "_iddistance")){
 							alert("New Id " + String(value) + " distance needs to be filled");
+							return;
+						}
+						var distVal = modifiedDistanceData[key + "_iddistance"];
+						if (!distVal || !/^[1-9]\d*$/.test(String(distVal).trim()) || parseInt(distVal, 10) <= 0) {
+							alert("New Id " + String(value) + " distance must be a positive integer");
 							return;
 						}
 					}
@@ -777,7 +797,8 @@ if($currentTimestamp >= $targetTimestamp) {
 								//var distance_district = obj[datafield]["new_distance_district"] !== null ? obj[datafield]["new_distance_district"] : "";
 								//var district_change_approve = obj[datafield]["district_change_approve"] !== null ? obj[datafield]["district_change_approve"] : "";
 								
-								var subpart1 = "<tr><td>" +  obj[datafield]["scenario"] +  "</td><td>"  + obj[datafield]["from"] +  "</td><td>"  + obj[datafield]["from_state"] +  "</td><td>"  + obj[datafield]["from_id"] +  "</td><td>"  + obj[datafield]["from_name"] +  "</td><td>"  + obj[datafield]["from_district"] +  "</td><td>"  + obj[datafield]["from_lat"] +  "</td><td>"  + obj[datafield]["from_long"] +  "</td><td>"  + obj[datafield]["to"] +  "</td><td>"  + obj[datafield]["to_state"] +  "</td><td>"  + obj[datafield]["to_id"] +  "</td><td>"  + obj[datafield]["to_name"] +  "</td><td>"  + obj[datafield]["to_district"] +  "</td><td>"  + obj[datafield]["to_lat"] +  "</td><td>"  + obj[datafield]["to_long"] +  "</td><td>"  + obj[datafield]["commodity"] +  "</td><td>"  + obj[datafield]["quantity"] +  "</td><td>"  + obj[datafield]["distance"] + "</td>";
+								var origDist = (obj[datafield]["distance"] !== null && obj[datafield]["distance"] !== "") ? Math.abs(Math.round(obj[datafield]["distance"])) : "";
+								var subpart1 = "<tr><td>" +  obj[datafield]["scenario"] +  "</td><td>"  + obj[datafield]["from"] +  "</td><td>"  + obj[datafield]["from_state"] +  "</td><td>"  + obj[datafield]["from_id"] +  "</td><td>"  + obj[datafield]["from_name"] +  "</td><td>"  + obj[datafield]["from_district"] +  "</td><td>"  + obj[datafield]["from_lat"] +  "</td><td>"  + obj[datafield]["from_long"] +  "</td><td>"  + obj[datafield]["to"] +  "</td><td>"  + obj[datafield]["to_state"] +  "</td><td>"  + obj[datafield]["to_id"] +  "</td><td>"  + obj[datafield]["to_name"] +  "</td><td>"  + obj[datafield]["to_district"] +  "</td><td>"  + obj[datafield]["to_lat"] +  "</td><td>"  + obj[datafield]["to_long"] +  "</td><td>"  + obj[datafield]["commodity"] +  "</td><td>"  + obj[datafield]["quantity"] +  "</td><td>"  + origDist + "</td>";
 								
 								if(obj[datafield]["new_id"]==null){
 									obj[datafield]["new_id"] = "";
@@ -809,10 +830,11 @@ if($currentTimestamp >= $targetTimestamp) {
 								}
 								
 								if(distance_admin==null || distance_admin==""){
-									var newdistance = "<td><input type='text' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
+									var newdistance = "<td><input type='number' min='1' step='1' oninput='this.value = this.value.replace(/[^0-9]/g, \"\")' onchange='handleDistanceChange(\"" + uniqueid_iddistance + "\")' id='" + uniqueid_iddistance + "' name='" + uniqueid_iddistance + "' disabled required /></td>";
 								}
 								else{
-									var newdistance = "<td>" + distance_admin + "</td>"
+									var displayDist = Math.abs(parseInt(distance_admin, 10));
+									var newdistance = "<td>" + (isNaN(displayDist) ? distance_admin : displayDist) + "</td>";
 								}
 								
 								if(reason_admin.length>0){

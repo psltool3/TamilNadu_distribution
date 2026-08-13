@@ -53,8 +53,10 @@ $tablename = "fps_".$id;
 												<span class="input-group-addon"><span class="fa fa-certificate"></span></span>						
 												<select class="form-control" id="district" name="district" onchange="fetchDataFromServer()">
 													<option value=''>Select</option>
+													<option value='all'>All</option>
 												</select>
 												</div>
+												<span class="help-block">All option will work only for download</span>
 											</div>
 										</div>
 									</div>
@@ -133,7 +135,8 @@ $tablename = "fps_".$id;
 		document.getElementById('downloadCSV').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
-				const csvResponse = await fetch('api/DownloadOptimalDataFPS.php?format=csv&tableName='+tableName);
+				var district = document.getElementById('district').value;
+				const csvResponse = await fetch('api/DownloadOptimalDataFPS.php?format=csv&tableName=' + tableName + '&district=' + district);
 				const csvBlob = await csvResponse.blob();
 				downloadFile(csvBlob, 'Tamil Nadu_FPS_' + getDateString() + '.csv');
 			} catch (error) {
@@ -145,7 +148,8 @@ $tablename = "fps_".$id;
 		document.getElementById('downloadXLSX').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
-				const excelResponse = await fetch('api/DownloadOptimalDataFPS.php?format=xlsx&tableName='+tableName);
+				var district = document.getElementById('district').value;
+				const excelResponse = await fetch('api/DownloadOptimalDataFPS.php?format=xlsx&tableName=' + tableName + '&district=' + district);
 				const excelBlob = await excelResponse.blob();
 				downloadFile(excelBlob, 'Tamil Nadu_FPS_' + getDateString() + '.xlsx');
 			} catch (error) {
@@ -196,6 +200,11 @@ $tablename = "fps_".$id;
 						break;
 					}
 				}
+			}
+
+			if(district=="all"){
+				$('#fps_table').empty();
+				return;
 			}
 			
 			var dataString = "district=" + district + "&tablename=" + '<?php echo $tablename ?>';

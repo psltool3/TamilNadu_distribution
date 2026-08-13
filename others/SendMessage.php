@@ -68,15 +68,15 @@ while($row = mysqli_fetch_assoc($result)){
 								<div class="panel-heading">                                
                                     <h3 class="panel-title">Data</h3> 
                                 </div>
-								<button class='btn btn-success' style="float:right;margin-top:10px;margin-right:13px" onclick="send_all('all')">Send Message to All</button>
+								<!-- <button class='btn btn-success' style="float:right;margin-top:10px;margin-right:13px" onclick="send_all('all')">Send Message to All</button> -->
 								<div class="panel-body">
                                  <div class="table-responsive">
                                     <table id="export_table" class="table">
                                         <thead>
                                             <tr>
-												<th style="font-size:16px">Email Id</th>
+												<th style="font-size:16px">User Id</th>
                                                 <th style="font-size:16px">District</th>
-                                                <th style="font-size:16px">Send</th>
+                                                <!-- <th style="font-size:16px">Send</th> -->
                                             </tr>
                                         </thead>
                                         <tbody id="table_body">
@@ -89,8 +89,8 @@ while($row = mysqli_fetch_assoc($result)){
 										{
 											$temp_id = (string)$row['uid'];
 											echo "<tr><td>{$row['username']}</td>".
-											 "<td>{$row['role']}</td>".
-											 "<td> <button class='btn btn-success btn-rounded' onclick=\"send_email('{$temp_id}')\">Send Message</button></td></tr>";
+											 "<td>{$row['role']}</td>";
+											//  "<td> <button class='btn btn-success btn-rounded' onclick=\"send_email('{$temp_id}')\">Send Message</button></td></tr>"
              							}
 
 										?>

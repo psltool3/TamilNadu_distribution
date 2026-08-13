@@ -600,7 +600,7 @@ if($currentTimestamp >= $targetTimestamp) {
 			var reviewed = document.getElementById("reviewed") ? document.getElementById("reviewed").value : "";
 			var from_id = document.getElementById("from_id") ? document.getElementById("from_id").value : "";
 			var to_id = document.getElementById("to_id") ? document.getElementById("to_id").value : "";
-			return 'format=' + format + '&approved=' + encodeURIComponent(approved) + '&reviewed=' + encodeURIComponent(reviewed) + '&fromid=' + encodeURIComponent(from_id) + '&toid=' + encodeURIComponent(to_id);
+			return 'format=' + format + '&approved=' + encodeURIComponent(approved) + '&reviewed=' + encodeURIComponent(reviewed) + '&fromid=' + encodeURIComponent(from_id) + '&toid=' + encodeURIComponent(to_id) + '&page=home';
 		}
 
 		document.getElementById('downloadCSV').addEventListener('click', async function() {
