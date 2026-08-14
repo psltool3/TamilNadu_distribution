@@ -23,11 +23,11 @@ if (isset($_GET['format'])) {
     $format = $_GET['format'];
 	$district = isset($_GET['district']) ? $_GET['district'] : '';
     
-	$columns     = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance","RO Accepted","FCI Release Warehouse","Reason for not Approve","Distance","status"];
-	$columns_pdf = ["scenario","from","from_id","from_name","from_district","from_lat","from_long","to","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance","RO Accepted","FCI Release Warehouse","Reason for not Approve","Distance","status"];
+	$columns     = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
+	$columns_pdf = ["scenario","from","from_id","from_name","from_district","from_lat","from_long","to","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 
-	$fields     = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance","approve_district","new_id_admin","reason_admin","new_distance_admin","status"];
-	$fields_pdf = ["scenario","from","from_id","from_name","from_district","from_lat","from_long","to","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance","approve_district","new_id_admin","reason_admin","new_distance_admin","status"];
+	$fields     = ["scenario","from","from_state","from_id","from_name","from_district","from_lat","from_long","to","to_state","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
+	$fields_pdf = ["scenario","from","from_id","from_name","from_district","from_lat","from_long","to","to_id","to_name","to_district","to_lat","to_long","commodity","quantity","distance"];
 
 	$tableData     = array();
 	$tableData_pdf = array();

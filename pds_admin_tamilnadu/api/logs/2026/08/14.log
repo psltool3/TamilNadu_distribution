@@ -15,3 +15,5 @@
 [2026-08-14 14:47:21] User -> Save Row Data | approve district change id -> admin@pds | 645 - 15DA001PN | B22
 [2026-08-14 14:50:52] Admin User -> Reset Row Data | admin@pds | 645 - 15DA001PN - Wheat
 [2026-08-14 14:51:54] Admin User -> Reset Row Data | admin@pds | 645 - 15DA001PN - Rice
+[2026-08-14 14:54:48] Admin User -> Reset Row Data Leg1 | admin@pds | SE16002 - 645 - Wheat
+[2026-08-14 14:54:53] Admin User -> Reset Row Data Leg1 | admin@pds | SE16002 - 645 - Rice
