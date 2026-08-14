@@ -830,10 +830,10 @@ if($currentTimestamp >= $targetTimestamp) {
 									if(district_change_approve=="yes" || (approve_admin=="yes" && newid_admin=="")){
 										var admin_approve = "<td><button class='btn btn-info'>Approved</button></td>";
 									}
-									else if(district_change_approve=="no" || approve_admin=="no" || (approve_admin=="yes" && newid_district!="")){
+									else if(district_change_approve=="no" || approve_admin=="no" || (approve_admin=="yes" && newid_admin!="") || (approve_admin=="yes" && newid_district!="")){
 										var admin_approve = "<td><button class='btn btn-danger'>Not Approved</button></td>";
 									}
-									else if(approve_admin==""){
+									else{
 										var admin_approve = "<td><button class='btn btn-warning'>Pending</button></td>";
 									}
 									
