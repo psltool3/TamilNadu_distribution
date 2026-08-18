@@ -136,7 +136,7 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 
 	$FPS = new FPS;
 	$FPS->setUniqueid(substr($uniqueid,0,15));
-	$FPS->setDistrict(ucwords(strtolower($district)));
+	$FPS->setDistrict(strtoupper($district));
 	$FPS->setLatitude($latitude);
 	$FPS->setLongitude($longitude);
 	$FPS->setName($name);
