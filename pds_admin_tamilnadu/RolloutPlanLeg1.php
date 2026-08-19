@@ -360,32 +360,26 @@ require('Header.php');
 	}
 	
 	function formatNumberWithCommas(value) {
-		const formattedNumber = Number(value).toFixed(2);
+		const num = Number(value);
 
-		// Separate the integer and decimal parts
-		const parts = formattedNumber.split('.');
-		let integerPart = parts[0];
-		const decimalPart = parts[1] || '';
+		if (Number.isInteger(num)) {
+			return num.toLocaleString('en-IN');
+		}
 
-		// Add commas every two digits from the right in the integer part
-		integerPart = integerPart.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
-
-		// Combine the integer and decimal parts and return the formatted number
-		return integerPart + '.' + decimalPart;
+		return num.toLocaleString('en-IN', {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2
+		});
 	}
 	
 	function formatNumberWithCommasWithoutDecimal(value) {
-		const roundedNumber = Math.round(value);
+		const num = Number(value);
 
-		// Separate the integer and decimal parts
-		const parts = roundedNumber.toString().split('.');
-		let integerPart = parts[0];
-  
-		// Add commas every three digits from the right in the integer part
-		integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-	  
-		// Return the formatted number
-		return integerPart;
+		const roundedNumber = Math.round(num * 100) / 100;
+
+		return roundedNumber.toLocaleString('en-IN', {
+			maximumFractionDigits: 0
+		});
 	}
 	
 	var modifiedIdData = {};
