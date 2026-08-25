@@ -1,0 +1,160 @@
+<?php
+require('util/Connection.php');
+require('util/SessionCheck.php');
+require('Header.php');
+
+$id = "";
+if (isset($_POST['id']) && !empty($_POST['id'])) {
+    $id = $_POST['id'];
+} else if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    $query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated DESC LIMIT 1";
+    $result = mysqli_query($con, $query);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $id = $row["id"];
+    }
+}
+$id = preg_replace('/[^a-zA-Z0-9_-]/', '', $id);
+$id_lower = strtolower($id);
+
+$tablename = "dcp";
+if (!empty($id)) {
+    $candidates = [
+        "fci_leg1_" . $id,
+        "fci_leg1_" . $id_lower,
+        "dcp_leg1_" . $id,
+        "dcp_leg1_" . $id_lower,
+        "fci_" . $id,
+        "fci_" . $id_lower,
+        "dcp_" . $id,
+        "dcp_" . $id_lower,
+        "dcp"
+    ];
+    foreach ($candidates as $cand) {
+        $chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $cand) . "'");
+        if ($chk && mysqli_num_rows($chk) > 0) {
+            $tablename = $cand;
+            break;
+        }
+    }
+}
+
+?>
+<style>
+    td {
+            font-size: 15px; /* Increase font size for table headers and data cells */
+        }
+        .table thead tr th {
+    background-color: #95b75d !important;
+    /* border: 2px solid #777; */
+    color: black;
+    /* Optional: Font size for table header */
+}
+    </style>
+
+                <!-- START BREADCRUMB -->
+                <ul class="breadcrumb">
+                    <li><a href="Home.php">Home</a></li>
+                    <li class="active">FCI View</li>
+                </ul>
+                <!-- END BREADCRUMB -->
+
+
+				<!-- PAGE CONTENT WRAPPER -->
+                <div class="page-content-wrap">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <!-- START SIMPLE DATATABLE -->
+                            <div class="panel panel-default">
+							<div class="panel-heading">
+                                    <h3 class="panel-title">FCI</h3>
+                                </div>
+								<div style="float:right" style="margin:10px">
+									<button id="downloadCSV" class="btn btn-warning" style="margin-bottom: 10px;" type="button">Download CSV</button>
+									<button id="downloadXLSX" class="btn btn-success" style="margin-bottom: 10px;" type="button">Download XLSX</button>
+								</div>
+                                <div class="panel-body">
+                                 <div class="table-responsive">
+                                    <table id="export_table" class="table datatable">
+										<?php
+										$has_storage = false;
+										$chk_col = mysqli_query($con, "SHOW COLUMNS FROM " . mysqli_real_escape_string($con, $tablename) . " LIKE 'storage'");
+										if ($chk_col && mysqli_num_rows($chk_col) > 0) {
+											$has_storage = true;
+										}
+										?>
+                                        <thead>
+                                            <tr>
+												<th style="font-size:16px">District</th>
+												<th style="font-size:16px">Name of FCI</th>
+												<th style="font-size:16px">FCI ID</th>
+												<th style="font-size:16px">Type of FCI</th>
+												<th style="font-size:16px">Latitude</th>
+												<th style="font-size:16px">Longitude</th>
+										<?php if ($has_storage) { ?>
+												<th style="font-size:16px">Storage Capacity(Qtl)</th>
+										<?php } else { ?>
+												<th style="font-size:16px">Storage Capacity(Qtl)</th>
+										<?php } ?>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+										<?php
+										
+										$query = "SELECT * FROM " . mysqli_real_escape_string($con, $tablename) . " WHERE 1";
+										$result = mysqli_query($con,$query);
+										if ($result) {
+											while($row = mysqli_fetch_array($result))
+											{
+												$cap = isset($row['storage']) ? $row['storage'] : (isset($row['capacity']) ? $row['capacity'] : '');
+												echo "<tr><td>{$row['district']}</td>".
+												"<td>{$row['name']}</td>".
+												"<td>{$row['id']}</td>".
+												"<td>{$row['type']}</td>".
+												"<td>{$row['latitude']}</td>".
+												"<td>{$row['longitude']}</td>".
+												"<td>{$cap}</td></tr>";
+											}
+										}
+
+										?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- END SIMPLE DATATABLE -->
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- PAGE CONTENT WRAPPER -->
+            </div>
+            <!-- END PAGE CONTAINER -->
+
+    <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document.getElementById("downloadCSV")).click(function () {
+			
+            $('#export_table').table2excel({
+                filename: "FCIData.csv",
+                exclude_inputs: false
+            });
+        });
+
+        $(document.getElementById("downloadXLSX")).click(function () {
+            $('#export_table').table2excel({
+                filename: "FCIData.xls",
+                exclude_inputs: false
+            });
+        });
+    </script>
+    </body>
+</html>

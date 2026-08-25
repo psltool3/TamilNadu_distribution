@@ -68,8 +68,8 @@ require('Header.php');
 												<th style="font-size:16px">Year</th>
                                                 <th style="font-size:16px">Month</th>
                                                 <th style="font-size:16px">Applicable Month</th>
+                                                <th style="font-size:16px">FCI</th>
                                                 <th style="font-size:16px">Warehouse</th>
-                                                <th style="font-size:16px">FPS</th>
                                                 <th style="font-size:16px">Optimised Data</th>
                                             </tr>
                                         </thead>
@@ -86,8 +86,8 @@ require('Header.php');
 											echo "<tr><td>{$row['year']}</td>".
 											 "<td>{$row['month']}</td>".
 											 "<td>{$app_month}</td>".
+              								 "<td> <button class='btn btn-warning btn-rounded' onclick=\"fci_open('{$temp_id}')\">View FCI</button></td>".
 											 "<td> <button class='btn btn-info btn-rounded' onclick=\"warehouse_open('{$temp_id}')\">View Warehouses</button></td>".
-             								 "<td> <button class='btn btn-warning btn-rounded' onclick=\"fps_open('{$temp_id}')\">View FPS</button></td>".
              								 "<td> <button class='btn btn-danger btn-rounded' onclick=\"optimised_open('{$temp_id}')\">View Data</button></td></tr>";
              							}
 
@@ -197,6 +197,10 @@ require('Header.php');
 			form.submit();
 		}
 
+		function fci_open(temp_id){
+			post({id:temp_id,step:"leg1"} ,"DCPView.php");
+		}
+		
 		function warehouse_open(temp_id){
 			post({id:temp_id,step:"leg1"} ,"WarehouseView.php");
 		}
