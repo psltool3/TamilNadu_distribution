@@ -5,7 +5,7 @@ require('Header.php');
 
 $uid_email = [];
 
-$query = "SELECT * FROM login WHERE role!='admin'";
+$query = "SELECT * FROM login";
 $result = mysqli_query($con,$query);
 while($row = mysqli_fetch_assoc($result)){
 	$uniqueid = $row['uid'];
@@ -51,7 +51,7 @@ while($row = mysqli_fetch_assoc($result)){
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="#">Home</a></li>                    
-                    <li class="active">Send Message</li>
+                    <li class="active">Send Email</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 
@@ -69,7 +69,6 @@ while($row = mysqli_fetch_assoc($result)){
                                     <h3 class="panel-title">Data</h3> 
                                 </div>
 								<button class='btn btn-success' style="float:right;margin-top:10px;margin-right:13px" onclick="send_all('all')">Send Message to All</button>
-								<button id="sendSelectedBtn" class='btn btn-success' style="float:right;margin-top:10px;margin-right:13px" onclick="send_selected()" disabled>Send Message to Selected</button>
 								<div class="panel-body">
                                  <div class="table-responsive">
                                     <table id="export_table" class="table">
@@ -78,7 +77,6 @@ while($row = mysqli_fetch_assoc($result)){
 												<th style="font-size:16px">User Id</th>
                                                 <th style="font-size:16px">District</th>
                                                 <th style="font-size:16px">Send</th>
-                                                <th style="font-size:16px">Select</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table_body">
@@ -92,8 +90,7 @@ while($row = mysqli_fetch_assoc($result)){
 											$temp_id = (string)$row['uid'];
 											echo "<tr><td>{$row['username']}</td>".
 											 "<td>{$row['role']}</td>".
-											 "<td> <button class='btn btn-success btn-rounded' onclick=\"send_email('{$temp_id}')\">Send Message</button></td>".
-											 "<td><input type='checkbox' class='user-checkbox' value='{$temp_id}' onchange='toggleSendSelectedBtn()'></td></tr>";
+											 "<td> <button class='btn btn-success btn-rounded' onclick=\"send_email('{$temp_id}')\">Send Message</button></td></tr>";
              							}
 
 										?>
@@ -106,7 +103,7 @@ while($row = mysqli_fetch_assoc($result)){
                                     <table id="" class="table">
                                         <thead>
                                             <tr>
-												<th style="font-size:16px">User Id</th>
+												<th style="font-size:16px">Email Id</th>
                                                 <th style="font-size:16px">Message</th>
                                                 <th style="font-size:16px">Date</th>
                                                 <th style="font-size:16px">Acknowledged</th>
@@ -122,8 +119,7 @@ while($row = mysqli_fetch_assoc($result)){
 										while($row = mysqli_fetch_array($result))
 										{
 											$temp_id = (string)$row['id'];
-											$user_id = $row['user_id'];
-											$email = isset($uid_email[$user_id]) ? $uid_email[$user_id] : $user_id;
+											$email = isset($uid_email[$row['user_id']]) ? $uid_email[$row['user_id']] : $row['user_id'];
 											echo "<tr><td>{$email}</td>".
 											 "<td>{$row['message']}</td>".
 											 "<td>{$row['date']}</td>".
@@ -215,27 +211,6 @@ while($row = mysqli_fetch_assoc($result)){
 			proceed();
 		}
 		
-		function send_selected(){
-			var selectedUids = [];
-			$(".user-checkbox:checked").each(function() {
-				selectedUids.push($(this).val());
-			});
-			if(selectedUids.length > 0) {
-				uidCalled = selectedUids.join("_");
-				proceed();
-			}
-		}
-		
-		function toggleSendSelectedBtn(){
-			var anyChecked = $(".user-checkbox:checked").length > 0;
-			if (anyChecked) {
-				$("#sendSelectedBtn").prop("disabled", false);
-			} else {
-				$("#sendSelectedBtn").prop("disabled", true);
-			}
-		}
-		
-
 		function proceed(){
 			post({uid:uidCalled} ,"SendMessageText.php");
 		}

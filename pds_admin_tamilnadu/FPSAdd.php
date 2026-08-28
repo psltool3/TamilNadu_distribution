@@ -257,6 +257,31 @@ require('Header.php');
                 return false;
             }
 			
+            if (isNaN(latitude) || parseFloat(latitude) <= 0 || parseFloat(latitude) >= 40) {
+                alert('Check Latitude: value must be greater than 0 and less than 40');
+                return false;
+            }
+
+            if (isNaN(longitude) || parseFloat(longitude) <= 65 || parseFloat(longitude) >= 100) {
+                alert('Check Longitude: value must be greater than 65 and less than 100');
+                return false;
+            }
+
+            if (isNaN(demand) || parseFloat(demand) < 0) {
+                alert('Check Entitlement Wheat Value: value cannot be negative');
+                return false;
+            }
+
+            if (isNaN(demand_rice) || parseFloat(demand_rice) < 0) {
+                alert('Check Entitlement Rice Value: value cannot be negative');
+                return false;
+            }
+
+            if (isNaN(demand_frice) || parseFloat(demand_frice) < 0) {
+                alert('Check Entitlement FRice Value: value cannot be negative');
+                return false;
+            }
+
             document.getElementById('popup').style.display = 'block';
         }
 		

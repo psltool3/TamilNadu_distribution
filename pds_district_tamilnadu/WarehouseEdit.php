@@ -320,6 +320,21 @@ require('Header.php');
                 return false;
             }
 			
+            if (isNaN(latitude) || parseFloat(latitude) <= 0 || parseFloat(latitude) >= 40) {
+                alert('Check Latitude: value must be greater than 0 and less than 40');
+                return false;
+            }
+
+            if (isNaN(longitude) || parseFloat(longitude) <= 65 || parseFloat(longitude) >= 100) {
+                alert('Check Longitude: value must be greater than 65 and less than 100');
+                return false;
+            }
+
+            if (isNaN(storage) || parseFloat(storage) < 0) {
+                alert('Check Storage Value: storage capacity cannot be negative');
+                return false;
+            }
+			
             document.getElementById('popup').style.display = 'block';
         }
 		

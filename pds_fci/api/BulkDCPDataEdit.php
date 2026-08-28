@@ -27,9 +27,9 @@ $mapData = [
     "Type" => "type",
     "Latitude" => "latitude",
     "Longitude" => "longitude",
-    "Offset of Wheat" => "demand",
-	"Offset of Rice" => "demand_rice",
-	"Offset of FRice" => "demand_frice",
+    "Offered of Wheat" => "demand",
+	"Offered of Rice" => "demand_rice",
+	"Offered of FRice" => "demand_frice",
 	"Active/Not-Active" => "active"
 ];
 
@@ -80,9 +80,9 @@ function isValidCoordinate($value, $coordinateType) {
     // Check if it's latitude or longitude and validate within the range
     switch ($coordinateType) {
         case 'latitude':
-            return ($coordinate >= -90 && $coordinate <= 90);
+            return ($coordinate > 0 && $coordinate < 40);
         case 'longitude':
-            return ($coordinate >= -180 && $coordinate <= 180);
+            return ($coordinate > 65 && $coordinate < 100);
         default:
             return false;
     }
@@ -119,7 +119,7 @@ try{
 			$active = -1;
 			while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
 				if($i>0){
-					if($district<0 or $name<0 or $id<0 or $type<0 or $demand<0 or $demand_rice<0 or $demand_rice<0 or $latitude<0 or $longitude<0 or $active<0){
+					if($district<0 or $name<0 or $id<0 or $type<0 or $demand<0 or $demand_rice<0 or $demand_frice<0 or $latitude<0 or $longitude<0 or $active<0){
 						echo "Error : You have modified Template Header, please check";
 						exit();
 					}
@@ -129,18 +129,18 @@ try{
 						$redirect = 0;
 					}
 
-					if(!isStringNumber($column[$demand])){
-						echo "Error : Check Demand Wheat Value: ".$column[$demand];
+					if(!isStringNumber($column[$demand]) || floatval($column[$demand]) < 0){
+						echo "Error : Check Offered Wheat Value: ".$column[$demand];
 						echo "</br>";
 						$redirect = 0;
 					}	
-					if(!isStringNumber($column[$demand_rice])){
-						echo "Error : Check Demand Rice Value: ".$column[$demand_rice];
+					if(!isStringNumber($column[$demand_rice]) || floatval($column[$demand_rice]) < 0){
+						echo "Error : Check Offered Rice Value: ".$column[$demand_rice];
 						echo "</br>";
 						$redirect = 0;
 					}	
-					if(!isStringNumber($column[$demand_frice])){
-						echo "Error : Check Demand FRice Value: ".$column[$demand_frice];
+					if(!isStringNumber($column[$demand_frice]) || floatval($column[$demand_frice]) < 0){
+						echo "Error : Check Offered FRice Value: ".$column[$demand_frice];
 						echo "</br>";
 						$redirect = 0;
 					}	
@@ -151,15 +151,14 @@ try{
 						$redirect = 0;
 					}
 					
-					if (!is_numeric($column[$latitude]) || $column[$latitude] >= 40) {
-							echo "Error : Latitude must be less than 40. Given: " . $column[$latitude];
-							echo "</br>";
-							$redirect = 0;
-						}
+					if (!is_numeric($column[$latitude]) || $column[$latitude] <= 0 || $column[$latitude] >= 40) {
+						echo "Error : Latitude must be greater than 0 and less than 40. Given: " . $column[$latitude];
+						echo "</br>";
+						$redirect = 0;
+					}
 
-					// Longitude check (must be more than 65)
-					if (!is_numeric($column[$longitude]) || $column[$longitude] <= 65) {
-						echo "Error : Longitude must be more than 65. Given: " . $column[$longitude];
+					if (!is_numeric($column[$longitude]) || $column[$longitude] <= 65 || $column[$longitude] >= 100) {
+						echo "Error : Longitude must be greater than 65 and less than 100. Given: " . $column[$longitude];
 						echo "</br>";
 						$redirect = 0;
 					}	

@@ -157,7 +157,7 @@ try{
 				}
 
 				$column[$storage] = htmlspecialchars($column[$storage], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-				if(!isStringNumber($column[$storage])){
+				if(!isStringNumber($column[$storage]) || floatval($column[$storage]) < 0){
 					echo "Error : Check Storage Value: ".$column[$storage];
 					echo "</br>";
 					$redirect = 0;

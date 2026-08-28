@@ -103,16 +103,16 @@ if ($_POST['demand_frice'] === false)
 }
 
 
-if(!isStringNumber($_POST["demand"])){
-	echo "Error : Check DemandWheat Value";
+if(!isStringNumber($_POST["demand"]) || floatval($_POST["demand"]) < 0){
+	echo "Error : Check Entitlement Wheat Value: value cannot be negative";
 	exit();
 }
-if(!isStringNumber($_POST["demand_rice"])){
-	echo "Error : Check Demand Rice Value";
+if(!isStringNumber($_POST["demand_rice"]) || floatval($_POST["demand_rice"]) < 0){
+	echo "Error : Check Entitlement Rice Value: value cannot be negative";
 	exit();
 }
-if(!isStringNumber($_POST["demand_frice"])){
-	echo "Error : Check Demand FRice Value";
+if(!isStringNumber($_POST["demand_frice"]) || floatval($_POST["demand_frice"]) < 0){
+	echo "Error : Check Entitlement FRice Value: value cannot be negative";
 	exit();
 }
 

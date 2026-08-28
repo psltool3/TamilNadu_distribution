@@ -11,6 +11,7 @@ $latitude = "";
 $longitude = "";
 $demand = "";
 $demand_rice = "";
+$demand_frice = "";
 $active = "";
 
 if(isset($_POST["uid"])){
@@ -28,6 +29,7 @@ if(isset($_POST["uid"])){
 		$longitude = $row['longitude'];
 		$demand = $row['demand'];
 		$demand_rice = $row['demand_rice'];
+		$demand_frice = $row['demand_frice'];
 		$active = $row['active'];
 	}
 	else{
@@ -146,13 +148,13 @@ else{
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Offset of FRice in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offered of FRice in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
-                                                        <input type="text" class="form-control" id="demand_frice" name="demand_frice" value="<?php echo $demand_rice ?>" required />
+                                                        <input type="text" class="form-control" id="demand_frice" name="demand_frice" value="<?php echo htmlspecialchars($demand_frice, ENT_QUOTES, 'UTF-8'); ?>" required />
                                                     </div>
-                                                    <span class="help-block">Offset in Quintals</span>
+                                                    <span class="help-block">Offered in Quintals</span>
                                                 </div>
                                             </div>	
 											
@@ -183,23 +185,23 @@ else{
                                             </div>
 											
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Offset of Rice in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offered of Wheat in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand" name="demand" value="<?php echo $demand ?>" required />
                                                     </div>
-                                                    <span class="help-block">Offset in Quintals</span>
+                                                    <span class="help-block">Offered in Quintals</span>
                                                 </div>
                                             </div>
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Offset of Wheat in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offered of Rice in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand_rice" name="demand_rice" value="<?php echo $demand_rice ?>" required />
                                                     </div>
-                                                    <span class="help-block">Offset in Quintals</span>
+                                                    <span class="help-block">Offered in Quintals</span>
                                                 </div>
                                             </div>											
                                         </div>
@@ -296,7 +298,7 @@ else{
 			var id = document.getElementById('id').value;
             var demand = document.getElementById('demand').value;
 			var demand_rice = document.getElementById('demand_rice').value;
-			var demand_rice = document.getElementById('demand_frice').value;
+			var demand_frice = document.getElementById('demand_frice').value;
             var district = document.getElementById('district').value;
 
             if (name === '' || type === '' || latitude === '' || longitude === '' || id === '' || demand === '' ||demand_rice === '' || demand_frice === '' || district === '') {
@@ -304,6 +306,31 @@ else{
                 return false;
             }
 			
+            if (isNaN(latitude) || parseFloat(latitude) <= 0 || parseFloat(latitude) >= 40) {
+                alert('Check Latitude: value must be greater than 0 and less than 40');
+                return false;
+            }
+
+            if (isNaN(longitude) || parseFloat(longitude) <= 65 || parseFloat(longitude) >= 100) {
+                alert('Check Longitude: value must be greater than 65 and less than 100');
+                return false;
+            }
+
+            if (isNaN(demand) || parseFloat(demand) < 0) {
+                alert('Check Offered Wheat Value: value cannot be negative');
+                return false;
+            }
+
+            if (isNaN(demand_rice) || parseFloat(demand_rice) < 0) {
+                alert('Check Offered Rice Value: value cannot be negative');
+                return false;
+            }
+
+            if (isNaN(demand_frice) || parseFloat(demand_frice) < 0) {
+                alert('Check Offered FRice Value: value cannot be negative');
+                return false;
+            }
+
             document.getElementById('popup').style.display = 'block';
         }
 		

@@ -61,9 +61,9 @@ function isValidCoordinate($value, $coordinateType) {
     $coordinate = floatval($value);
     switch ($coordinateType) {
         case 'latitude':
-            return ($coordinate >= -90 && $coordinate <= 90);
+            return ($coordinate > 0 && $coordinate < 40);
         case 'longitude':
-            return ($coordinate >= -180 && $coordinate <= 180);
+            return ($coordinate > 65 && $coordinate < 100);
         default:
             return false;
     }
@@ -94,28 +94,28 @@ if(!isValidCoordinate($_POST["latitude"],'latitude') || !isValidCoordinate($_POS
 	renderError("Check Latitude and Longitude Value");
 }
 
-if(!isStringNumber($_POST["demand"])){
-	renderError("Check Offset Rice Value");
+if (!is_numeric($_POST['demand']) || floatval($_POST['demand']) < 0) {
+	renderError("Check Offered Wheat Value: value cannot be negative");
 }
 
-if(!isStringNumber($_POST["demand_rice"])){
-	renderError("Check Offset Wheat Value");
+if (!is_numeric($_POST['demand_rice']) || floatval($_POST['demand_rice']) < 0) {
+	renderError("Check Offered Rice Value: value cannot be negative");
 }
 
-if(!isStringNumber($_POST["demand_frice"])){
-	renderError("Check Offset FRice Value");
+if (!is_numeric($_POST['demand_frice']) || floatval($_POST['demand_frice']) < 0) {
+	renderError("Check Offered FRice Value: value cannot be negative");
 }
 
 if (!isset($_POST["id"]) || !preg_match('/^[A-Za-z0-9]+$/', $_POST["id"])) {
     renderError("Check FCI ID value (only letters and numbers allowed, no spaces or special characters)");
 }
 
-if (!isset($_POST["latitude"]) || !is_numeric($_POST["latitude"]) || $_POST["latitude"] >= 40) {
-    renderError("Check Latitude: value must be less than 40");
+if (!isset($_POST["latitude"]) || !is_numeric($_POST["latitude"]) || $_POST["latitude"] <= 0 || $_POST["latitude"] >= 40) {
+    renderError("Check Latitude: value must be greater than 0 and less than 40");
 }
 
-if (!isset($_POST["longitude"]) || !is_numeric($_POST["longitude"]) || $_POST["longitude"] <= 65) {
-    renderError("Check Longitude: value must be greater than 65");
+if (!isset($_POST["longitude"]) || !is_numeric($_POST["longitude"]) || $_POST["longitude"] <= 65 || $_POST["longitude"] >= 100) {
+    renderError("Check Longitude: value must be greater than 65 and less than 100");
 }
 
 $dbHashedPassword = $row['password'];

@@ -759,32 +759,26 @@ require('Header.php');
 	setInterval(checkServerStatus, 10000);
 	
 	function formatNumberWithCommas(value) {
-		const formattedNumber = Number(value).toFixed(2);
+		const num = Number(value);
 
-		// Separate the integer and decimal parts
-		const parts = formattedNumber.split('.');
-		let integerPart = parts[0];
-		const decimalPart = parts[1] || '';
+		if (Number.isInteger(num)) {
+			return num.toLocaleString('en-IN');
+		}
 
-		// Add commas every two digits from the right in the integer part
-		integerPart = integerPart.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
-
-		// Combine the integer and decimal parts and return the formatted number
-		return integerPart + '.' + decimalPart;
+		return num.toLocaleString('en-IN', {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2
+		});
 	}
 	
 	function formatNumberWithCommasWithoutDecimal(value) {
-		const roundedNumber = Math.round(value);
+		const num = Number(value);
 
-		// Separate the integer and decimal parts
-		const parts = roundedNumber.toString().split('.');
-		let integerPart = parts[0];
-  
-		// Add commas every three digits from the right in the integer part
-		integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-	  
-		// Return the formatted number
-		return integerPart;
+		const roundedNumber = Math.round(num * 100) / 100;
+
+		return roundedNumber.toLocaleString('en-IN', {
+			maximumFractionDigits: 0
+		});
 	}
 	
 
@@ -936,17 +930,20 @@ require('Header.php');
 								.then(data => {
 									function formatNumberWithCommasWithoutDecimal(value) {
 										if (value === undefined || value === null || isNaN(Number(value))) return "0";
-										const roundedNumber = Math.round(Number(value));
-										return roundedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+										const num = Number(value);
+										return Math.round(num).toLocaleString('en-IN');
 									}
 
 									function formatSmartNumber(val) {
 										if (val === undefined || val === null || isNaN(Number(val))) return "0";
 										var num = Number(val);
 										if (Math.abs(num - Math.round(num)) < 0.0001) {
-											return formatNumberWithCommasWithoutDecimal(Math.round(num));
+											return Math.round(num).toLocaleString('en-IN');
 										}
-										return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+										return num.toLocaleString('en-IN', {
+											minimumFractionDigits: 2,
+											maximumFractionDigits: 2
+										});
 									}
 
 									document.getElementById("total_warehouse").innerHTML = formatSmartNumber(data["Warehouse_No"]);
@@ -1305,12 +1302,12 @@ function handleStateCheckboxChange() {
 				console.log(totalDemandFRice)
 				console.log(totalDemand)
 
-				// Format the total demand and total capacity values with commas
-				var formattedTotalDemand = totalDemand.toLocaleString();
-				var formattedTotalCapacity = totalCapacity.toLocaleString();
+				// Format the total demand and total capacity values with Indian number notation
+				var formattedTotalDemand = formatNumberWithCommas(totalDemand);
+				var formattedTotalCapacity = formatNumberWithCommas(totalCapacity);
 
-				document.getElementById("totalFciDemand").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand: " + totalDemand.toFixed(2) + " (Qtl)</span>";
-				document.getElementById("totalFciSupply").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply: " + totalCapacity.toFixed(2) + " (Qtl)</span>";
+				document.getElementById("totalFciDemand").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand: " + formattedTotalDemand + " (Qtl)</span>";
+				document.getElementById("totalFciSupply").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply: " + formattedTotalCapacity + " (Qtl)</span>";
 				document.getElementById("selectedMonth").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Selected Month: " + capitalizeFirstLetter(month) + "</span>";
 
 				districtdata = data.District_Name;

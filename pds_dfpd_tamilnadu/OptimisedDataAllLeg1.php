@@ -3,39 +3,45 @@ require('util/Connection.php');
 require('util/SessionCheck.php');
 require('Header.php');
 
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : 'all';
+
+$yearQuery = "SELECT DISTINCT year FROM optimised_table_leg1 WHERE year IS NOT NULL AND year != '' ORDER BY year DESC";
+$yearResult = mysqli_query($con, $yearQuery);
+$availableYears = array();
+if ($yearResult) {
+    while ($yRow = mysqli_fetch_assoc($yearResult)) {
+        $availableYears[] = $yRow['year'];
+    }
+}
+
 ?>
 
  <style>
-        /* Increase the font size for the entire page */
         body {
-            font-size: 16px; /* Change this value to increase or decrease the base font size */
+            font-size: 16px;
         }
 
-        /* Increase the font size for specific elements */
         .breadcrumb,
         .panel-title,
         .btn {
-            font-size: 12px; /* Adjust the font size for breadcrumbs, panel titles, and buttons */
+            font-size: 12px;
         }
 
-        /* Increase font size for tables */
         table,
         th,
         td {
-            font-size: 15px; /* Font size for table elements */
+            font-size: 15px;
         }
 
-        /* Increase the font size for form labels, inputs, and buttons */
         label,
         input,
         button {
-            font-size: 12px; /* Font size for form elements and buttons */
+            font-size: 12px;
         }
 
-        /* Increase the font size for specific elements within the page */
         .popup,
         .help-block {
-            font-size: 16px; /* Font size for popup elements and help blocks */
+            font-size: 16px;
         }
     </style>
               
@@ -53,11 +59,19 @@ require('Header.php');
                     <div class="row">
                         <div class="col-md-12">
 
-
                             <!-- START SIMPLE DATATABLE -->
                             <div class="panel panel-default">
 								<div class="panel-heading">                                
-                                    <h3 class="panel-title">Tamil Nadu Leg1 Data</h3> 
+                                    <h3 class="panel-title" style="margin-top:6px;">Tamil Nadu Leg1 Data</h3> 
+                                    <div style="float:right; margin-right:15px;">
+                                        <label style="margin-right:8px; font-weight:bold;">Select Year:</label>
+                                        <select id="yearFilter" class="form-control" style="width:140px; display:inline-block;" onchange="filterByYear(this.value)">
+                                            <option value="all" <?php if($selectedYear == 'all') echo 'selected'; ?>>All Years</option>
+                                            <?php foreach($availableYears as $y): ?>
+                                                <option value="<?php echo htmlspecialchars($y); ?>" <?php if($selectedYear == $y) echo 'selected'; ?>><?php echo htmlspecialchars($y); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
                                 </div>
 								<div class="panel-body">
                                  <div class="table-responsive">
@@ -76,7 +90,12 @@ require('Header.php');
                                         <tbody id="table_body">
 										<?php
 										
-										$query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated ASC";
+										if ($selectedYear != 'all' && !empty($selectedYear)) {
+											$safeYear = mysqli_real_escape_string($con, $selectedYear);
+											$query = "SELECT * FROM optimised_table_leg1 WHERE year = '$safeYear' ORDER BY last_updated ASC";
+										} else {
+											$query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated ASC";
+										}
 										$result = mysqli_query($con,$query);
 										$numrows = mysqli_num_rows($result);
 										while($row = mysqli_fetch_assoc($result))
@@ -157,7 +176,7 @@ require('Header.php');
 		}
 
 		function warehouse_open(temp_id){
-			post({url: "WarehouseView.php", id: temp_id, step: "leg1"});
+			post({url: "WarehouseViewLeg1.php", id: temp_id, step: "leg1"});
 		}
 		
 		function fci_open(temp_id){
@@ -169,7 +188,15 @@ require('Header.php');
 		}
 		
 		function generate_report(temp_id){
-			post({url: "GenerateDataView.php", id: temp_id, step: "leg1"});
+			post({url: "GenerateDataViewLeg1.php", id: temp_id, step: "leg1"});
+		}
+
+		function filterByYear(yearVal) {
+			if (yearVal === 'all') {
+				window.location.href = 'OptimisedDataAllLeg1.php';
+			} else {
+				window.location.href = 'OptimisedDataAllLeg1.php?year=' + encodeURIComponent(yearVal);
+			}
 		}
 		</script>	
     </body>

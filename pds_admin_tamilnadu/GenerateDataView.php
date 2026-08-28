@@ -50,7 +50,7 @@ $cost = "";
 $cost1 = "";
 
 if(!empty($id)){
-	$query = "SELECT * FROM optimised_table WHERE id='$id'";
+		$query = "SELECT * FROM optimised_table WHERE id='$id'";
 	$result = mysqli_query($con,$query);
 	if($result && mysqli_num_rows($result)>0){
 		while($row=mysqli_fetch_assoc($result)){
@@ -251,7 +251,7 @@ function addRow($pdf, $row, $colWidth, $isHeader = false) {
 // Add to lines
 $fontSize = 12;
 $pdf->SetFont('Arial', 'B', $fontSize);
-$text = "PDS report generated for state Bihar and applicable month ".ucfirst($month)." and Date ".$date;
+$text = "PDS report generated for state Tamil Nadu and applicable month ".ucfirst($month)." and Date ".$date;
 $pdf->Cell(0, 10, $text, 0, 1);
 
 $text = "Cost saving for L2";
@@ -270,20 +270,22 @@ $pdf->Cell(50, 10, $averagedistanceoptimised, 1);
 $pdf->Cell(40, 10, $cost, 1);
 $pdf->Ln();
 
-$text = "Cost saving for L1";
-$pdf->Cell(0, 10, $text, 0, 1);
+if(!empty($tablename1) && $tablename1 != $tablename){
+	$text = "Cost saving for L1";
+	$pdf->Cell(0, 10, $text, 0, 1);
 
-$pdf->Cell(40, 10, 'Qkm', 1);
-$pdf->Cell(40, 10, 'Allocation', 1);
-$pdf->Cell(50, 10, 'Average Distance', 1);
-$pdf->Cell(40, 10, 'Cost', 1);
-$pdf->Ln();
+	$pdf->Cell(40, 10, 'Qkm', 1);
+	$pdf->Cell(40, 10, 'Allocation', 1);
+	$pdf->Cell(50, 10, 'Average Distance', 1);
+	$pdf->Cell(40, 10, 'Cost', 1);
+	$pdf->Ln();
 
-$pdf->Cell(40, 10, $qkm1, 1);
-$pdf->Cell(40, 10, $allocation1, 1);
-$pdf->Cell(50, 10, $averagedistanceoptimised1, 1);
-$pdf->Cell(40, 10, $cost1, 1);
-$pdf->Ln();
+	$pdf->Cell(40, 10, $qkm1, 1);
+	$pdf->Cell(40, 10, $allocation1, 1);
+	$pdf->Cell(50, 10, $averagedistanceoptimised1, 1);
+	$pdf->Cell(40, 10, $cost1, 1);
+	$pdf->Ln();
+}
 $pdf->Ln();
 // Add the header
 addRow($pdf, $tableData_pdf[0], $colWidth, true);

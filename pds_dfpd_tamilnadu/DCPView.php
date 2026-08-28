@@ -80,13 +80,6 @@ if (!empty($id)) {
                                 <div class="panel-body">
                                  <div class="table-responsive">
                                     <table id="export_table" class="table datatable">
-										<?php
-										$has_storage = false;
-										$chk_col = mysqli_query($con, "SHOW COLUMNS FROM " . mysqli_real_escape_string($con, $tablename) . " LIKE 'storage'");
-										if ($chk_col && mysqli_num_rows($chk_col) > 0) {
-											$has_storage = true;
-										}
-										?>
                                         <thead>
                                             <tr>
 												<th style="font-size:16px">District</th>
@@ -95,12 +88,9 @@ if (!empty($id)) {
 												<th style="font-size:16px">Type of FCI</th>
 												<th style="font-size:16px">Latitude</th>
 												<th style="font-size:16px">Longitude</th>
-										<?php if ($has_storage) { ?>
-												<th style="font-size:16px">Storage Capacity(Qtl)</th>
-										<?php } else { ?>
-												<th style="font-size:16px">Offset of Wheat(Qtl)</th>
-												<th style="font-size:16px">Offset of Rice(Qtl)</th>
-										<?php } ?>
+												<th style="font-size:16px">Offered of Wheat(Qtl)</th>
+												<th style="font-size:16px">Offered of Rice(Qtl)</th>
+												<th style="font-size:16px">Offered of FRice(Qtl)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -112,28 +102,19 @@ if (!empty($id)) {
 										while($row = mysqli_fetch_array($result))
 										{
 											$type_val = isset($row['type']) ? $row['type'] : (isset($row['warehousetype']) ? $row['warehousetype'] : '');
-											if ($has_storage) {
-												$storage_val = isset($row['storage']) ? $row['storage'] : '0';
-												echo "<tr><td>{$row['district']}</td>".
-												"<td>{$row['name']}</td>".
-												"<td>{$row['id']}</td>".
-												"<td>{$type_val}</td>".
-												"<td>{$row['latitude']}</td>".
-												"<td>{$row['longitude']}</td>".
-												"<td>{$storage_val}</td></tr>";
-											} else {
-												$demand_wheat = isset($row['demand']) ? $row['demand'] : (isset($row['Allocation_Wheat']) ? $row['Allocation_Wheat'] : 0);
-												$demand_rice = isset($row['demand_rice']) ? $row['demand_rice'] : (isset($row['Allocation_Rice']) ? $row['Allocation_Rice'] : 0);
+											$demand_wheat = isset($row['demand']) ? $row['demand'] : (isset($row['Allocation_Wheat']) ? $row['Allocation_Wheat'] : 0);
+											$demand_rice = isset($row['demand_rice']) ? $row['demand_rice'] : (isset($row['Allocation_Rice']) ? $row['Allocation_Rice'] : 0);
+											$demand_frice = isset($row['demand_frice']) ? $row['demand_frice'] : (isset($row['Allocation_FRice']) ? $row['Allocation_FRice'] : 0);
 
-												echo "<tr><td>{$row['district']}</td>".
-												"<td>{$row['name']}</td>".
-												"<td>{$row['id']}</td>".
-												"<td>{$type_val}</td>".
-												"<td>{$row['latitude']}</td>".
-												"<td>{$row['longitude']}</td>".
-												"<td>{$demand_wheat}</td>".
-												"<td>{$demand_rice}</td></tr>";
-											}
+											echo "<tr><td>{$row['district']}</td>".
+											"<td>{$row['name']}</td>".
+											"<td>{$row['id']}</td>".
+											"<td>{$type_val}</td>".
+											"<td>{$row['latitude']}</td>".
+											"<td>{$row['longitude']}</td>".
+											"<td>{$demand_wheat}</td>".
+											"<td>{$demand_rice}</td>".
+											"<td>{$demand_frice}</td></tr>";
 										}
 										
 										?>

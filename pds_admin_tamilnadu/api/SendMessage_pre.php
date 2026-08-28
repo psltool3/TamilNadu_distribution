@@ -3,9 +3,10 @@
 require('../util/Connection.php');
 require('../util/SessionFunction.php');
 require('../structures/Login.php');
-require('../util/Logger.php');
 require('../util/Security.php');
 require ('../util/Encryption.php');
+require('../util/Logger.php');
+
 $nonceValue = 'nonce_value';
 
 function generateRandomId($length = 10) {
@@ -23,6 +24,10 @@ if(!SessionCheck()){
 }
 
 require('Header.php');
+
+if(empty($_POST) || empty($_POST["username"]) || empty($_POST["password"])){
+	die("Something went wrong...");
+}
 
 
 $person = new Login;
@@ -46,55 +51,36 @@ $uniqueid = $_POST['uniqueid'];
 $date = date('Y-m-d H:i:s');
 
 if($uniqueid=="all"){
-	$select_query = "SELECT uid FROM login WHERE role!='admin'";
-	$result = mysqli_query($con,$select_query);
-	if($result){
-		while($row = mysqli_fetch_assoc($result)){
-			$uid = mysqli_real_escape_string($con, $row['uid']);
-			$id = generateRandomId(10);
-			$insert_query = "INSERT INTO user_message (id,user_id,message,date,acknowledged) VALUES ('$id','$uid','$message','$date','no')";
-			mysqli_query($con, $insert_query);
-		}
+	$query = "SELECT uid FROM login WHERE role!='admin'";
+	$result = mysqli_query($con,$query);
+	while($row = mysqli_fetch_assoc($result)){
+		$uniqueid = $row['uid'];
+		$id = generateRandomId(10);
+		$query = "INSERT INTO user_message (id,user_id,message,date,acknowledged) VALUES ('$id','$uniqueid','$message','$date','no')";
+		mysqli_query($con, $query);
 	}
 }
 else{
-	$uids = preg_split('/[,_\-]+/', $uniqueid);
-	foreach($uids as $uid){
-		$uid = trim($uid);
-		if($uid !== ''){
-			$safeUid = mysqli_real_escape_string($con, $uid);
-			$id = generateRandomId(10);
-			$insert_query = "INSERT INTO user_message (id,user_id,message,date,acknowledged) VALUES ('$id','$safeUid','$message','$date','no')";
-			mysqli_query($con, $insert_query);
-		}
-	}
+	$id = generateRandomId(10);
+	$query = "INSERT INTO user_message (id,user_id,message,date,acknowledged) VALUES ('$id','$uniqueid','$message','$date','no')";
+	mysqli_query($con, $query);
 }
 
-
-$log_name = '';
-if ($uniqueid == "all") {
-	$log_name = "All Users";
-} else {
-	$uids = preg_split('/[,_\-]+/', $uniqueid);
-	$usernames = [];
-	foreach($uids as $uid){
-		$uid = trim($uid);
-		if($uid !== ''){
-			$log_query = "select username from login WHERE uid='".mysqli_real_escape_string($con, $uid)."'";
-			$log_result = mysqli_query($con,$log_query);
-			if ($log_result && $row = $log_result->fetch_assoc()) {
-				$usernames[] = $row['username'];
-			}
-		}
-	}
-	$log_name = implode(', ', $usernames);
+$log_query = "select username from login WHERE uid='$uniqueid'";
+$log_result = mysqli_query($con,$log_query);
+if ($log_result && $row = $log_result->fetch_assoc()) {
+	$log_name =  $row['username'];
 }
 
 $filteredPost = $_POST;
 unset($filteredPost['username'], $filteredPost['password']);
 writeLog("User ->" ." Send  Message ->". $_SESSION['user'] . "| Requested JSON -> " . json_encode($filteredPost). " | " . $log_name);
 
+
+
 echo "<script>window.location.href = '../SendMessage.php';</script>";
+
+
 } 
 else{
     echo "Error : Password or Username is incorrect";

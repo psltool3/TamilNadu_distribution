@@ -114,7 +114,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <!-- END PAGE SIDEBAR -->
 
         <!-- PAGE CONTENT -->
-        <div class="page-content">
+        <div class="page-content" style="font-size:20px;color:black">
             <!-- START X-NAVIGATION VERTICAL -->
             <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
                 <!-- TOGGLE NAVIGATION -->
@@ -125,3 +125,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 			</ul>
 			<!-- END X-NAVIGATION VERTICAL -->
 			<h1 id="error-message"></h1>
+			
+			 <script>
+			// Function to display error message after 10 seconds
+			setTimeout(function() {
+				document.getElementById("error-message").innerHTML = "You Have Following Error :";
+			}, 5000); // 10 seconds delay
+		</script>

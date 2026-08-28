@@ -45,9 +45,9 @@ function isValidCoordinate($value, $coordinateType) {
     // Check if it's latitude or longitude and validate within the range
     switch ($coordinateType) {
         case 'latitude':
-            return ($coordinate >= -90 && $coordinate <= 90);
+            return ($coordinate > 0 && $coordinate < 40);
         case 'longitude':
-            return ($coordinate >= -180 && $coordinate <= 180);
+            return ($coordinate > 65 && $coordinate < 100);
         default:
             return false;
     }
@@ -82,7 +82,7 @@ if(!isValidCoordinate($_POST["latitude"],'latitude') or !isValidCoordinate($_POS
 	exit();
 }
 
-if(!isStringNumber($_POST["storage"])){
+if(!isStringNumber($_POST["storage"]) || floatval($_POST["storage"]) < 0){
 	echo "Error : Check Storage Value";
 	exit();
 }
@@ -94,14 +94,13 @@ function validateId($id) {
     return $id;  
 }
 
-if (!isset($_POST["latitude"]) || !is_numeric($_POST["latitude"]) || $_POST["latitude"] >= 40) {
-	echo "Error : Latitude must be less than 40.";
+if (!isset($_POST["latitude"]) || !is_numeric($_POST["latitude"]) || $_POST["latitude"] <= 0 || $_POST["latitude"] >= 40) {
+	echo "Error : Latitude must be greater than 0 and less than 40.";
 	exit();
 }
 
-// Longitude check (must be more than 65)
-if (!isset($_POST["longitude"]) || !is_numeric($_POST["longitude"]) || $_POST["longitude"] <= 65) {
-	echo "Error : Longitude must be more than 65.";
+if (!isset($_POST["longitude"]) || !is_numeric($_POST["longitude"]) || $_POST["longitude"] <= 65 || $_POST["longitude"] >= 100) {
+	echo "Error : Longitude must be greater than 65 and less than 100.";
 	exit();
 }
 

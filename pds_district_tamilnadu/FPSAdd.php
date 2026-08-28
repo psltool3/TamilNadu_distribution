@@ -243,8 +243,8 @@ $district = ucfirst($_SESSION["district_district"]);
             var longitude = document.getElementById('longitude').value;
 			var id = document.getElementById('id').value;
             var demand = document.getElementById('demand').value;
-			var demand = document.getElementById('demand_rice').value;
-			var demand = document.getElementById('demand_frice').value;
+			var demand_rice = document.getElementById('demand_rice').value;
+			var demand_frice = document.getElementById('demand_frice').value;
             var district = document.getElementById('district').value;
 
             if (name === '' || type === '' || latitude === '' || longitude === '' || id === '' || demand === '' ||demand_rice === '' ||demand_frice === '' || district === '') {
@@ -252,6 +252,31 @@ $district = ucfirst($_SESSION["district_district"]);
                 return false;
             }
 			
+            if (isNaN(latitude) || parseFloat(latitude) <= 0 || parseFloat(latitude) >= 40) {
+                alert('Check Latitude: value must be greater than 0 and less than 40');
+                return false;
+            }
+
+            if (isNaN(longitude) || parseFloat(longitude) <= 65 || parseFloat(longitude) >= 100) {
+                alert('Check Longitude: value must be greater than 65 and less than 100');
+                return false;
+            }
+
+            if (isNaN(demand) || parseFloat(demand) < 0) {
+                alert('Check Entitlement Wheat Value: value cannot be negative');
+                return false;
+            }
+
+            if (isNaN(demand_rice) || parseFloat(demand_rice) < 0) {
+                alert('Check Entitlement Rice Value: value cannot be negative');
+                return false;
+            }
+
+            if (isNaN(demand_frice) || parseFloat(demand_frice) < 0) {
+                alert('Check Entitlement FRice Value: value cannot be negative');
+                return false;
+            }
+
             document.getElementById('popup').style.display = 'block';
         }
 		

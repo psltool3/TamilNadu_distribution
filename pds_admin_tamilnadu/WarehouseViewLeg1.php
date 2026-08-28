@@ -9,7 +9,7 @@ if (isset($_POST['id']) && !empty($_POST['id'])) {
 } else if (isset($_GET['id']) && !empty($_GET['id'])) {
     $id = $_GET['id'];
 } else {
-    $query = "SELECT * FROM optimised_table ORDER BY last_updated DESC LIMIT 1";
+    $query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated DESC LIMIT 1";
     $result = mysqli_query($con, $query);
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
@@ -35,9 +35,9 @@ function get_safe_table_name($con, $prefix, $id_val) {
     return '';
 }
 
-$tablename = get_safe_table_name($con, "warehouse_", $id);
+$tablename = get_safe_table_name($con, "warehouse_leg1_", $id);
 if (empty($tablename)) {
-    $tablename = get_safe_table_name($con, "warehouse_leg1_", $id);
+    $tablename = get_safe_table_name($con, "warehouse_", $id);
 }
 if (empty($tablename)) {
     $tablename = "warehouse";
@@ -58,8 +58,8 @@ if (empty($tablename)) {
 
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                    <li><a href="Warehouse.php">Home</a></li>
-                    <li class="active">Warehouse View</li>
+                    <li><a href="Home.php">Home</a></li>
+                    <li class="active">Warehouse Leg1 View</li>
                 </ul>
                 <!-- END BREADCRUMB -->
 
@@ -73,7 +73,7 @@ if (empty($tablename)) {
                             <!-- START SIMPLE DATATABLE -->
                             <div class="panel panel-default">
 							<div class="panel-heading">
-                                    <h3 class="panel-title">Warehouse</h3>
+                                    <h3 class="panel-title">Warehouse (Leg 1)</h3>
                                 </div>
 								<div style="float:right" style="margin:10px">
 									<button id="downloadCSV" class="btn btn-warning" style="margin-bottom: 10px;" type="button">Download CSV</button>
@@ -135,8 +135,6 @@ if (empty($tablename)) {
         </div>
         <!-- END PAGE CONTAINER -->
 
-
-
     <!-- START SCRIPTS -->
         <!-- START PLUGINS -->
         <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
@@ -155,15 +153,10 @@ if (empty($tablename)) {
 		<script type="text/javascript" src="js/plugins/tableexport/jspdf/jspdf.js"></script>
 		<script type="text/javascript" src="js/plugins/tableexport/jspdf/libs/base64.js"></script>
 		
-		
         <script type="text/javascript" src="js/plugins.js"></script>
         <script type="text/javascript" src="js/actions.js"></script>
         <!-- END PAGE PLUGINS -->
 
-        <!-- START TEMPLATE -->
-       
-        <!-- END TEMPLATE -->
-		
 		<script>
 		function getDateString(){
 			var currentDate = new Date();
@@ -179,25 +172,23 @@ if (empty($tablename)) {
 				var tableName = '<?php echo $tablename ?>';
 				const csvResponse = await fetch('api/DownloadOptimalDataWarehouse.php?format=csv&tableName='+tableName);
 				const csvBlob = await csvResponse.blob();
-				downloadFile(csvBlob, 'Warehouse_' + getDateString() + '.csv');
+				downloadFile(csvBlob, 'WarehouseLeg1_' + getDateString() + '.csv');
 			} catch (error) {
 				console.error('Error downloading CSV file:', error);
 			}
 		});
 
-		// Event listener for downloading XLSX
 		document.getElementById('downloadXLSX').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
 				const excelResponse = await fetch('api/DownloadOptimalDataWarehouse.php?format=xlsx&tableName='+tableName);
 				const excelBlob = await excelResponse.blob();
-				downloadFile(excelBlob, 'Warehouse_' + getDateString() + '.xlsx');
+				downloadFile(excelBlob, 'WarehouseLeg1_' + getDateString() + '.xlsx');
 			} catch (error) {
 				console.error('Error downloading XLSX file:', error);
 			}
 		});
 		
-		// Functions for file download and PDF generation (similar to previous code)
 		function downloadFile(blob, fileName) {
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
@@ -206,8 +197,6 @@ if (empty($tablename)) {
 			link.click();
 			window.URL.revokeObjectURL(url);
 		}
-
-
 		</script>
     </body>
 </html>

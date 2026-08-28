@@ -3,6 +3,17 @@ require('util/Connection.php');
 require('util/SessionCheck.php');
 require('Header.php');
 
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : 'all';
+
+$yearQuery = "SELECT DISTINCT year FROM optimised_table_leg1 WHERE year IS NOT NULL AND year != '' ORDER BY year DESC";
+$yearResult = mysqli_query($con, $yearQuery);
+$availableYears = array();
+if ($yearResult) {
+    while ($yRow = mysqli_fetch_assoc($yearResult)) {
+        $availableYears[] = $yRow['year'];
+    }
+}
+
 ?>
 
  <style>
@@ -57,9 +68,18 @@ require('Header.php');
                             <!-- START SIMPLE DATATABLE -->
                             <div class="panel panel-default">
 								<div class="panel-heading">                                
-                                    <h3 class="panel-title">Data</h3> 
+                                    <h3 class="panel-title" style="margin-top:6px;">Data</h3> 
+                                    <div style="float:right; margin-right:15px;">
+                                        <label style="margin-right:8px; font-weight:bold;">Select Year:</label>
+                                        <select id="yearFilter" class="form-control" style="width:140px; display:inline-block;" onchange="filterByYear(this.value)">
+                                            <option value="all" <?php if($selectedYear == 'all') echo 'selected'; ?>>All Years</option>
+                                            <?php foreach($availableYears as $y): ?>
+                                                <option value="<?php echo htmlspecialchars($y); ?>" <?php if($selectedYear == $y) echo 'selected'; ?>><?php echo htmlspecialchars($y); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
                                 </div>
-								<button class='btn btn-success' style="float:right;margin-top:10px;margin-right:13px" onclick="send_all('all')">Send Email to All</button>
+								<!-- <button class='btn btn-success' style="float:right;margin-top:10px;margin-right:13px" onclick="send_all('all')">Send Email to All</button> -->
 								<div class="panel-body">
                                  <div class="table-responsive">
                                     <table id="export_table" class="table">
@@ -71,12 +91,18 @@ require('Header.php');
                                                 <th style="font-size:16px">FCI</th>
                                                 <th style="font-size:16px">Warehouse</th>
                                                 <th style="font-size:16px">Optimised Data</th>
+                                                <th style="font-size:16px">Generate Data</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table_body">
 										<?php
 										
-										$query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated ASC";
+										if ($selectedYear != 'all' && !empty($selectedYear)) {
+											$safeYear = mysqli_real_escape_string($con, $selectedYear);
+											$query = "SELECT * FROM optimised_table_leg1 WHERE year = '$safeYear' ORDER BY last_updated ASC";
+										} else {
+											$query = "SELECT * FROM optimised_table_leg1 ORDER BY last_updated ASC";
+										}
 										$result = mysqli_query($con,$query);
 										$numrows = mysqli_num_rows($result);
 										while($row = mysqli_fetch_array($result))
@@ -88,7 +114,8 @@ require('Header.php');
 											 "<td>{$app_month}</td>".
               								 "<td> <button class='btn btn-warning btn-rounded' onclick=\"fci_open('{$temp_id}')\">View FCI</button></td>".
 											 "<td> <button class='btn btn-info btn-rounded' onclick=\"warehouse_open('{$temp_id}')\">View Warehouses</button></td>".
-             								 "<td> <button class='btn btn-danger btn-rounded' onclick=\"optimised_open('{$temp_id}')\">View Data</button></td></tr>";
+              								 "<td> <button class='btn btn-danger btn-rounded' onclick=\"optimised_open('{$temp_id}')\">View Data</button></td>".
+											 "<td> <button class='btn btn-success btn-rounded' onclick=\"generate_report('{$temp_id}')\">View Report</button></td></tr>";
              							}
 
 										?>
@@ -202,15 +229,19 @@ require('Header.php');
 		}
 		
 		function warehouse_open(temp_id){
-			post({id:temp_id,step:"leg1"} ,"WarehouseView.php");
+			post({id:temp_id,step:"leg1"} ,"WarehouseViewLeg1.php");
 		}
 		
-		function fps_open(temp_id){
-			post({id:temp_id,step:"leg1"} ,"FpsView.php");
-		}
+		// function fps_open(temp_id){
+		// 	post({id:temp_id,step:"leg1"} ,"FpsView.php");
+		// }
 		
 		function optimised_open(temp_id){
-			post({id:temp_id,step:"leg1"} ,"OptimisedDataView.php");
+			post({id:temp_id,step:"leg1"} ,"OptimisedDataViewLeg1.php");
+		}
+		
+		function generate_report(temp_id){
+			post({id:temp_id,step:"leg1"} ,"GenerateDataViewLeg1.php");
 		}
 		
 		function send_email(temp_id){	
@@ -251,6 +282,13 @@ require('Header.php');
             document.getElementById('popup').style.display = 'none';
         }
 		
+		function filterByYear(yearVal) {
+			if (yearVal === 'all') {
+				window.location.href = 'OptimisedDataAllLeg1.php';
+			} else {
+				window.location.href = 'OptimisedDataAllLeg1.php?year=' + encodeURIComponent(yearVal);
+			}
+		}
 		
 		</script>	
     </body>

@@ -35,21 +35,13 @@ function get_safe_opt_table($con, $prefix, $id_val) {
 }
 
 $tablename = get_safe_opt_table($con, "optimiseddata_", $id);
-$tablename1 = $tablename;
-$leg = 0;
-if(isset($_POST['step'])){
-	if($_POST['step']=="leg1"){
-		$leg = 1;
-		$tablename = get_safe_opt_table($con, "optimiseddata_leg1_", $id);
-		$tablename1 = $tablename;
-	}
-	if($_POST['step']=="all"){
-		$leg = 2;
-		$leg_id = isset($_POST['legid']) ? $_POST['legid'] : '';
-		$tablename = get_safe_opt_table($con, "optimiseddata_", $id);
-		$tablename1 = get_safe_opt_table($con, "optimiseddata_leg1_", $leg_id);
-	}
+if (empty($tablename)) {
+    $tablename = get_safe_opt_table($con, "optimiseddata_leg1_", $id);
 }
+if (empty($tablename)) {
+    $tablename = "optimiseddata";
+}
+$tablename1 = "";
 
 ?>
 <style>

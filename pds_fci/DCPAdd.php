@@ -89,13 +89,13 @@ require('Header.php');
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Offset of FRice in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offered of FRice in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand_frice" name="demand_frice" required />
                                                     </div>
-                                                    <span class="help-block">Offset in Quintals</span>
+                                                    <span class="help-block">Offered in Quintals</span>
                                                 </div>
                                             </div>
 											
@@ -127,23 +127,23 @@ require('Header.php');
 											
 											
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Offset of Rice in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offered of Wheat in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand" name="demand" required />
                                                     </div>
-                                                    <span class="help-block"> Offset in Quintals</span>
+                                                    <span class="help-block"> Offered in Quintals</span>
                                                 </div>
                                             </div>
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Offset of Wheat in Quintals*</label>
+                                                <label class="col-md-3 control-label">Offered of Rice in Quintals*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="demand_rice" name="demand_rice" required />
                                                     </div>
-                                                    <span class="help-block">Offset in Quintals</span>
+                                                    <span class="help-block">Offered in Quintals</span>
                                                 </div>
                                             </div>
 										   
@@ -254,6 +254,34 @@ require('Header.php');
                 return false;
             }
 			
+            if (isNaN(latitude) || parseFloat(latitude) <= 0 || parseFloat(latitude) >= 40) {
+                alert('Check Latitude: value must be greater than 0 and less than 40');
+                return false;
+            }
+
+            if (isNaN(longitude) || parseFloat(longitude) <= 65 || parseFloat(longitude) >= 100) {
+                alert('Check Longitude: value must be greater than 65 and less than 100');
+                return false;
+            }
+
+            if (isNaN(demand) || parseFloat(demand) < 0) {
+                alert('Check Offered Wheat Value: value cannot be negative');
+                return false;
+            }
+
+            if (isNaN(demand_rice) || parseFloat(demand_rice) < 0) {
+                alert('Check Offered Rice Value: value cannot be negative');
+                return false;
+            }
+
+            if (document.getElementById('demand_frice')) {
+                var demand_frice = document.getElementById('demand_frice').value;
+                if (isNaN(demand_frice) || parseFloat(demand_frice) < 0) {
+                    alert('Check Offered FRice Value: value cannot be negative');
+                    return false;
+                }
+            }
+
             document.getElementById('popup').style.display = 'block';
         }
 		

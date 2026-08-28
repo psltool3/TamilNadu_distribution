@@ -435,14 +435,25 @@ require('Header.php');
 				<div class="col-md-3">
 					<div class="form-group">
 						<div class="col-md-2"></div>
-						<div class="col-md-9">  
-							<div class="input-group" style="width:100%;">					
-							<select class="form-control" id="year" name="year" style="border-radius:5px;font-weight:bold">
+						<div class="col-md-9">
+							<div class="input-group" style="width:100%;">				
+							<select class="form-control" id="month" name="month" onchange="updateApplicableMonths()" style="border-radius:5px;font-weight:bold">
 								<option value='' style="font-weight:bold;color:#000;">Select</option>
-								
+								<option value='jan' style="font-weight:bold;color:#000;">January</option>
+								<option value='feb' style="font-weight:bold;color:#000;">February</option>
+								<option value='march' style="font-weight:bold;color:#000;">March</option>
+								<option value='april' style="font-weight:bold;color:#000;">April</option>
+								<option value='may' style="font-weight:bold;color:#000;">May</option>
+								<option value='june' style="font-weight:bold;color:#000;">June</option>
+								<option value='july' style="font-weight:bold;color:#000;">July</option>
+								<option value='aug' style="font-weight:bold;color:#000;">August</option>
+								<option value='sept' style="font-weight:bold;color:#000;">September</option>
+								<option value='oct' style="font-weight:bold;color:#000;">October</option>
+								<option value='nov' style="font-weight:bold;color:#000;">November</option>
+								<option value='dec' style="font-weight:bold;color:#000;">December</option>
 							</select>
 							</div>
-							<span class="help-block">Selected Year</span>
+							<span class="help-block">Current Month</span>
 						</div>
 					</div>
 				</div>
@@ -450,13 +461,14 @@ require('Header.php');
 				<div class="col-md-3">
 					<div class="form-group">
 						<div class="col-md-2"></div>
-						<div class="col-md-9">
-							<div class="input-group" style="width:100%;">				
-							<select class="form-control" id="month" name="month" style="border-radius:5px;font-weight:bold">
+						<div class="col-md-9">  
+							<div class="input-group" style="width:100%;">					
+							<select class="form-control" id="year" name="year" onchange="updateApplicableMonths()" style="border-radius:5px;font-weight:bold">
 								<option value='' style="font-weight:bold;color:#000;">Select</option>
+								
 							</select>
 							</div>
-							<span class="help-block">Selected Month</span>
+							<span class="help-block">Applicable Year</span>
 						</div>
 					</div>
 				</div>
@@ -777,32 +789,26 @@ require('Header.php');
 	setInterval(checkServerStatus, 10000);
 	
 	function formatNumberWithCommas(value) {
-		const formattedNumber = Number(value).toFixed(2);
+		const num = Number(value);
 
-		// Separate the integer and decimal parts
-		const parts = formattedNumber.split('.');
-		let integerPart = parts[0];
-		const decimalPart = parts[1] || '';
+		if (Number.isInteger(num)) {
+			return num.toLocaleString('en-IN');
+		}
 
-		// Add commas every two digits from the right in the integer part
-		integerPart = integerPart.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
-
-		// Combine the integer and decimal parts and return the formatted number
-		return integerPart + '.' + decimalPart;
+		return num.toLocaleString('en-IN', {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2
+		});
 	}
 	
 	function formatNumberWithCommasWithoutDecimal(value) {
-		const roundedNumber = Math.round(value);
+		const num = Number(value);
 
-		// Separate the integer and decimal parts
-		const parts = roundedNumber.toString().split('.');
-		let integerPart = parts[0];
-  
-		// Add commas every three digits from the right in the integer part
-		integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-	  
-		// Return the formatted number
-		return integerPart;
+		const roundedNumber = Math.round(num * 100) / 100;
+
+		return roundedNumber.toLocaleString('en-IN', {
+			maximumFractionDigits: 0
+		});
 	}
 	
 	function formatSmartNumber(val) {
@@ -1273,28 +1279,28 @@ function handleStateCheckboxChange() {
 				var formattedTotalDemand = totalDemand.toLocaleString();
 				var formattedTotalCapacity = totalCapacity.toLocaleString();
 
-				//document.getElementById("total_demand").innerHTML = formatSmartNumber(totalDemandWheat);
-				//document.getElementById("total_demand_rice").innerHTML = formatSmartNumber(totalDemandRice);
-				//document.getElementById("total_demand_frice").innerHTML = formatSmartNumber(totalDemandFRice);
-				//document.getElementById("total_supply").innerHTML = formatSmartNumber(totalCapacity);
-				//document.getElementById("total_supply1").innerHTML = formatSmartNumber(totalCapacity1);
-				//document.getElementById("total_supply2").innerHTML = formatSmartNumber(totalCapacity2);
+				document.getElementById("total_demand").innerHTML = formatSmartNumber(totalDemandWheat);
+				document.getElementById("total_demand_rice").innerHTML = formatSmartNumber(totalDemandRice);
+				document.getElementById("total_demand_frice").innerHTML = formatSmartNumber(totalDemandFRice);
+				document.getElementById("total_supply").innerHTML = formatSmartNumber(totalCapacity);
+				document.getElementById("total_supply1").innerHTML = formatSmartNumber(totalCapacity1);
+				document.getElementById("total_supply2").innerHTML = formatSmartNumber(totalCapacity2);
 
-				document.getElementById("totalFciDemand").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand Wheat: " + totalDemand.toFixed(2) + " (Qtl)</span>";
-				document.getElementById("totalFciSupply").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply Wheat: " + totalCapacity.toFixed(2) + " (Qtl)</span>";
+				document.getElementById("totalFciDemand").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand Wheat: " + formatNumberWithCommas(totalDemand) + " (Qtl)</span>";
+				document.getElementById("totalFciSupply").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply Wheat: " + formatNumberWithCommas(totalCapacity) + " (Qtl)</span>";
 
-				document.getElementById("totalFciDemandRice").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand Rice: " + totalDemandRice + " (Qtl)</span>";
-				document.getElementById("totalFciSupply1").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply Rice: " + totalCapacity1 + " (Qtl)</span>";
+				document.getElementById("totalFciDemandRice").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand Rice: " + formatNumberWithCommas(totalDemandRice) + " (Qtl)</span>";
+				document.getElementById("totalFciSupply1").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply Rice: " + formatNumberWithCommas(totalCapacity1) + " (Qtl)</span>";
 
-				document.getElementById("totalFciDemandFRice").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand FRice: " + totalDemandFRice + " (Qtl)</span>";
-				document.getElementById("totalFciSupply2").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply FRice: " + totalCapacity2 + " (Qtl)</span>";
+				document.getElementById("totalFciDemandFRice").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Demand FRice: " + formatNumberWithCommas(totalDemandFRice) + " (Qtl)</span>";
+				document.getElementById("totalFciSupply2").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Total Supply FRice: " + formatNumberWithCommas(totalCapacity2) + " (Qtl)</span>";
 
 				document.getElementById("selectedMonth").innerHTML = "<span style='color: white; font-size: 14px;'>" + "Selected Month: " + capitalizeFirstLetter(month) + "</span>";
 
 
 				districtdata = data.District_Name;
 
-				if (totalCapacity >= totalDemandWheat && totalCapacity1 >= totalDemandRice && totalCapacity2 >= totalDemandFRice) {
+				if (totalCapacity > totalDemandWheat && totalCapacity1 > totalDemandRice && totalCapacity2 > totalDemandFRice) {
 					isOptimizationFeasible = true;
 					// document.getElementById("result").innerHTML = "Optimization can be done.";
 					document.getElementById("result").innerHTML = "<span style='font-weight: bold; font-size: 20px; color: green;'>Optimization can be done.</span>";
@@ -1409,7 +1415,7 @@ currentYearOption.textContent = currentYear;
 currentYearOption.style.fontWeight = "bold";
 currentYearOption.style.color = "#000";
 dropdown_year.appendChild(currentYearOption);
-currentYearOption.selected = true; 
+currentYearOption.selected = false; 
  
 const nextYearOption = document.createElement("option");
 nextYearOption.value = nextYear;
@@ -1417,14 +1423,29 @@ nextYearOption.textContent = nextYear;
 nextYearOption.style.fontWeight = "bold";
 nextYearOption.style.color = "#000";
 dropdown_year.appendChild(nextYearOption);
-nextYearOption.selected = false; 
+nextYearOption.selected = true; 
 
-var dropdown = document.getElementById("month");
-var option = document.createElement('option');
-option.value = currentMonthValue;
-option.textContent = currentMonthValue;
-dropdown.appendChild(option);
-dropdown.options[1].selected = true;
+var dropdown = document.getElementById('month');
+var removeIndices = [];
+for (var i = 0; i < dropdown.options.length; i++) {
+	if (dropdown.options[i].value === currentMonthValue) {
+        dropdown.options[i].selected = true;
+    }
+	else{
+		removeIndices.push(i);
+	}
+}
+for (var j = removeIndices.length - 1; j >= 0; j--) {
+    dropdown.remove(removeIndices[j]);
+}
+
+var dropdownYear = document.getElementById('year');
+for (var i = 0; i < dropdownYear.options.length; i++) {
+    if (dropdownYear.options[i].value == currentYear) {
+        dropdownYear.options[i].selected = true;
+        break;
+    }
+}
 
 fetchApplicableMonth(currentMonthValue);
 
@@ -1478,21 +1499,54 @@ function fetchApplicableMonth(month){
 	});	
 }
 
+function updateApplicableMonths() {
+	var monthNames = ['jan', 'feb', 'march', 'april', 'may', 'june', 'july', 'aug', 'sept', 'oct', 'nov', 'dec'];
+	var selectedMonth = document.getElementById("month").value;
+	var selectedIndex = monthNames.indexOf(selectedMonth);
+	var selectedYear = document.getElementById("year").value;
+	var actualCurrentYear = new Date().getFullYear();
+
+	monthNames.forEach(function(mName, index) {
+		var checkbox = document.getElementById(mName);
+		if (checkbox) {
+			var label = checkbox.closest ? checkbox.closest('label') : checkbox.parentElement;
+			if (selectedYear == actualCurrentYear && selectedIndex !== -1 && index < selectedIndex) {
+				checkbox.disabled = true;
+				checkbox.checked = false;
+				if (label) {
+					label.style.color = "#aaa";
+					label.style.cursor = "not-allowed";
+					label.style.pointerEvents = "none";
+				}
+			} else {
+				checkbox.disabled = false;
+				if (label) {
+					label.style.color = "#000";
+					label.style.cursor = "pointer";
+					label.style.pointerEvents = "auto";
+				}
+			}
+		}
+	});
+}
+
 document.getElementById('month').addEventListener('change', function() {
-    var selectedMonth = this.value; // Get the selected month value
+    var selectedMonth = this.value;
+	updateApplicableMonths();
 	fetchApplicableMonth(selectedMonth);
 });
 
 document.getElementById('year').addEventListener('change', function() {
     var selectedMonth = document.getElementById('month').value;
+	updateApplicableMonths();
 	fetchApplicableMonth(selectedMonth);
 });
 
-var dropdown = document.getElementById('type');
-var currentType = "inter"
-for (var i = 0; i < dropdown.options.length; i++) {
-    if (dropdown.options[i].value === currentType) {
-        dropdown.options[i].selected = true;
+var dropdownType = document.getElementById('type');
+var currentType = "inter";
+for (var i = 0; i < dropdownType.options.length; i++) {
+    if (dropdownType.options[i].value === currentType) {
+        dropdownType.options[i].selected = true;
         break;
     }
 }
@@ -1500,6 +1554,7 @@ for (var i = 0; i < dropdown.options.length; i++) {
 var expanded = false;
 
 function showCheckboxes() {
+  updateApplicableMonths();
   var checkboxes = document.getElementById("checkboxes");
   if (!expanded) {
     checkboxes.style.display = "block";
@@ -1511,6 +1566,7 @@ function showCheckboxes() {
 }
 var firstStart = 0;
 var isOptimizationFeasible = false;
+updateApplicableMonths();
 
 
 </script>

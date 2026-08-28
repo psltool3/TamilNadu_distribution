@@ -73,9 +73,9 @@ function isValidCoordinate($value, $coordinateType) {
     // Check if it's latitude or longitude and validate within the range
     switch ($coordinateType) {
         case 'latitude':
-            return ($coordinate >= -90 && $coordinate <= 90);
+            return ($coordinate > 0 && $coordinate < 40);
         case 'longitude':
-            return ($coordinate >= -180 && $coordinate <= 180);
+            return ($coordinate > 65 && $coordinate < 100);
         default:
             return false;
     }
@@ -129,8 +129,8 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 
 					$column[$latitude]  = htmlspecialchars($column[$latitude], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 					$column[$longitude] = htmlspecialchars($column[$longitude], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isValidCoordinate($column[$latitude],'latitude') or !isValidCoordinate($column[$longitude],'longitude')){
-						echo "Error : Check Latitude and Longitude Value Latitude: ".$column[$latitude]." Longitude: ".$column[$longitude];
+					if(!isValidCoordinate($column[$latitude],'latitude')){
+						echo "Error : Latitude must be greater than 0 and less than 40. Given: ".$column[$latitude];
 						echo "</br>";
 						$redirect = 0;
 					}
@@ -155,7 +155,7 @@ if(password_verify($person->getPassword(), $dbHashedPassword)){
 					}
 
 					$column[$storage] = htmlspecialchars($column[$storage], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isStringNumber($column[$storage])){
+					if(!isStringNumber($column[$storage]) || floatval($column[$storage]) < 0){
 						echo "Error : Check Storage Value: ".$column[$storage];
 						echo "</br>";
 						$redirect = 0;

@@ -55,9 +55,7 @@ $tablename1 = "";
             font-size: 24px; /* Increase font size for heading elements */
         }
 
-        /* You can add similar styles for other elements as needed */
-        /* For example: */
-        th
+        th,
         td {
             font-size: 18px; /* Increase font size for table headers and data cells */
         }
@@ -89,19 +87,16 @@ $tablename1 = "";
 			text-align: center;
 			color: black;
 			border-color: black !important;
-			
 		}
 
 		tr {
-			border: 2px solid black; /* Set border for table rows */
+			border: 2px solid black;
 		}
 		.table > tfoot > tr > td {
 			border-color: black !important;
 			border-width: 2px !important;
 		}
 
-
-		/* Apply background color to even rows */
 		#export_table tbody tr:nth-child(even) {
 			background-color: #FFCF8B;
 		}
@@ -109,8 +104,8 @@ $tablename1 = "";
 
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                    <li><a href="#">Home</a></li>
-                    <li class="active">Optimised Leg1 Data View</li>
+                    <li><a href="Home.php">Home</a></li>
+                    <li class="active">Optimised Data Leg1 View</li>
                 </ul>
                 <!-- END BREADCRUMB -->
 
@@ -124,7 +119,7 @@ $tablename1 = "";
                             <!-- START SIMPLE DATATABLE -->
                             <div class="panel panel-default">
 							<div class="panel-heading">
-                                    <h3 class="panel-title">Optimised Leg1 Data View</h3>
+                                    <h3 class="panel-title">Optimised Data Leg1 View</h3>
                                 </div>
 								<div style="float:right" style="margin:10px">
 									<button id="downloadCSV" class="btn btn-warning" style="margin-bottom: 10px;" type="button">Download CSV</button>
@@ -144,7 +139,7 @@ $tablename1 = "";
 													<option value='all'>All</option>
 												</select>
 												</div>
-												<span class="help-block">Select a specific district or 'All' for state-wide data</span>
+												<span class="help-block">All option will work only for download</span>
 											</div>
 										</div>
 									</div>
@@ -153,8 +148,8 @@ $tablename1 = "";
                                  <div class="table-responsive">
 								 <div class="table-container">
 								<table id="export_table" class="table">
-                                         <thead>
-                                             <tr>												
+                                        <thead>
+                                            <tr>												
 												<th style="font-size:16px">Scenario</th>
 												<th style="font-size:16px">From</th>
 												<th style="font-size:16px">From_State</th>
@@ -173,13 +168,13 @@ $tablename1 = "";
 												<th style="font-size:16px">Commodity</th>
 												<th style="font-size:16px">Quantity(Qtl)</th>
 												<th style="font-size:16px">Distance(Km)</th>
-                                             </tr>
-                                         </thead>
+                                            </tr>
+                                        </thead>
 										 <tbody id="optimised_table">
 										
 										</tbody>
 										
-                                     </table>
+                                    </table>
 									</div>
                                   </div>
                                 </div>
@@ -196,7 +191,7 @@ $tablename1 = "";
         </div>
         <!-- END PAGE CONTAINER -->
 
-		<?php  require('DistrictAutocomplete.php'); ?>
+		<?php require('DistrictAutocomplete.php'); ?>
 
     <!-- START SCRIPTS -->
         <!-- START PLUGINS -->
@@ -223,7 +218,7 @@ $tablename1 = "";
 		function getDateString(){
 			var currentDate = new Date();
 			var year = currentDate.getFullYear();
-			var month = currentDate.getMonth() + 1; // Month is zero-based, so we add 1
+			var month = currentDate.getMonth() + 1;
 			var day = currentDate.getDate();
 			var str = year + "-" + month + "-" + day;
 			return str;
@@ -236,13 +231,12 @@ $tablename1 = "";
 				var district = document.getElementById('district').value;
 				const csvResponse = await fetch('api/DownloadOptimalDataOptimised.php?format=csv&tableName=' + tableName + '&tableName1=' + tableName1 + '&district=' + district);
 				const csvBlob = await csvResponse.blob();
-				downloadFile(csvBlob, 'Optimised_Leg1_Data_' + getDateString() + '.csv');
+				downloadFile(csvBlob, 'Optimised_Data_Leg1_' + getDateString() + '.csv');
 			} catch (error) {
 				console.error('Error downloading CSV file:', error);
 			}
 		});
 
-		// Event listener for downloading XLSX
 		document.getElementById('downloadXLSX').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
@@ -250,7 +244,7 @@ $tablename1 = "";
 				var district = document.getElementById('district').value;
 				const excelResponse = await fetch('api/DownloadOptimalDataOptimised.php?format=xlsx&tableName=' + tableName + '&tableName1=' + tableName1 + '&district=' + district);
 				const excelBlob = await excelResponse.blob();
-				downloadFile(excelBlob, 'Optimised_Leg1_Data_' + getDateString() + '.xlsx');
+				downloadFile(excelBlob, 'Optimised_Data_Leg1_' + getDateString() + '.xlsx');
 			} catch (error) {
 				console.error('Error downloading XLSX file:', error);
 			}
@@ -302,6 +296,12 @@ $tablename1 = "";
 							
 							$('#optimised_table').append(subpart);
 						}
+						var obj = resultarray["data1"];
+						for (var datafield in obj){
+							var subpart1 = "<tr><td>" +  obj[datafield]["scenario"] +  "</td><td>"  + obj[datafield]["from"] +  "</td><td>"  + obj[datafield]["from_state"] +  "</td><td>"  + obj[datafield]["from_id"] +  "</td><td>"  + obj[datafield]["from_name"] +  "</td><td>"  + obj[datafield]["from_district"] +  "</td><td>"  + obj[datafield]["from_lat"] + "</td><td>" + obj[datafield]["from_long"] + "</td><td>" + obj[datafield]["to"] + "</td><td>" + obj[datafield]["to_state"] + "</td><td>" + obj[datafield]["to_id"] + "</td><td>" + obj[datafield]["to_name"] + "</td><td>" + obj[datafield]["to_district"] + "</td><td>" + obj[datafield]["to_lat"] + "</td><td>" + obj[datafield]["to_long"] + "</td><td>" + obj[datafield]["commodity"] + "</td><td>" + obj[datafield]["quantity"] + "</td><td>" + obj[datafield]["distance"] + "</td></tr>";
+							
+							$('#optimised_table').append(subpart1);
+						}
 					}
 					catch (error) {
 					}
@@ -309,8 +309,6 @@ $tablename1 = "";
 			});
 		}
 		fetchDataFromServer();
-
 		</script>
-
     </body>
 </html>

@@ -165,22 +165,22 @@ try{
 					}
 			
 					$column[$demand] = htmlspecialchars($column[$demand], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isStringNumber($column[$demand])){
-						echo "Error : Check Demand Wheat Value: ".$column[$demand];
+					if(!isStringNumber($column[$demand]) || floatval($column[$demand]) < 0){
+						echo "Error : Check Entitlement Wheat Value: ".$column[$demand];
 						echo "</br>";
 						$redirect = 0;
 					}
 
 					$column[$demand_rice] = htmlspecialchars($column[$demand_rice], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isStringNumber($column[$demand_rice])){
-						echo "Error : Check DemandRice Value: ".$column[$demand_rice];
+					if(!isStringNumber($column[$demand_rice]) || floatval($column[$demand_rice]) < 0){
+						echo "Error : Check Entitlement Rice Value: ".$column[$demand_rice];
 						echo "</br>";
 						$redirect = 0;
 					}
 
 					$column[$demand_frice] = htmlspecialchars($column[$demand_frice], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isStringNumber($column[$demand_frice])){
-						echo "Error : Check DemandFRice Value: ".$column[$demand_frice];
+					if(!isStringNumber($column[$demand_frice]) || floatval($column[$demand_frice]) < 0){
+						echo "Error : Check Entitlement FRice Value: ".$column[$demand_frice];
 						echo "</br>";
 						$redirect = 0;
 					}

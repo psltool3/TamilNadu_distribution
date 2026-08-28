@@ -75,9 +75,9 @@ function isValidCoordinate($value, $coordinateType) {
     // Check if it's latitude or longitude and validate within the range
     switch ($coordinateType) {
         case 'latitude':
-            return ($coordinate >= -90 && $coordinate <= 90);
+            return ($coordinate > 0 && $coordinate < 40);
         case 'longitude':
-            return ($coordinate >= -180 && $coordinate <= 180);
+            return ($coordinate > 65 && $coordinate < 100);
         default:
             return false;
     }
@@ -163,21 +163,20 @@ try{
 					$column[$name] = htmlspecialchars($column[$name], ENT_QUOTES | ENT_HTML5, 'UTF-8');
 			
 					$column[$demand] = htmlspecialchars($column[$demand], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isStringNumber($column[$demand])){
-						echo "Error : Check WheatDemand Value: ".$column[$demand];
+					if(!isStringNumber($column[$demand]) || floatval($column[$demand]) < 0){
+						echo "Error : Check Entitlement Wheat Value: ".$column[$demand];
 						echo "</br>";
 						$redirect = 0;
 					}
 					
-					if (!is_numeric($column[$latitude]) || $column[$latitude] >= 40) {
-						echo "Error : Latitude must be less than 40. Given: " . $column[$latitude];
+					if (!is_numeric($column[$latitude]) || $column[$latitude] <= 0 || $column[$latitude] >= 40) {
+						echo "Error : Latitude must be greater than 0 and less than 40. Given: " . $column[$latitude];
 						echo "</br>";
 						$redirect = 0;
 					}
 
-					// Longitude check (must be more than 65)
-					if (!is_numeric($column[$longitude]) || $column[$longitude] <= 65) {
-						echo "Error : Longitude must be more than 65. Given: " . $column[$longitude];
+					if (!is_numeric($column[$longitude]) || $column[$longitude] <= 65 || $column[$longitude] >= 100) {
+						echo "Error : Longitude must be greater than 65 and less than 100. Given: " . $column[$longitude];
 						echo "</br>";
 						$redirect = 0;
 					}	
@@ -185,15 +184,15 @@ try{
 				
 
 					$column[$demand_rice] = htmlspecialchars($column[$demand_rice], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isStringNumber($column[$demand_rice])){
-						echo "Error : Check DemandRice Value: ".$column[$demand_rice];
+					if(!isStringNumber($column[$demand_rice]) || floatval($column[$demand_rice]) < 0){
+						echo "Error : Check Entitlement Rice Value: ".$column[$demand_rice];
 						echo "</br>";
 						$redirect = 0;
 					}
 
 					$column[$demand_frice] = htmlspecialchars($column[$demand_frice], ENT_QUOTES | ENT_HTML5, 'UTF-8');
-					if(!isStringNumber($column[$demand_frice])){
-						echo "Error : Check DemandFRice Value: ".$column[$demand_frice];
+					if(!isStringNumber($column[$demand_frice]) || floatval($column[$demand_frice]) < 0){
+						echo "Error : Check Entitlement FRice Value: ".$column[$demand_frice];
 						echo "</br>";
 						$redirect = 0;
 					}

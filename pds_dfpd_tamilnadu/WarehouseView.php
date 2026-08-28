@@ -35,43 +35,22 @@ function get_safe_table_name($con, $prefix, $id_val) {
     return '';
 }
 
-$tablename1 = get_safe_table_name($con, "warehouse_", $id);
-if (empty($tablename1)) {
-    $tablename1 = "warehouse";
+$tablename = get_safe_table_name($con, "warehouse_", $id);
+if (empty($tablename)) {
+    $tablename = get_safe_table_name($con, "warehouse_leg1_", $id);
 }
-$tablename = "";
-$leg = 0;
-
-if(isset($_POST['step'])){
-	if($_POST['step']=="leg1"){
-		$leg = 1;
-		$tablename1 = "";
-		$tablename = get_safe_table_name($con, "warehouse_leg1_", $id);
-		if (empty($tablename)) {
-			$tablename = "warehouse";
-		}
-	}
-	if($_POST['step']=="all"){
-		$leg = 2;
-		$leg_id = isset($_POST['legid']) ? $_POST['legid'] : '';
-		$tablename1 = get_safe_table_name($con, "warehouse_", $id);
-		if (empty($tablename1)) {
-			$tablename1 = "warehouse";
-		}
-		$tablename = get_safe_table_name($con, "warehouse_leg1_", $leg_id);
-	}
+if (empty($tablename)) {
+    $tablename = "warehouse";
 }
 
 ?>
 <style>
      td {
-            font-size: 16px; /* Increase font size for table headers and data cells */
+            font-size: 16px;
         }
         .table thead tr th {
     background-color: #95b75d !important;
-    /* border: 2px solid #777; */
     color: black;
-    /* Optional: Font size for table header */
 }
     </style>
 
@@ -116,69 +95,22 @@ if(isset($_POST['step'])){
                                         <tbody>
 										<?php
 										
-										if($leg==2 && !empty($tablename1)){
-											$chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename1) . "'");
-											if ($chk && mysqli_num_rows($chk) > 0) {
-												$query = "SELECT * FROM ".$tablename1." WHERE 1";								
-												$result = mysqli_query($con,$query);
-												if ($result) {
-													while($row = mysqli_fetch_array($result))
-													{
-														$t = isset($row['type']) ? $row['type'] : '';
-														$wt = isset($row['warehousetype']) ? $row['warehousetype'] : '';
-														echo "<tr><td>{$row['district']}</td>".
-														"<td>{$row['name']}</td>".
-														"<td>{$row['id']}</td>".
-														"<td>{$t}</td>".
-														"<td>{$wt}</td>".
-														"<td>{$row['latitude']}</td>".
-														"<td>{$row['longitude']}</td>".
-														"<td>{$row['storage']}</td></tr>";
-													}
-												}
-											}
-										}
-										
-										if(!empty($tablename) && $tablename != $tablename1){
-											$chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename) . "'");
-											if ($chk && mysqli_num_rows($chk) > 0) {
-												$query = "SELECT * FROM ".$tablename." WHERE 1";
-												$result = mysqli_query($con,$query);
-												if ($result) {
-													while($row = mysqli_fetch_array($result))
-													{
-														$t = isset($row['type']) ? $row['type'] : '';
-														$wt = isset($row['warehousetype']) ? $row['warehousetype'] : '';
-														echo "<tr><td>{$row['district']}</td>".
-														"<td>{$row['name']}</td>".
-														"<td>{$row['id']}</td>".
-														"<td>{$t}</td>".
-														"<td>{$wt}</td>".
-														"<td>{$row['latitude']}</td>".
-														"<td>{$row['longitude']}</td>".
-														"<td>{$row['storage']}</td></tr>";
-													}
-												}
-											}
-										} else if ($leg != 2 && !empty($tablename)) {
-											$chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename) . "'");
-											if ($chk && mysqli_num_rows($chk) > 0) {
-												$query = "SELECT * FROM ".$tablename." WHERE 1";
-												$result = mysqli_query($con,$query);
-												if ($result) {
-													while($row = mysqli_fetch_array($result))
-													{
-														$t = isset($row['type']) ? $row['type'] : '';
-														$wt = isset($row['warehousetype']) ? $row['warehousetype'] : '';
-														echo "<tr><td>{$row['district']}</td>".
-														"<td>{$row['name']}</td>".
-														"<td>{$row['id']}</td>".
-														"<td>{$t}</td>".
-														"<td>{$wt}</td>".
-														"<td>{$row['latitude']}</td>".
-														"<td>{$row['longitude']}</td>".
-														"<td>{$row['storage']}</td></tr>";
-													}
+										$chk = mysqli_query($con, "SHOW TABLES LIKE '" . mysqli_real_escape_string($con, $tablename) . "'");
+										if ($chk && mysqli_num_rows($chk) > 0) {
+											$query = "SELECT * FROM " . mysqli_real_escape_string($con, $tablename) . " WHERE 1";
+											$result = mysqli_query($con, $query);
+											if ($result) {
+												while ($row = mysqli_fetch_array($result)) {
+													$t = isset($row['type']) ? $row['type'] : '';
+													$wt = isset($row['warehousetype']) ? $row['warehousetype'] : '';
+													echo "<tr><td>{$row['district']}</td>" .
+													"<td>{$row['name']}</td>" .
+													"<td>{$row['id']}</td>" .
+													"<td>{$t}</td>" .
+													"<td>{$wt}</td>" .
+													"<td>{$row['latitude']}</td>" .
+													"<td>{$row['longitude']}</td>" .
+													"<td>{$row['storage']}</td></tr>";
 												}
 											}
 										}
@@ -201,8 +133,6 @@ if(isset($_POST['step'])){
         </div>
         <!-- END PAGE CONTAINER -->
 
-
-
     <!-- START SCRIPTS -->
         <!-- START PLUGINS -->
         <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
@@ -221,20 +151,15 @@ if(isset($_POST['step'])){
 		<script type="text/javascript" src="js/plugins/tableexport/jspdf/jspdf.js"></script>
 		<script type="text/javascript" src="js/plugins/tableexport/jspdf/libs/base64.js"></script>
 		
-		
         <script type="text/javascript" src="js/plugins.js"></script>
         <script type="text/javascript" src="js/actions.js"></script>
         <!-- END PAGE PLUGINS -->
 
-        <!-- START TEMPLATE -->
-       
-        <!-- END TEMPLATE -->
-		
 		<script>
 		function getDateString(){
 			var currentDate = new Date();
 			var year = currentDate.getFullYear();
-			var month = currentDate.getMonth() + 1; // Month is zero-based, so we add 1
+			var month = currentDate.getMonth() + 1;
 			var day = currentDate.getDate();
 			var str = year + "-" + month + "-" + day;
 			return str;
@@ -243,8 +168,7 @@ if(isset($_POST['step'])){
 		document.getElementById('downloadCSV').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
-				var tableName1 = '<?php echo $tablename1 ?>';
-				const csvResponse = await fetch('api/DownloadOptimalDataWarehouse.php?format=csv&tableName='+tableName+'&tableName1='+tableName1);
+				const csvResponse = await fetch('api/DownloadOptimalDataWarehouse.php?format=csv&tableName='+tableName);
 				const csvBlob = await csvResponse.blob();
 				downloadFile(csvBlob, 'Warehouse_' + getDateString() + '.csv');
 			} catch (error) {
@@ -252,12 +176,10 @@ if(isset($_POST['step'])){
 			}
 		});
 
-		// Event listener for downloading XLSX
 		document.getElementById('downloadXLSX').addEventListener('click', async function() {
 			try {
 				var tableName = '<?php echo $tablename ?>';
-				var tableName1 = '<?php echo $tablename1 ?>';
-				const excelResponse = await fetch('api/DownloadOptimalDataWarehouse.php?format=xlsx&tableName='+tableName+'&tableName1='+tableName1);
+				const excelResponse = await fetch('api/DownloadOptimalDataWarehouse.php?format=xlsx&tableName='+tableName);
 				const excelBlob = await excelResponse.blob();
 				downloadFile(excelBlob, 'Warehouse_' + getDateString() + '.xlsx');
 			} catch (error) {
@@ -265,7 +187,6 @@ if(isset($_POST['step'])){
 			}
 		});
 		
-		// Functions for file download and PDF generation (similar to previous code)
 		function downloadFile(blob, fileName) {
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
@@ -274,8 +195,6 @@ if(isset($_POST['step'])){
 			link.click();
 			window.URL.revokeObjectURL(url);
 		}
-
-
 		</script>
     </body>
 </html>
