@@ -102,9 +102,9 @@ if (!empty($id)) {
 											while($row = mysqli_fetch_array($result))
 											{
 												$type_val = isset($row['type']) ? $row['type'] : (isset($row['warehousetype']) ? $row['warehousetype'] : '');
-												$demand_wheat = isset($row['demand']) ? $row['demand'] : (isset($row['Allocation_Wheat']) ? $row['Allocation_Wheat'] : 0);
-												$demand_rice = isset($row['demand_rice']) ? $row['demand_rice'] : (isset($row['Allocation_Rice']) ? $row['Allocation_Rice'] : 0);
-												$demand_frice = isset($row['demand_frice']) ? $row['demand_frice'] : (isset($row['Allocation_FRice']) ? $row['Allocation_FRice'] : 0);
+												$demand_wheat = isset($row['Offered_Wheat']) ? $row['Offered_Wheat'] : 0;
+												$demand_rice  = isset($row['Offered_Rice']) ? $row['Offered_Rice'] : 0;
+												$demand_frice = isset($row['Offered_FRice']) ? $row['Offered_FRice'] : 0;
 
 												echo "<tr><td>{$row['district']}</td>".
 												"<td>{$row['name']}</td>".

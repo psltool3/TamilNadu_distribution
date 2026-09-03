@@ -25,8 +25,8 @@ if (isset($_GET['format'])) {
         $columns = ["district", "name", "id", "type", "latitude", "longitude", "storage"];
         $columnsName = ["District", "Name of FCI", "FCI ID", "Type of FCI", "Latitude", "Longitude", "Storage Capacity(Qtl)"];
     } else {
-        $columns = ["district", "name", "id", "type", "latitude", "longitude", "demand", "demand_rice"];
-        $columnsName = ["District", "Name of FCI", "FCI ID", "Type of FCI", "Latitude", "Longitude", "Offset of Wheat(Qtl)", "Offset of Rice(Qtl)"];
+        $columns = ["district", "name", "id", "type", "latitude", "longitude", "demand", "demand_rice", "demand_frice"];
+        $columnsName = ["District", "Name of FCI", "FCI ID", "Type of FCI", "Latitude", "Longitude", "Offered of Wheat(Qtl)", "Offered of Rice(Qtl)", "Offered of FRice(Qtl)"];
     }
 
     $tableData = array();
@@ -50,8 +50,9 @@ if (isset($_GET['format'])) {
                 $temp[] = isset($row["longitude"]) ? $row["longitude"] : '';
                 $temp[] = isset($row["storage"]) ? $row["storage"] : '0';
             } else {
-                $dWheat = isset($row["demand"]) ? $row["demand"] : (isset($row["Allocation_Wheat"]) ? $row["Allocation_Wheat"] : '0');
-                $dRice = isset($row["demand_rice"]) ? $row["demand_rice"] : (isset($row["Allocation_Rice"]) ? $row["Allocation_Rice"] : '0');
+                $dWheat = isset($row['Offered_Wheat']) ? $row['Offered_Wheat'] : '0';
+                $dRice  = isset($row['Offered_Rice']) ? $row['Offered_Rice'] : '0';
+                $dFRice = isset($row['Offered_FRice']) ? $row['Offered_FRice'] : '0';
 
                 $temp[] = isset($row["district"]) ? $row["district"] : '';
                 $temp[] = isset($row["name"]) ? $row["name"] : '';
@@ -61,6 +62,7 @@ if (isset($_GET['format'])) {
                 $temp[] = isset($row["longitude"]) ? $row["longitude"] : '';
                 $temp[] = $dWheat;
                 $temp[] = $dRice;
+                $temp[] = $dFRice;
             }
             array_push($tableData, $temp);
         }
