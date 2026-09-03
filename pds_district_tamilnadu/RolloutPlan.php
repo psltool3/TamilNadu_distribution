@@ -433,7 +433,7 @@ if ($rolled_out !== "1" || empty($id)) {
 							var applicable = data[0].applicable;
 							var lastUpdated = data[0].last_updated;
 
-							var resultString = "Optimised Data for Year <b>" + year + "</b> and Month <b>" + month + "</b>, Applicable for <b>" + applicable + "</b>. Last updated at <b>" + lastUpdated + "</b>";
+							var resultString = "Optimised Data for Applicable Year <b>" + year + "</b> and Applicable Month <b>" + month  + "</b>. Last updated at <b>" + lastUpdated + "</b>";
 							document.getElementById("mainheading_big").innerHTML = resultString;
 
 							// Clear existing options

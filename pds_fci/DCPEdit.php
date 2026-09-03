@@ -80,7 +80,7 @@ else{
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="DCP.php">Home</a></li>
-                    <li class="active">DCP Edit</li>
+                    <li class="active">FCI Edit</li>
                 </ul>
                 <!-- END BREADCRUMB -->
 
@@ -93,19 +93,19 @@ else{
                             <form action="api/DCPEdit.php" method="POST" class="form-horizontal" enctype = "multipart/form-data">
                             <div class="panel panel-default">
                                <div class="panel-body">
-                                    <p>Fill this form to add new DCP.</p>
+                                    <p>Fill this form to add new FCI.</p>
                                 </div>
                              <div class="panel-body">
                                     <div class="row">
                                         <div class="col-md-6">
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Name of DCP*</label>
+                                                <label class="col-md-3 control-label">Name of FCI*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>" required />
                                                     </div>
-                                                    <span class="help-block">DCP Name</span>
+                                                    <span class="help-block">FCI Name</span>
                                                 </div>
                                             </div>
 											
@@ -113,7 +113,7 @@ else{
 											<input type="hidden" id="active" name="active" value="<?php  echo $active ?>" />
 											
 										<div class="form-group">
-                                                <label class="col-md-3 control-label">Type of DCP*</label>
+                                                <label class="col-md-3 control-label">Type of FCI*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
@@ -121,29 +121,29 @@ else{
                                                             <option value="fci" <?php if(strtolower($type) == 'fci') echo 'selected'; ?>>FCI</option>
                                                         </select>
                                                     </div>
-                                                    <span class="help-block">Type of DCP</span>
+                                                    <span class="help-block">Type of FCI</span>
                                                 </div>
                                             </div>
 											
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Latitude of DCP*</label>
+                                                <label class="col-md-3 control-label">Latitude of FCI*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="latitude" name="latitude" value="<?php echo $latitude ?>" required />
                                                     </div>
-                                                    <span class="help-block">Latitude of DCP</span>
+                                                    <span class="help-block">Latitude of FCI</span>
                                                 </div>
                                             </div>
 											
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">Longitude of DCP*</label>
+                                                <label class="col-md-3 control-label">Longitude of FCI*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="longitude" name="longitude" value="<?php echo $longitude ?>"required />
                                                     </div>
-                                                    <span class="help-block">Longitude of DCP</span>
+                                                    <span class="help-block">Longitude of FCI</span>
                                                 </div>
                                             </div>
 
@@ -174,13 +174,13 @@ else{
                                             </div>
 										
 											<div class="form-group">
-                                                <label class="col-md-3 control-label">DCP Id*</label>
+                                                <label class="col-md-3 control-label">FCI Id*</label>
                                                 <div class="col-md-9">
                                                     <div class="input-group">
                                                         <span class="input-group-addon"><span class="fa fa-info"></span></span>
                                                         <input type="text" class="form-control" id="id" name="id" value="<?php echo $id ?>" style="color: black; font-weight: bold;"readonly required />
                                                     </div>
-                                                    <span class="help-block">DCP ID</span>
+                                                    <span class="help-block">FCI ID</span>
                                                 </div>
                                             </div>
 											

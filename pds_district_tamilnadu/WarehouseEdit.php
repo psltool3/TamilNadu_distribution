@@ -83,7 +83,7 @@ require('Header.php');
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="#">Home</a></li>
-                    <li class="active">Warehouse Add</li>
+                    <li class="active">Warehouse Edit</li>
                 </ul>
                 <!-- END BREADCRUMB -->
 

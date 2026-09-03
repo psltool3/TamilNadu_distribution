@@ -566,7 +566,7 @@ require('Header.php');
 									<div class="card h-100"
 										style="background-color:#3FDBBC; color:white; padding:12px; font-weight: bold;">
 										<div style="font-size:20px" id="total_supply"></div>
-										<div style="font-size:14px">Total Wheat Allotment (Qtl)</div>
+										<div style="font-size:14px">Total Wheat Offered(Qtl)</div>
 									</div>
 								</div>
 								
@@ -575,7 +575,7 @@ require('Header.php');
 									<div class="card h-100"
 										style="background-color:#FFC167; color:white; padding:12px; font-weight: bold;">
 										<div style="font-size:20px" id="total_supply1"></div>
-										<div style="font-size:14px">Total Rice Allotment</div>
+										<div style="font-size:14px">Total Rice Offered</div>
 									</div>
 								</div>
 
@@ -583,7 +583,7 @@ require('Header.php');
 									<div class="card h-100"
 										style="background-color:#FFC167; color:white; padding:12px; font-weight: bold;">
 										<div style="font-size:20px" id="total_supply2"></div>
-										<div style="font-size:14px">Total FRice Allotment</div>
+										<div style="font-size:14px">Total FRice Offered</div>
 									</div>
 								</div>
 								
