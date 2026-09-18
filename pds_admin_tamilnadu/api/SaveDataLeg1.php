@@ -28,7 +28,6 @@ foreach ($_POST as $key => $value) {
 			writeLog("User ->" ." Save Data | approve district change no ->". $_SESSION['user'] . "| " . $fromid . " - " . $toid);
 		}
 		mysqli_query($con,$query);
-		echo $query;
 	}	
 	if (substr($key, -11) === '_iddistance' or substr($key, -9) === '_idreason' or substr($key, -8) === '_approve' or $value===""){
 		continue;
