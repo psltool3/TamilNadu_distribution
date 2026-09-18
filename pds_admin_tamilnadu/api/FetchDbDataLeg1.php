@@ -108,7 +108,7 @@ while($row = mysqli_fetch_assoc($result))
 	$data[] = $row;
 }
 
-$query_warehouse = "SELECT * from warehouse_leg1_".$id." WHERE 1";
+$query_warehouse = "SELECT * from fci_leg1_".$id." WHERE 1";
 $result_warehouse = mysqli_query($con,$query_warehouse);
 while($row_warehouse = mysqli_fetch_assoc($result_warehouse)){
 	$warehouse[] = $row_warehouse;
